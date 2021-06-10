@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.zifangsky.mapper.TrainInfoMapper" >
+
+  <insert id="insert" parameterType="cn.zifangsky.model.TrainInfo" >
+    insert into train_list (train_num,  station_name, price, num, arrive_time, start_time, sort)
+    values (#{trainNum},#{stationName}, #{price}, #{num},#{arriveTime}, #{startTime},#{sort})
+  </insert>
+
+
+	<select id="getTrainInfo" resultType="cn.zifangsky.model.TrainInfo"  parameterType="cn.zifangsky.model.TrainInfo">
+		select train_num as trainNum,  station_name as stationName, price, num, arrive_time as arriveTime, start_time as startTime, sort
+		from train_list
+		where train_num = #{trainNum} and station_name = #{stationName}
+	</select>
+
+
+<!--  <update id="update" parameterType="cn.zifangsky.model.TrainInfo" >-->
+<!--    update  train_list set num = #{num}-->
+<!--    where train_num = #{trainNum} and from_name = #{fromName} and to_name = #{toName} and from_date = #{fromDate}-->
+<!--  </update>-->
+
+
+    <select id="listTrainInfo" resultType="cn.zifangsky.model.TrainInfo" parameterType="cn.zifangsky.model.TrainInfo" >
+		select train_num as trainNum,  station_name as stationName, price, num, arrive_time as arriveTime, start_time as startTime, sort
+		from train_list
+		where train_num = #{trainNum}
+	</select>
+
+</mapper>
