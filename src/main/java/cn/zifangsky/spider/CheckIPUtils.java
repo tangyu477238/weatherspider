@@ -3,6 +3,7 @@ package cn.zifangsky.spider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.*;
 import java.text.MessageFormat;
 
@@ -44,6 +45,8 @@ public class CheckIPUtils {
 		} catch (java.lang.RuntimeException e) {
 			return false;
 		} catch (SocketTimeoutException e) {
+			return false;
+		} catch (IOException e) {
 			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
