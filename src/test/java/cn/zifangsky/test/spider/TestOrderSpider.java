@@ -1,6 +1,8 @@
 package cn.zifangsky.test.spider;
 
+import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.BizOrderManager;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * 测试基于WebMagic框架的爬虫效果
@@ -18,6 +21,7 @@ import javax.annotation.Resource;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @WebAppConfiguration
+@Slf4j
 public class TestOrderSpider {
 
     @Resource(name = "bizOrderManager")
@@ -28,7 +32,11 @@ public class TestOrderSpider {
 
     @Test
     public void testTrainCrawl(){
-        bizOrderManager.getOrder();
+        for (int i = 0;i<30;i++){
+            String bizDate = DateTimeUtil.formatDateTimetoString(DateTimeUtil.addDays(new Date(),-1*i),DateTimeUtil.FMT_yyyyMMdd);
+            bizOrderManager.getOrder(bizDate);
+
+        }
     }
 
 

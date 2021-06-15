@@ -3,7 +3,7 @@ package cn.zifangsky.manager;
 public interface BizOrderManager {
 	
 
-	 void getOrder();
+	 void getOrder(String bizDate);
 
 
 

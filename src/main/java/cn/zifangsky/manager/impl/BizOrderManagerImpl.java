@@ -25,10 +25,10 @@ public class BizOrderManagerImpl implements BizOrderManager {
 
 
 	@Override
-	public void getOrder() {
+	public void getOrder(String bizDate) {
 		OOSpider.create(new BizOrderSpider()).addPipeline(bizOrderPipeline)
 //				.setDownloader(getHttpClientDownloader())
-				.addUrl("http://beiwan.gzwkh.com/vanke/admin/index.php/tp/index1?tck_no=&date=2021-06-15&_name=&_cardID=&_phone=&act=search")
+				.addUrl("http://beiwan.gzwkh.com/vanke/admin/index.php/tp/index1?tck_no=&date="+bizDate+"&_name=&_cardID=&_phone=&act=search")
 				.thread(2)
 				.run();
 	}
