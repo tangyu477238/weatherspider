@@ -1,12 +1,11 @@
 package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
-import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.manager.XueqiuManager;
 import cn.zifangsky.model.XueqiuGupiao;
-import cn.zifangsky.model.XueqiuGupiaoKline;
-import cn.zifangsky.repository.XueqiuGupiaoKlineRepository;
+import cn.zifangsky.model.GupiaoKline;
+import cn.zifangsky.repository.GupiaoKlineRepository;
 import cn.zifangsky.repository.XueqiuGupiaoRepository;
 import cn.zifangsky.spider.gp.XueqiuGupiaoKlinePipeline;
 import cn.zifangsky.spider.gp.XueqiuGupiaoPipeline;
@@ -16,14 +15,13 @@ import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.model.OOSpider;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 @Slf4j
 @Service("xueqiuManager")
 public class XueqiuManagerImpl implements XueqiuManager {
 
-    @Resource(name = "xueqiuGupiaoKlineRepository")
-    private XueqiuGupiaoKlineRepository xueqiuGupiaoKlineRepository;
+    @Resource(name = "gupiaoKlineRepository")
+    private GupiaoKlineRepository gupiaoKlineRepository;
 
     @Resource
     private XueqiuGupiaoRepository xueqiuGupiaoRepository;
@@ -98,15 +96,15 @@ public class XueqiuManagerImpl implements XueqiuManager {
 
     /***
      * 股票k线数据存储
-     * @param xueqiuGupiaoKline
+     * @param gupiaoKline
      */
     @Override
-    public void saveXueqiuKline(XueqiuGupiaoKline xueqiuGupiaoKline) {
+    public void saveXueqiuKline(GupiaoKline gupiaoKline) {
         try {
-            XueqiuGupiaoKline kline = xueqiuGupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(xueqiuGupiaoKline.getSymbol(),
-                    xueqiuGupiaoKline.getPeriod(),xueqiuGupiaoKline.getBizDate());
+            GupiaoKline kline = gupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(gupiaoKline.getSymbol(),
+                    gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
-                xueqiuGupiaoKlineRepository.save(xueqiuGupiaoKline);
+                gupiaoKlineRepository.save(gupiaoKline);
             }
         } catch (Exception e){
             log.info(e.getMessage());

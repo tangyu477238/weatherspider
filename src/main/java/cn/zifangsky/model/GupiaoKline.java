@@ -9,8 +9,8 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "xueqiu_gupiao_kline")
-public class XueqiuGupiaoKline implements Serializable {
+@Table(name = "gupiao_kline")
+public class GupiaoKline implements Serializable {
     private static final long serialVersionUID = -5395611529404702931L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

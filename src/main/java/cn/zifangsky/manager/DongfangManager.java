@@ -1,7 +1,7 @@
 package cn.zifangsky.manager;
 
 import cn.zifangsky.model.XueqiuGupiao;
-import cn.zifangsky.model.XueqiuGupiaoKline;
+import cn.zifangsky.model.GupiaoKline;
 
 public interface DongfangManager {
 
@@ -10,7 +10,7 @@ public interface DongfangManager {
 
 	void getKline(String bondId, String period, long Timestamp);
 
-	void saveXueqiuKline(XueqiuGupiaoKline xueqiuGupiaoKline);
+	void saveXueqiuKline(GupiaoKline gupiaoKline);
 
 	void saveGupiao(XueqiuGupiao xueqiuGupiao);
 

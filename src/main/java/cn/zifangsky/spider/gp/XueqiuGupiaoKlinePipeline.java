@@ -2,12 +2,10 @@ package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.XueqiuManager;
-import cn.zifangsky.model.XueqiuGupiaoKline;
-import cn.zifangsky.mq.producer.CheckIPSender;
+import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.mq.producer.GupiaoKlineSender;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
@@ -46,7 +44,7 @@ public class XueqiuGupiaoKlinePipeline implements Pipeline {
 		JSONArray jsonArray = JSONObject.parseObject(result).getJSONObject("data").getJSONArray("item");
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			JSONArray jsonArray1 = jsonArray.getJSONArray(i);
-			XueqiuGupiaoKline kzz1 = new XueqiuGupiaoKline();
+			GupiaoKline kzz1 = new GupiaoKline();
 			kzz1.setSymbol(symbol);
 			kzz1.setPeriod(period);
 			Long time =jsonArray1.getLong(0);

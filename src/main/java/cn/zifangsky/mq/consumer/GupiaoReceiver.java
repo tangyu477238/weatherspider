@@ -2,7 +2,6 @@ package cn.zifangsky.mq.consumer;
 
 import cn.zifangsky.manager.XueqiuManager;
 import cn.zifangsky.model.XueqiuGupiao;
-import cn.zifangsky.model.XueqiuGupiaoKline;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;

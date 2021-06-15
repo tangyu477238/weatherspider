@@ -1,8 +1,8 @@
 package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.common.DateTimeUtil;
-import cn.zifangsky.manager.XueqiuManager;
-import cn.zifangsky.model.XueqiuGupiaoKline;
+import cn.zifangsky.common.StringUtil;
+import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.mq.producer.GupiaoKlineSender;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -13,7 +13,6 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,8 +26,6 @@ public class DongfangKlinePipeline implements Pipeline {
 	@Resource(name="gupiaoKlineSender")
 	private GupiaoKlineSender gupiaoKlineSender;
 
-	@Resource
-	private XueqiuManager xueqiuManager;
 	/**
 	 * 保存数据
 	 */
@@ -41,15 +38,15 @@ public class DongfangKlinePipeline implements Pipeline {
 		JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
 
 		String url = resultItems.getRequest().getUrl();
-		Map<String, String> map = urlSplit(url);
+		Map<String, String> map = StringUtil.urlSplit(url);
 		String symbol = object.getString("code");
-//		String period = map.get("period");
+		String period = map.get("klt");
 		JSONArray jsonArray = object.getJSONArray("klines");
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			String jsonArray1[] = jsonArray.get(i).toString().split(",");
-			XueqiuGupiaoKline kzz1 = new XueqiuGupiaoKline();
+			GupiaoKline kzz1 = new GupiaoKline();
 			kzz1.setSymbol(symbol);
-			kzz1.setPeriod("day");
+			kzz1.setPeriod(getPeriod(period));
 			try {
 				kzz1.setTimestamp(DateTimeUtil.parseToDate(jsonArray1[0]));
 			} catch (Exception e) {
@@ -79,14 +76,24 @@ public class DongfangKlinePipeline implements Pipeline {
 		//sendNewPost(symbol, period, timestamp, jsonArray);
 	}
 
-	private void sendNewPost(String symbol,String period, long timestamp, JSONArray jsonArray){
-		if (period.equals("day") && jsonArray.size()==800){
-			try { Thread.sleep(3000);} catch (InterruptedException ie){}//n为毫秒数
-			xueqiuManager.getDataXueqiuDetailKline(symbol.toUpperCase(),period,timestamp);
-			return ;
+	private String getPeriod(String period){
+		int periodNum = Integer.parseInt(period);
+		if (periodNum<100){
+			return period+"m";
 		}
-		return ;
+		if (periodNum==101){
+			return "day";
+		}
+		return null;
 	}
+//	private void sendNewPost(String symbol,String period, long timestamp, JSONArray jsonArray){
+//		if (period.equals("day") && jsonArray.size()==800){
+//			try { Thread.sleep(3000);} catch (InterruptedException ie){}//n为毫秒数
+//			xueqiuManager.getDataXueqiuDetailKline(symbol.toUpperCase(),period,timestamp);
+//			return ;
+//		}
+//		return ;
+//	}
 
 	private String getBizDate(String period, Date Timestamp){
 		if (period.equals("day")){
@@ -99,57 +106,4 @@ public class DongfangKlinePipeline implements Pipeline {
 	}
 
 
-
-	/**
-	 * 去掉url中的路径，留下请求参数部分
-	 * @param strURL url地址
-	 * @return url请求参数部分
-	 * @author lzf
-	 */
-	private static String TruncateUrlPage(String strURL){
-		String strAllParam=null;
-		String[] arrSplit=null;
-		strURL=strURL.trim().toLowerCase();
-		arrSplit=strURL.split("[?]");
-		if(strURL.length()>1){
-			if(arrSplit.length>1){
-				for (int i=1;i<arrSplit.length;i++){
-					strAllParam = arrSplit[i];
-				}
-			}
-		}
-		return strAllParam;
-	}
-
-	/**
-	 * 解析出url参数中的键值对
-	 * 如 "index.jsp?Action=del&id=123"，解析出Action:del,id:123存入map中
-	 * @param URL  url地址
-	 * @return  url请求参数部分
-	 * @author lzf
-	 */
-	public static Map<String, String> urlSplit(String URL){
-		Map<String, String> mapRequest = new HashMap<String, String>();
-		String[] arrSplit=null;
-		String strUrlParam=TruncateUrlPage(URL);
-		if(strUrlParam==null){
-			return mapRequest;
-		}
-		arrSplit=strUrlParam.split("[&]");
-		for(String strSplit:arrSplit){
-			String[] arrSplitEqual=null;
-			arrSplitEqual= strSplit.split("[=]");
-			//解析出键值
-			if(arrSplitEqual.length>1){
-				//正确解析
-				mapRequest.put(arrSplitEqual[0], arrSplitEqual[1]);
-			}else{
-				if(arrSplitEqual[0]!=""){
-					//只有参数没有值，不加入
-					mapRequest.put(arrSplitEqual[0], "");
-				}
-			}
-		}
-		return mapRequest;
-	}
 }

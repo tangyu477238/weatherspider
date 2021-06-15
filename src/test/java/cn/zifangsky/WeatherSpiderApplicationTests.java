@@ -87,7 +87,8 @@ public class WeatherSpiderApplicationTests {
 
 	@Test
 	public void getDongfangDay() {
-		dongfangManager.getKline("000001", "day",System.currentTimeMillis());
+		dongfangManager.getKline("399006", "101",System.currentTimeMillis());
+//		dongfangManager.getKline("399006", "5",System.currentTimeMillis());
 	}
 
 

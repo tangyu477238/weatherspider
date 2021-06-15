@@ -3,10 +3,9 @@ package cn.zifangsky.manager.impl;
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.HttpClientManager;
-import cn.zifangsky.manager.XueqiuManager;
 import cn.zifangsky.model.XueqiuGupiao;
-import cn.zifangsky.model.XueqiuGupiaoKline;
-import cn.zifangsky.repository.XueqiuGupiaoKlineRepository;
+import cn.zifangsky.model.GupiaoKline;
+import cn.zifangsky.repository.GupiaoKlineRepository;
 import cn.zifangsky.repository.XueqiuGupiaoRepository;
 import cn.zifangsky.spider.gp.*;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +18,8 @@ import javax.annotation.Resource;
 @Service("dongfangManagerImpl")
 public class DongfangManagerImpl implements DongfangManager {
 
-    @Resource(name = "xueqiuGupiaoKlineRepository")
-    private XueqiuGupiaoKlineRepository xueqiuGupiaoKlineRepository;
+    @Resource
+    private GupiaoKlineRepository gupiaoKlineRepository;
 
     @Resource
     private XueqiuGupiaoRepository xueqiuGupiaoRepository;
@@ -58,7 +57,7 @@ public class DongfangManagerImpl implements DongfangManager {
     public void getKline(String bondId, String period, long timestamp) {
         String url = "http://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6" +
                 "&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989" +
-                "&klt=101&fqt=1&secid=0."+bondId+"&beg=0&end=20500000&_=1618930055730";
+                "&klt="+period+"&fqt=1&secid=0."+bondId+"&beg=0&end=20500000&_=1618930055730";
         log.info(url);
         OOSpider.create(new DongfangSpider()).addPipeline(dongfangKlinePipeline)
                 .setDownloader(httpClientManager.getHttpClientDownloader())
@@ -88,15 +87,15 @@ public class DongfangManagerImpl implements DongfangManager {
 
     /***
      * 股票k线数据存储
-     * @param xueqiuGupiaoKline
+     * @param gupiaoKline
      */
     @Override
-    public void saveXueqiuKline(XueqiuGupiaoKline xueqiuGupiaoKline) {
+    public void saveXueqiuKline(GupiaoKline gupiaoKline) {
         try {
-            XueqiuGupiaoKline kline = xueqiuGupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(xueqiuGupiaoKline.getSymbol(),
-                    xueqiuGupiaoKline.getPeriod(),xueqiuGupiaoKline.getBizDate());
+            GupiaoKline kline = gupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(gupiaoKline.getSymbol(),
+                    gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
-                xueqiuGupiaoKlineRepository.save(xueqiuGupiaoKline);
+                gupiaoKlineRepository.save(gupiaoKline);
             }
         } catch (Exception e){
             log.info(e.getMessage());
