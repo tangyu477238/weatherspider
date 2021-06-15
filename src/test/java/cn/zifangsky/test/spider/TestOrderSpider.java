@@ -34,8 +34,12 @@ public class TestOrderSpider {
     public void testTrainCrawl(){
         for (int i = 0;i<30;i++){
             String bizDate = DateTimeUtil.formatDateTimetoString(DateTimeUtil.addDays(new Date(),-1*i),DateTimeUtil.FMT_yyyyMMdd);
-            bizOrderManager.getOrder(bizDate);
-
+            try {
+                bizOrderManager.getOrder(bizDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try { Thread.sleep(1000);} catch (InterruptedException ie){}//n为毫秒数
         }
     }
 
