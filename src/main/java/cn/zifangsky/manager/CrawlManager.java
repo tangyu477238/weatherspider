@@ -14,10 +14,6 @@ public interface CrawlManager {
 	 void proxyIPCrawl2();
 
 
-	/**
-	 * trainInfoCrawl，
-	 */
-	 void trainInfoCrawl(String trainNo,String fromCode,String toCode,String bizDate);
 
 	 void getDataJsl();
 	 void getDataJslDetail(String bondId);

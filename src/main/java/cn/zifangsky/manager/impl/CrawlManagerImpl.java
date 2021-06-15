@@ -1,23 +1,15 @@
 package cn.zifangsky.manager.impl;
 
-import javax.annotation.Resource;
-
+import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.HttpClientManager;
-import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.model.ProxyIp;
 import cn.zifangsky.spider.*;
-import cn.zifangsky.spider.gp.*;
-import cn.zifangsky.spider.train.TrainInfoPipeline;
-import cn.zifangsky.spider.train.TrainPipeline;
-import cn.zifangsky.spider.train.TrainSpider;
+import cn.zifangsky.spider.gp.JslPipeline;
+import cn.zifangsky.spider.gp.JslSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import cn.zifangsky.manager.CrawlManager;
-import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.model.OOSpider;
-import us.codecraft.webmagic.proxy.Proxy;
-import us.codecraft.webmagic.proxy.SimpleProxyProvider;
+
+import javax.annotation.Resource;
 @Slf4j
 @Service("crawlManager")
 public class CrawlManagerImpl implements CrawlManager {
@@ -52,14 +44,6 @@ public class CrawlManagerImpl implements CrawlManager {
 	*****/
 
 
-	@Override
-	public void trainInfoCrawl(String trainNo, String fromCode, String toCode, String bizDate) {
-//		OOSpider.create(new TrainSpider()).addPipeline(trainInfoPipeline).setDownloader(httpClientManager.getHttpClientDownloader())
-//				.addUrl("https://kyfw.12306.cn/otn/czxx/queryByTrainNo?train_no="+trainNo+"&from_station_telecode="+fromCode+"&to_station_telecode="+toCode+"&depart_date="
-//						+ bizDate)
-//				.thread(1)
-//				.run();
-	}
 
 
 
