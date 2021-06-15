@@ -22,25 +22,13 @@ import us.codecraft.webmagic.proxy.SimpleProxyProvider;
 @Service("crawlManager")
 public class CrawlManagerImpl implements CrawlManager {
 
-	@Resource(name="customPipeline")
-	private CustomPipeline customPipeline;
 	
 	@Resource(name="proxyIPPipeline")
 	private ProxyIPPipeline proxyIPPipeline;
 
-	@Resource(name="trainPipeline")
-	private TrainPipeline trainPipeline;
-
-	@Resource(name="trainInfoPipeline")
-	private TrainInfoPipeline trainInfoPipeline;
 
 	@Resource(name="jslPipeline")
 	private JslPipeline jslPipeline;
-
-
-
-
-
 
 
 
@@ -73,22 +61,8 @@ public class CrawlManagerImpl implements CrawlManager {
 //				.run();
 	}
 
-	@Override
-	public void trainCrawl(String date, String fromName, String toName) {
-//		OOSpider.create(new TrainSpider()).addPipeline(trainPipeline).setDownloader(httpClientManager.getHttpClientDownloader())
-//				.addUrl("https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date="
-//						+date+"&leftTicketDTO.from_station="+fromName+"&leftTicketDTO.to_station="+toName+"&purpose_codes=ADULT")
-//				.thread(1)
-//				.run();
-	}
 
-	@Override
-	public void weatherCrawl(String stationCode) {
-		OOSpider.create(new WeatherSpider()).addPipeline(customPipeline).setDownloader(httpClientManager.getHttpClientDownloader())
-		.addUrl("http://www.weather.com.cn/weather/" + stationCode + ".shtml")
-		.thread(1)
-		.run();
-	}
+
 
 	@Override
 	public void proxyIPCrawl() {

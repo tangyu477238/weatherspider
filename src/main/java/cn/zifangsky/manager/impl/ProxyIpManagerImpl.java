@@ -7,14 +7,9 @@ import java.util.Random;
 import cn.zifangsky.repository.ProxyIpRepository;
 import cn.zifangsky.spider.CheckIPUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import cn.zifangsky.common.PageInfo;
 import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.mapper.ProxyIpMapper;
 import cn.zifangsky.model.ProxyIp;
 
 import javax.annotation.Resource;

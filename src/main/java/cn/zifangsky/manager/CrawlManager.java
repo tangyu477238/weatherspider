@@ -2,12 +2,7 @@ package cn.zifangsky.manager;
 
 public interface CrawlManager {
 	
-	/**
-	 * 天气爬虫
-	 * @param stationCode 县城（区）的CODE
-	 */
-	 void weatherCrawl(String stationCode);
-	
+
 	/**
 	 * 代理IP爬虫，地址：http://www.xicidaili.com
 	 */
@@ -18,15 +13,6 @@ public interface CrawlManager {
 	 */
 	 void proxyIPCrawl2();
 
-	/**
-	 * trainCrawl，
-	 */
-	 void trainCrawl(String date,String fromName,String toName);
-
-	/**
-	 * trainPriceCrawl，
-	 */
-//	 void trainPriceCrawl(String trainNo,String fromCode,String toCode,String bizDate,String seatTypes);
 
 	/**
 	 * trainInfoCrawl，

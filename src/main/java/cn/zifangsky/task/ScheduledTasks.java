@@ -2,7 +2,6 @@ package cn.zifangsky.task;
 
 import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.manager.WeatherStationManager;
 import cn.zifangsky.mq.producer.CheckIPSender;
 import cn.zifangsky.mq.producer.WeatherUpdateSender;
 import lombok.extern.slf4j.Slf4j;
@@ -38,14 +37,10 @@ public class ScheduledTasks {
     @Resource(name="proxyIpManager")
     private ProxyIpManager proxyIpManager;
 
-    @Resource(name = "weatherStationManager")
-    private WeatherStationManager weatherStationManager;
 
     @Resource(name="checkIPSender")
     private CheckIPSender checkIPSender;
 
-    @Resource(name="weatherUpdateSender")
-    private WeatherUpdateSender weatherUpdateSender;
 
     @Resource(name="crawlManager")
     private CrawlManager crawlManager;

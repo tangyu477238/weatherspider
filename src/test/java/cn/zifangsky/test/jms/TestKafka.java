@@ -1,9 +1,7 @@
 package cn.zifangsky.test.jms;
 
 import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.manager.WeatherStationManager;
 import cn.zifangsky.model.ProxyIp;
-import cn.zifangsky.model.WeatherStation;
 import cn.zifangsky.model.bo.ProxyIpBO;
 import cn.zifangsky.mq.producer.CheckIPSender;
 import cn.zifangsky.mq.producer.WeatherUpdateSender;
@@ -30,20 +28,13 @@ public class TestKafka {
     @Value("${mq.topicName.checkIP}")
 	private String checkIPTopicName;
 
-    @Value("${mq.topicName.weather}")
-    private String weatherTopicName;
-
     @Resource(name="proxyIpManager")
     private ProxyIpManager proxyIpManager;
 
-    @Resource(name = "weatherStationManager")
-    private WeatherStationManager weatherStationManager;
 
 	@Resource(name="checkIPSender")
 	private CheckIPSender checkIPSender;
 
-	@Resource(name="weatherUpdateSender")
-	private WeatherUpdateSender weatherUpdateSender;
 
 
     /**
@@ -77,23 +68,6 @@ public class TestKafka {
 
 	}
 
-	/**
-	 * 测试更新天气
-	 */
-	@Test
-	public void testUpdateWeather() throws InterruptedException {
-		List<WeatherStation> list = weatherStationManager.selectAll();
 
-		if(list != null && list.size() > 0){
-		    list.forEach(station -> {
-		        //添加到队列中
-                weatherUpdateSender.updateWeather(weatherTopicName, station.getCode());
-            });
-
-		}
-
-        //暂停线程，查看效果
-        Thread.sleep(1000 * 60);
-	}
 
 }

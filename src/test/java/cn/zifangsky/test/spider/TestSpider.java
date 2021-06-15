@@ -1,10 +1,7 @@
 package cn.zifangsky.test.spider;
 
-import cn.zifangsky.common.StationUtil;
 import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.mapper.TrainInfoMapper;
-import cn.zifangsky.model.TrainInfo;
 import cn.zifangsky.model.bo.ProxyIpBO;
 import cn.zifangsky.spider.CheckIPUtils;
 import org.junit.Test;
@@ -14,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 测试基于WebMagic框架的爬虫效果
@@ -32,19 +28,7 @@ public class TestSpider{
     @Resource(name = "proxyIpManager")
     private ProxyIpManager proxyIpManager;
 
-    @Resource(name = "trainInfoMapper")
-    private TrainInfoMapper trainInfoMapper;
 
-	/**
-	 * 测试获取某个城镇CODE对应的天气
-	 * @author zifangsky
-	 * @date 2018/6/21 10:43
-	 * @since 1.0.0
-	 */
-	@Test
-	public void testWeatherCrawl(){
-		crawlManager.weatherCrawl("101010700");
-	}
 
     /**
      * 测试检测代理IP是否可用
