@@ -51,6 +51,15 @@ public class CrawlManagerImpl implements CrawlManager {
 	@Override
 	public void proxyIPCrawl() {
 		try {
+			OOSpider.create(new ProxyIPSpider9())
+					.addUrl("https://www.kuaidaili.com/free/inha/1/").addPipeline(proxyIPPipeline)
+					.thread(5)
+					.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		try {
 			OOSpider.create(new ProxyIPSpider()).setDownloader(httpClientManager.getHttpClientDownloader())
 					.addUrl("https://ip.jiangxianli.com/?page=1").addPipeline(proxyIPPipeline)
 					.thread(2)
@@ -59,8 +68,7 @@ public class CrawlManagerImpl implements CrawlManager {
 			e.printStackTrace();
 		}
 		try {
-			OOSpider.create(new ProxyIPSpider3())
-					.setDownloader(httpClientManager.getHttpClientDownloader())
+			OOSpider.create(new ProxyIPSpider3()).setDownloader(httpClientManager.getHttpClientDownloader())
 					.addUrl("https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1").addPipeline(proxyIPPipeline)
 					.thread(2)
 					.run();
@@ -91,14 +99,7 @@ public class CrawlManagerImpl implements CrawlManager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		try {
-			OOSpider.create(new ProxyIPSpider9())
-					.addUrl("https://www.kuaidaili.com/free/inha/1/").addPipeline(proxyIPPipeline)
-					.thread(5)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 
 
 
@@ -123,8 +124,7 @@ public class CrawlManagerImpl implements CrawlManager {
 			e.printStackTrace();
 		}
 		try {
-			OOSpider.create(new ProxyIPSpider6())
-					.setDownloader(httpClientManager.getHttpClientDownloader())
+			OOSpider.create(new ProxyIPSpider6()).setDownloader(httpClientManager.getHttpClientDownloader())
 					.addUrl("http://www.ip3366.net/?stype=1&page=1").addPipeline(proxyIPPipeline)
 					.thread(2)
 					.run();

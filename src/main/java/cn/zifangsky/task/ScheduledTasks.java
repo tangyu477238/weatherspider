@@ -1,7 +1,11 @@
 package cn.zifangsky.task;
 
+import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.CrawlManager;
+import cn.zifangsky.manager.DongfangManager;
+import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.manager.ProxyIpManager;
+import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.mq.producer.CheckIPSender;
 import cn.zifangsky.mq.producer.WeatherUpdateSender;
 import lombok.extern.slf4j.Slf4j;
@@ -48,24 +52,12 @@ public class ScheduledTasks {
     @Value("${mq.consumer.off}")
     private String consumerOff;
 
-    /**
-     * 天气定时更新任务
-     * @author zifangsky
-     * @date 2018/6/21 13:43
-     * @since 1.0.0
-     */
-//    @Scheduled(cron = "${task.updateWeather.schedule}")
-//    public void updateWeatherTask(){
-//        Date current = new Date();
-//        log.debug(MessageFormat.format("开始执行天气定时更新任务，Date：{0}",FORMAT.format(current)));
-//
-//        List<WeatherStation> list = weatherStationManager.selectAll();
-//        if(list != null && list.size() > 0){
-//            list.forEach(station -> {
-//                weatherUpdateSender.updateWeather(weatherTopicName, station.getCode());
-//            });
-//        }
-//    }
+
+    @Resource
+    private DongfangManager dongfangManager;
+
+    @Resource
+    private GupiaoManager gupiaoManager;
 
     /**
      * 代理IP定时检测任务（检查是否有效）
@@ -112,36 +104,53 @@ public class ScheduledTasks {
      * @date 2018/6/21 13:53
      * @since 1.0.0
      */
-    @Scheduled(cron = "${task.crawlProxyIp_1.schedule}")
-    public void crawlProxyIpTask1(){
+//    @Scheduled(cron = "${task.crawlProxyIp_1.schedule}")
+//    public void crawlProxyIpTask1(){
+//        if ("0".equals(consumerOff)) return;
+//        Date current = new Date();
+//        log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
+//        crawlManager.proxyIPCrawl();
+//    }
+//
+//    /**
+//     * 代理IP定时获取任务2
+//     * @author zifangsky
+//     * @date 2018/6/21 13:55
+//     * @since 1.0.0
+//     */
+//    @Scheduled(cron = "${task.crawlProxyIp_2.schedule}")
+//    public void crawlProxyIpTask2(){
+//        if ("0".equals(consumerOff)) return;
+//        Date current = new Date();
+//        log.debug(MessageFormat.format("开始执行代理IP定时获取任务2，Date：{0}",FORMAT.format(current)));
+//        crawlManager.proxyIPCrawl2();
+//    }
+
+
+
+//    @Scheduled(cron = "${task.jsl.schedule}")
+//    public void kzzKline(){
+//        if ("0".equals(consumerOff)) return;
+//        Date current = new Date();
+//        log.debug(MessageFormat.format("开始执行kzzKline，Date：{0}",FORMAT.format(current)));
+//        crawlManager.getDataJsl();
+//    }
+
+    @Scheduled(cron = "${task.dongfeng.schedule}")
+    public void dongfeng(){
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl();
+        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        dongfangManager.getKline("399006", "5",System.currentTimeMillis());
     }
 
-    /**
-     * 代理IP定时获取任务2
-     * @author zifangsky
-     * @date 2018/6/21 13:55
-     * @since 1.0.0
-     */
-    @Scheduled(cron = "${task.crawlProxyIp_2.schedule}")
-    public void crawlProxyIpTask2(){
+    @Scheduled(cron = "${task.dongfeng.schedule}")
+    public void buy(){
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("开始执行代理IP定时获取任务2，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl2();
-    }
+        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m", DateTimeUtil.getBeforeDay(0)+" 09:35");
 
-
-
-    @Scheduled(cron = "${task.jsl.schedule}")
-    public void kzzKline(){
-        if ("0".equals(consumerOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("开始执行kzzKline，Date：{0}",FORMAT.format(current)));
-        crawlManager.getDataJsl();
     }
 
 }

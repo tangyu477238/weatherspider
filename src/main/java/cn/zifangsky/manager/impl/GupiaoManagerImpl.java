@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Slf4j
-@Service("gupiaoManager")
+@Service("gupiaoManagerImpl")
 public class GupiaoManagerImpl implements GupiaoManager {
 
     @Resource
@@ -25,8 +25,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public void saveKline(GupiaoKline gupiaoKline) {
         try {
-            GupiaoKline kline = gupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(gupiaoKline.getSymbol(),
-                    gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
+            GupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
                 gupiaoKlineRepository.save(gupiaoKline);
             }
@@ -35,5 +34,9 @@ public class GupiaoManagerImpl implements GupiaoManager {
         }
     }
 
+    @Override
+    public GupiaoKline getGupiaoKline(String bondId, String period, String bizDate) {
 
+        return gupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(bondId,period, bizDate);
+    }
 }
