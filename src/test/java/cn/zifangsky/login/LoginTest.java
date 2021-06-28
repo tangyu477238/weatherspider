@@ -13,9 +13,11 @@ import java.net.URLEncoder;
 @Slf4j
 public class LoginTest {
 
+    private String access_token="797751deeba14260842301bb2f0fd9ce";
+
     @Test
     public void gridYmd() throws Exception{
-        String access_token = "8b62a82e2f074d6c821557ee38334400";
+//        String access_token = "8b62a82e2f074d6c821557ee38334400";
         String stock_code = "159949";
         String stock_name = "创业板50";
 
@@ -48,7 +50,7 @@ public class LoginTest {
     @Test
     public void avgLineYmd() throws Exception{
 
-        String access_token = "8b62a82e2f074d6c821557ee38334400";
+//        String access_token = "8b62a82e2f074d6c821557ee38334400";
         String stock_code = "600010";
         String stock_name = "包钢股份";
         int trigger_mode = 1;
@@ -67,7 +69,7 @@ public class LoginTest {
      */
     @Test
     public void deleteYmd() throws Exception{
-        String access_token = "8b62a82e2f074d6c821557ee38334400";
+//        String access_token = "8b62a82e2f074d6c821557ee38334400";
         String ymd_id ="25842";
         Login.deleteYmd(ymd_id, access_token);
     }
@@ -79,7 +81,7 @@ public class LoginTest {
      */
     @Test
     public void hungBuy() throws Exception{
-        String access_token = "8b62a82e2f074d6c821557ee38334400";
+//        String access_token = "8b62a82e2f074d6c821557ee38334400";
 //        String stock_code = "600004";
 //        String stock_name = "白云机场";
 //        String original_price = "9.00"; //触发价格
@@ -94,6 +96,48 @@ public class LoginTest {
 
         Login.hungBuy(stock_code, stock_name, original_price, current_price, entrust_amount, access_token);
     }
+
+
+    /****
+     * 定价卖出
+
+     */
+    @Test
+    public void hungSell() throws Exception{
+
+
+        String stock_code = "159949";
+        String stock_name = "创业板50";
+        String original_price = "2.000"; //触发价格
+        String current_price = "1.503"; //当前价格(无效)
+        int entrust_amount = 100; //委托数
+
+        Login.hungSell(stock_code, stock_name, original_price, current_price, entrust_amount, access_token);
+    }
+
+    /****
+     * 止盈止损
+     */
+    @Test
+    public void stopProfitAndLoss() throws Exception{
+
+
+
+        String stock_code = "159949";
+        String stock_name = "创业板50";
+        String base_price = "1.503";
+
+        String stop_profit_rate = "10.00"; //止盈
+        String stop_loss_rate = "1.00"; //止损
+        String stop_loss_price = "1.4880";
+        String stop_profit_price = "1.6533";
+
+        String current_price = "1.503";
+        int entrust_amount = 100; //委托数
+
+        Login.stopProfitAndLoss(stock_code, stock_name, base_price,stop_profit_rate, stop_loss_rate, stop_loss_price, stop_profit_price,  current_price, entrust_amount, access_token);
+    }
+
 
 
 
