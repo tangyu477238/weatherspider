@@ -23,7 +23,7 @@ public class CheckIPReceiver {
 	@Resource(name = "proxyIpManager")
 	private ProxyIpManager proxyIpManager;
 
-
+//
 //	@KafkaListener(id = "id0", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.checkIP}"), partitions = { "0" }) })
 //	public void handle0(ProxyIpBO proxyIpBO) {
 //		log.info(MessageFormat.format("接收到消息，000000000 分区 代理IP:{0}", proxyIpBO));

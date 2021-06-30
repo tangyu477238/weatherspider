@@ -1,10 +1,12 @@
 package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
+import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.repository.GupiaoKlineRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,6 +30,12 @@ public class GupiaoManagerImpl implements GupiaoManager {
             GupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
                 gupiaoKlineRepository.save(gupiaoKline);
+                return;
+            }
+            if (gupiaoKline.getBizDate().startsWith(DateTimeUtil.getBeforeDay(0))){ //如果是当天，请覆盖
+                gupiaoKline.setId(kline.getId());
+                BeanUtils.copyProperties(gupiaoKline, kline);
+                gupiaoKlineRepository.save(kline);
             }
         } catch (Exception e){
             log.info(e.getMessage());

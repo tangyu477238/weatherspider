@@ -27,7 +27,7 @@ import java.util.Date;
  */
 @Component
 @Slf4j
-public class TodayTasks {
+public class CczqTasks {
 
     private final Format FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -55,17 +55,38 @@ public class TodayTasks {
     @Resource
     private DongfangManager dongfangManager;
 
+    @Resource
+    private GupiaoManager gupiaoManager;
 
-    /***
-     * 1分钟同步一次
-     */
-    @Scheduled(cron = "${task.today.schedule}")
-    public void today(){
+
+
+    @Scheduled(cron = "${task.cczq.zaopan}")
+    public void zaopan(){
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
-        dongfangManager.getKline("399006", "5",System.currentTimeMillis());
+        GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m", DateTimeUtil.getBeforeDay(0)+" 09:35");
+        if (gupiaoKline.getClose()>gupiaoKline.getOpen() && gupiaoKline.getPercent()>0.3){ //阳线且大于0.3
+            log.info("触发购买");
+            log.info("触发网格交易");
+        } else {
+            log.info("触发清仓");
+        }
     }
 
+    @Scheduled(cron = "${task.cczq.wanpan}")
+    public void wanpan(){
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m", DateTimeUtil.getBeforeDay(0)+" 09:35");
+        //根据目前的账户情况，卖出或买入 建议对应的日志，根据日志统计。
+        if (gupiaoKline.getClose()>gupiaoKline.getOpen() && gupiaoKline.getPercent()>0.3){ //阳线且大于0.3
+            log.info("触发购买");
+            log.info("触发网格交易");
+        } else {
+            log.info("触发清仓");
+        }
+    }
 
 }

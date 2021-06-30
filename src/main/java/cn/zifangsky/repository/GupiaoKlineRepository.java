@@ -13,4 +13,6 @@ public interface GupiaoKlineRepository extends JpaRepository<GupiaoKline,Integer
 
     GupiaoKline findBySymbolAndPeriodAndBizDate(String bondId, String period, String bizDate);
 
+
+
 }
