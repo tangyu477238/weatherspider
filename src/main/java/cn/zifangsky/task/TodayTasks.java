@@ -31,22 +31,6 @@ public class TodayTasks {
 
     private final Format FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @Value("${mq.topicName.checkIP}")
-    private String checkIPTopicName;
-
-    @Value("${mq.topicName.weather}")
-    private String weatherTopicName;
-
-    @Resource(name="proxyIpManager")
-    private ProxyIpManager proxyIpManager;
-
-
-    @Resource(name="checkIPSender")
-    private CheckIPSender checkIPSender;
-
-
-    @Resource(name="crawlManager")
-    private CrawlManager crawlManager;
 
     @Value("${mq.consumer.off}")
     private String consumerOff;

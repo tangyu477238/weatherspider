@@ -13,7 +13,36 @@ import java.net.URLEncoder;
 @Slf4j
 public class LoginTest {
 
-    private String access_token="797751deeba14260842301bb2f0fd9ce";
+    private String access_token="945e732c72cc4e519bda9655bb2e0b12";
+
+
+
+
+
+
+    /***
+     * deleteAllMyYmd
+     * @throws Exception
+     */
+    @Test
+    public void deleteAllMyYmd() throws Exception{
+
+        Login.deleteAllMyYmd(access_token);
+
+    }
+
+
+
+    /***
+     * 查询仓位
+     * @throws Exception
+     */
+    @Test
+    public void queryMyStockAmount() throws Exception{
+
+        Login.queryMyStockAmount(access_token);
+
+    }
 
     @Test
     public void gridYmd() throws Exception{
@@ -137,10 +166,5 @@ public class LoginTest {
 
         Login.stopProfitAndLoss(stock_code, stock_name, base_price,stop_profit_rate, stop_loss_rate, stop_loss_price, stop_profit_price,  current_price, entrust_amount, access_token);
     }
-
-
-
-
-
 
 }

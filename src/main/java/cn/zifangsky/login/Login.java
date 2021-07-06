@@ -1,7 +1,12 @@
 package cn.zifangsky.login;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringEscapeUtils;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.net.URLEncoder;
 
 @Slf4j
@@ -19,6 +24,245 @@ public class Login {
     static String fund_account = "8505202";
     static String h_stock_account = "A137585140";
     static String s_stock_account = "0302248604";
+
+
+    /****
+     * 可用仓位
+     * @param access_token
+     * @return
+     * @throws Exception
+     */
+    public static int getEnableAmountCyb(String access_token, String stock_code) throws Exception{
+        return JSONUtil.parseObj(queryStockEnablelNum(access_token, stock_code)).getJSONObject("data").getInt("enable_amount");
+    }
+
+    /**
+     * 当前仓位
+     * @param access_token
+     * @param stock_code
+     * @return
+     * @throws Exception
+     */
+    public static int getCurrentAmountCyb(String access_token, String stock_code) throws Exception{
+        return  JSONUtil.parseObj(queryStockEnablelNum(access_token, stock_code)).getJSONObject("data").getInt("current_amount");
+    }
+
+
+    /****
+     * 补仓
+     * @param access_token
+     * @return
+     * @throws Exception
+     */
+    public static int buchongStockNum(String access_token) throws Exception{
+        String stock_code = "159949";
+        Integer enableAmount = getEnableAmountCyb(access_token, stock_code);
+        Integer currentAmount = getCurrentAmountCyb(access_token, stock_code);
+        Integer initNum = 4000;
+        if (currentAmount<initNum) { //当前<4000 需要补充仓位
+            return currentAmount-initNum;
+        }
+        //当前(6000)>4000 ,可用仓位(2000) > (6000-4000)
+        if (currentAmount>initNum && enableAmount>0){
+            return enableAmount < (currentAmount - initNum) ? enableAmount:(currentAmount - initNum);
+        }
+        return 0;
+    }
+
+    /****
+     * getNewPriceCyb
+     * 最新价格
+     */
+    public static Double getNewPriceCyb() throws Exception{
+        String stock_code = "159949";
+        String stock_name = "创业板50";
+        Double newPrice = Double.parseDouble(getNewPrice(stock_code));
+        return newPrice;
+    }
+
+
+
+
+    /****
+     * 定价卖出
+
+     */
+    public static void hungSellCyb(String access_token, String original_price, String current_price, int entrust_amount) throws Exception{
+
+        String stock_code = "159949";
+        String stock_name = "创业板50";
+//        String original_price = ""; //触发价格
+//        String current_price = original_price; //当前价格(无效)
+//        int entrust_amount = 2000; //委托数
+
+        Login.hungSell(stock_code, stock_name, original_price, current_price, entrust_amount, access_token);
+    }
+
+    /****
+     * 挂单买入
+
+     */
+    public static void hungBuyCyb(String access_token, String original_price, String current_price,int entrust_amount) throws Exception{
+
+        String stock_code = "159949";
+        String stock_name = "创业板50";
+//        String original_price = original_price; //触发价格
+//        String current_price = current_price; //当前价格
+//        int entrust_amount = 2000; //委托数
+
+        Login.hungBuy(stock_code, stock_name, original_price, current_price, entrust_amount, access_token);
+    }
+
+    /***
+     * 创建创业板表格
+     * @param access_token
+     * @param base_price
+     * @return
+     * @throws Exception
+     */
+    public static String gridYmdCyb(String access_token,String base_price) throws Exception{
+        String stock_code = "159949";
+        String stock_name = "创业板50";
+//        String base_price  = "1.500"; //基准价格
+        String lower_limit = "1.000";
+        String upper_limit = "2.000";
+        String increase = "1.00";
+        String decrease = "1.00";
+        String close_after_entrust_failure= "false";
+
+        String current_price= base_price;
+        int position_upper_limit=10000;
+        int position_lower_limit=1000;
+        int entrust_amount = 1000; //委托数
+        String json = Login.gridYmd( stock_code,  stock_name,  base_price, lower_limit, upper_limit,increase, decrease, close_after_entrust_failure,
+                current_price,  position_upper_limit,  position_lower_limit,  entrust_amount,  access_token);
+        return JSONUtil.parseObj(json).getStr("data");
+    }
+
+
+    /****
+     * getNewPrice
+
+     */
+    public static String getNewPrice(String stock_code) throws Exception{
+        int exchange_type = (!stock_code.startsWith("60") && !stock_code.startsWith("11") && !stock_code.startsWith("51"))  ? 2 : 1; //深/沪
+        String url = "https://tjd.cczq.com:5000/cczq/biz/v/getCodeInfosByExchangeType?codes="+stock_code+"."+exchange_type;
+        String httpOrgCreateTestRtn = HttpClientUtil.get(url);
+        log.info(httpOrgCreateTestRtn);
+        String str = StringEscapeUtils.unescapeJava(httpOrgCreateTestRtn);
+        log.info(str);
+        //只去两端的如下两行
+        str = str.substring(13,str.length()-2);
+        log.info(str);
+        JSONObject jsonObject = JSONUtil.parseObj(str);
+        return jsonObject.getStr("newPrice");
+    }
+
+    /***
+     *  仓位情况
+     * @param access_token
+     * @return
+     * @throws Exception
+     */
+    public static String queryMyStockAmount(String access_token) throws Exception{
+
+        String op_station = "MA;IIP:111.196.241.22;IPORT:NA;LIP:192.168.16.10;MAC:5CC307738AE8;IMEI:NA;RMPN:13552379492;UMPN:+8613552379492;ICCID:NA;OSV:ANDROID10;IMSI:NA@TDXADR;V5.00;HSTJD";
+        op_station = URLEncoder.encode(op_station, "UTF-8");
+        String ext = "{\"channel\":null}";
+        ext = URLEncoder.encode(ext, "UTF-8");
+        String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryMyStockAmount?comp_id="+comp_id+"&hs_openid="+hs_openid
+                +"&access_token="+access_token+"&fund_account="+fund_account+"&op_station="+op_station+"&ext="+ext;
+        log.info("");
+        log.info(url);
+        log.info("");
+        String httpOrgCreateTestRtn = HttpClientUtil.get(url);
+        log.info(httpOrgCreateTestRtn);
+        return httpOrgCreateTestRtn;
+    }
+
+    /***
+     * 清除任务
+     * @param access_token
+     * @throws Exception
+     */
+    public static void deleteAllMyYmd(String access_token) throws Exception{
+        String json = queryMyYmdForPage(access_token);
+        JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
+        for (Object object : jsonArray){
+            JSONObject jsonObject = (JSONObject)object;
+            String ymdId = jsonObject.getJSONObject("ymd_base").getStr("ymd_id");
+            deleteYmd(ymdId,access_token);
+        }
+//
+    }
+
+    /***
+     *  监控的计划
+     * @param access_token
+     * @return
+     * @throws Exception
+     */
+    public static String queryMyYmdForPage(String access_token) throws Exception{
+
+
+        String page_start_p1="";
+        String page_start_p2="";
+        String page_size="10";
+        String search_status="1";
+        String stock_code="";
+        String cep_type="1";
+
+        String date_type="5";
+        String order_column="update_datetime";
+        String order_direction="desc";
+
+        String op_station = "MA;IIP:111.196.241.22;IPORT:NA;LIP:192.168.16.10;MAC:5CC307738AE8;IMEI:NA;RMPN:13552379492;UMPN:+8613552379492;ICCID:NA;OSV:ANDROID10;IMSI:NA@TDXADR;V5.00;HSTJD";
+        op_station = URLEncoder.encode(op_station, "UTF-8");
+        String ext = "{\"channel\":null}";
+        ext = URLEncoder.encode(ext, "UTF-8");
+        String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryMyYmdForPage?page_start_p1="+page_start_p1
+                +"&page_start_p2="+page_start_p2+"&page_size="+page_size+"&search_status="+search_status
+                +"&stock_code="+stock_code+"&cep_type="+cep_type
+                +"&strategy_ids=8%2C34%2C35%2C16%2C9%2C7%2C15%2C22%2C12&date_type="+date_type
+                +"&order_column="+order_column+"&order_direction="+order_direction+"&comp_id="+comp_id+"&hs_openid="+hs_openid
+                +"&access_token="+access_token+"&fund_account="+fund_account+"&op_station="+op_station+"&ext="+ext;
+        log.info("");
+        log.info(url);
+        log.info("");
+        String httpOrgCreateTestRtn = HttpClientUtil.get(url);
+        log.info(httpOrgCreateTestRtn);
+        return httpOrgCreateTestRtn;
+    }
+
+
+    /***
+     * 获取当前仓位和可用仓位
+     * @param access_token
+     * @return
+     * @throws Exception
+     */
+    public static String queryStockEnablelNum(String access_token, String stock_code) throws Exception{
+
+        int exchange_type = (!stock_code.startsWith("60") && !stock_code.startsWith("11") && !stock_code.startsWith("51"))  ? 2 : 1; //深/沪
+        String stock_account = (!stock_code.startsWith("60") && !stock_code.startsWith("11") && !stock_code.startsWith("51"))? s_stock_account : h_stock_account; //沪市或深市
+
+        String op_station = "MA;IIP:111.196.241.22;IPORT:NA;LIP:192.168.16.10;MAC:5CC307738AE8;IMEI:NA;RMPN:13552379492;UMPN:+8613552379492;ICCID:NA;OSV:ANDROID10;IMSI:NA@TDXADR;V5.00;HSTJD";
+        op_station = URLEncoder.encode(op_station, "UTF-8");
+        String ext = "{\"channel\":null}";
+        ext = URLEncoder.encode(ext, "UTF-8");
+        String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryStockEnablelNum?stock_code="+stock_code
+                +"&exchange_type="+exchange_type+"&stock_account="+stock_account+"&comp_id="+comp_id+"&hs_openid="+hs_openid
+                +"&access_token="+access_token+"&fund_account="+fund_account+"&op_station="+op_station+"&ext="+ext;
+
+        log.info("");
+        log.info(url);
+        log.info("");
+        String httpOrgCreateTestRtn = HttpClientUtil.get(url);
+        log.info(httpOrgCreateTestRtn);
+        return httpOrgCreateTestRtn;
+    }
+
+
 
 
 
