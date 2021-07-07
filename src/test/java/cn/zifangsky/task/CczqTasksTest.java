@@ -1,7 +1,5 @@
 package cn.zifangsky.task;
 
-import cn.zifangsky.login.Login;
-import cn.zifangsky.manager.GupiaoManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,14 +14,18 @@ import javax.annotation.Resource;
 public class CczqTasksTest {
     @Resource
     private CczqTasks cczqTasks;
-    /***
-     * deleteAllMyYmd
-     * @throws Exception
-     */
+
     @Test
     public void zaopan() throws Exception{
 
         cczqTasks.zaopan();
+
+    }
+
+    @Test
+    public void wanpan() throws Exception{
+
+        cczqTasks.wanpan();
 
     }
 }

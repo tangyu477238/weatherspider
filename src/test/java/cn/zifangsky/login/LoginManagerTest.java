@@ -6,17 +6,16 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.net.URLEncoder;
+import javax.annotation.Resource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class LoginTest {
-
-    private String access_token="945e732c72cc4e519bda9655bb2e0b12";
+public class LoginManagerTest {
 
 
-
+    @Resource
+    private LoginManager loginManager;
 
 
 
@@ -27,7 +26,7 @@ public class LoginTest {
     @Test
     public void deleteAllMyYmd() throws Exception{
 
-        Login.deleteAllMyYmd(access_token);
+        loginManager.deleteAllMyYmd();
 
     }
 
@@ -40,7 +39,7 @@ public class LoginTest {
     @Test
     public void queryMyStockAmount() throws Exception{
 
-        Login.queryMyStockAmount(access_token);
+        loginManager.queryMyStockAmount ();
 
     }
 
@@ -68,8 +67,8 @@ public class LoginTest {
         int position_upper_limit=10000;
         int position_lower_limit=1000;
         int entrust_amount = 1300; //委托数
-        Login.gridYmd( stock_code,  stock_name,  base_price, lower_limit, upper_limit,increase, decrease, close_after_entrust_failure,
-                current_price,  position_upper_limit,  position_lower_limit,  entrust_amount,  access_token);
+        loginManager.gridYmd( stock_code,  stock_name,  base_price, lower_limit, upper_limit,increase, decrease, close_after_entrust_failure,
+                current_price,  position_upper_limit,  position_lower_limit,  entrust_amount);
 
     }
 
@@ -89,7 +88,7 @@ public class LoginTest {
 
         String current_price = "1.60"; //当前价格(无效)public void avgLineYmd() throws Exception{
         int entrust_amount = 100; //委托数
-        Login.avgLineYmd(stock_code, stock_name, trigger_mode,avg_line,duration,entrust_bs, current_price, entrust_amount, access_token);
+        loginManager.avgLineYmd(stock_code, stock_name, trigger_mode,avg_line,duration,entrust_bs, current_price, entrust_amount);
 
     }
 
@@ -100,7 +99,7 @@ public class LoginTest {
     public void deleteYmd() throws Exception{
 //        String access_token = "8b62a82e2f074d6c821557ee38334400";
         String ymd_id ="25842";
-        Login.deleteYmd(ymd_id, access_token);
+        loginManager.deleteYmd(ymd_id);
     }
 
 
@@ -123,7 +122,7 @@ public class LoginTest {
         String current_price = "5.30"; //当前价格(无效)
         int entrust_amount = 100; //委托数
 
-        Login.hungBuy(stock_code, stock_name, original_price, current_price, entrust_amount, access_token);
+        loginManager.hungBuy(stock_code, stock_name, original_price, current_price, entrust_amount);
     }
 
 
@@ -141,7 +140,7 @@ public class LoginTest {
         String current_price = "1.503"; //当前价格(无效)
         int entrust_amount = 100; //委托数
 
-        Login.hungSell(stock_code, stock_name, original_price, current_price, entrust_amount, access_token);
+        loginManager.hungSell(stock_code, stock_name, original_price, current_price, entrust_amount);
     }
 
     /****
@@ -164,7 +163,7 @@ public class LoginTest {
         String current_price = "1.503";
         int entrust_amount = 100; //委托数
 
-        Login.stopProfitAndLoss(stock_code, stock_name, base_price,stop_profit_rate, stop_loss_rate, stop_loss_price, stop_profit_price,  current_price, entrust_amount, access_token);
+        loginManager.stopProfitAndLoss(stock_code, stock_name, base_price,stop_profit_rate, stop_loss_rate, stop_loss_price, stop_profit_price,  current_price, entrust_amount);
     }
 
 }
