@@ -1,6 +1,7 @@
 package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
+import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.model.XueqiuGupiao;
@@ -31,8 +32,8 @@ public class DongfangManagerImpl implements DongfangManager {
     @Resource(name="dongfangKlinePipeline")
     private DongfangKlinePipeline dongfangKlinePipeline;
 
-    @Resource(name="xueqiuGupiaoPipeline")
-    private XueqiuGupiaoPipeline xueqiuGupiaoPipeline;
+//    @Resource(name="xueqiuGupiaoPipeline")
+//    private XueqiuGupiaoPipeline xueqiuGupiaoPipeline;
 
 
     /****
@@ -41,10 +42,10 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void listGupiaoData() {
-        OOSpider.create(new XueqiuSpider()).addPipeline(xueqiuGupiaoPipeline)
+        OOSpider.create(new DongfangSpider()).addPipeline(dongfangKlinePipeline)
 				.setDownloader(httpClientManager.getHttpClientDownloader())
-                .addUrl("https://xueqiu.com/service/v5/stock/screener/quote/list?page=1&size=5000&order=desc&orderby=percent&order_by=percent&market=CN&type=sh_sz&_=1606612746025")
-                .thread(1)
+                .addUrl("http://14.push2.eastmoney.com/api/qt/clist/get?cb=jQuery112400669458161096197_1625868279098&pn=1&pz=20&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f12,f13,f14,f15,f16,f17,f18,f20,f21,f23,f24,f25,f22,f11,f62,f128,f136,f115,f152&_=1625868279108")
+                .thread(3)
                 .run();
     }
 
@@ -54,15 +55,24 @@ public class DongfangManagerImpl implements DongfangManager {
      * @param period k线类型
      */
     @Override
-    public void getKline(String bondId, String period, long timestamp) {
+    public void getKline(String bondId, String period, boolean flag) {
+        int exchange_type =  StockUtil.isShenshi(bondId)  ? 0 : 1; //深/沪
+
         String url = "http://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6" +
                 "&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989" +
-                "&klt="+period+"&fqt=1&secid=0."+bondId+"&beg=0&end=20500000&_=1618930055730";
+                "&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg=0&end=20500000&_=1618930055730";
         log.info(url);
+        if (flag){
+            OOSpider.create(new DongfangSpider()).addPipeline(dongfangKlinePipeline)
+                    .addUrl(url)
+                    .thread(1)
+                    .run();
+            return;
+        }
         OOSpider.create(new DongfangSpider()).addPipeline(dongfangKlinePipeline)
                 .setDownloader(httpClientManager.getHttpClientDownloader())
                 .addUrl(url)
-                .thread(1)
+                .thread(3)
                 .run();
     }
 

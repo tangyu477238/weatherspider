@@ -27,12 +27,11 @@ public class GupiaoKlineSender {
 	 * @param gupiaoKline  消息内容
 	 */
 	public void send(GupiaoKline gupiaoKline){
-        log.info(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，Kline：{1}",topicName, gupiaoKline));
+
         try {
             String p = String.valueOf(new Random().nextInt(100) + 1);
             ProducerRecord producerRecord = new ProducerRecord<String, Object>(topicName, p , gupiaoKline);
             kafkaTemplate.send(producerRecord);
-            log.info("推送数据成功！");
         } catch (Exception e) {
             log.error(MessageFormat.format("推送数据出错，topicName:{0},Kline:{1}"
                     ,topicName, gupiaoKline),e);

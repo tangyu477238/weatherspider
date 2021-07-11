@@ -6,6 +6,7 @@ import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.mq.producer.GupiaoKlineSender;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
@@ -21,6 +22,7 @@ import java.util.Map;
  *
  */
 @Component("dongfangKlinePipeline")
+@Slf4j
 public class DongfangKlinePipeline implements Pipeline {
 
 	@Resource(name="gupiaoKlineSender")
@@ -32,7 +34,7 @@ public class DongfangKlinePipeline implements Pipeline {
 	@Override
 	public void process(ResultItems resultItems, Task task) {
 
-		long timestamp = System.currentTimeMillis();
+//		long timestamp = System.currentTimeMillis();
 		String result = resultItems.get("result");
 		result = result.split("\\(")[1].split("\\)")[0];
 		JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
@@ -42,6 +44,7 @@ public class DongfangKlinePipeline implements Pipeline {
 		String symbol = object.getString("code");
 		String period = map.get("klt");
 		JSONArray jsonArray = object.getJSONArray("klines");
+		log.info(jsonArray.toJSONString());
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			String jsonArray1[] = jsonArray.get(i).toString().split(",");
 			GupiaoKline kzz1 = new GupiaoKline();

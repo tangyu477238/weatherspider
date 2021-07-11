@@ -15,6 +15,8 @@ public class CczqTasksTest {
     @Resource
     private CczqTasks cczqTasks;
 
+
+
     @Test
     public void zaopan() throws Exception{
 
@@ -26,6 +28,13 @@ public class CczqTasksTest {
     public void wanpan() throws Exception{
 
         cczqTasks.wanpan();
+
+    }
+
+    @Test
+    public void xintiao() throws Exception{
+
+        cczqTasks.xintiao();
 
     }
 }

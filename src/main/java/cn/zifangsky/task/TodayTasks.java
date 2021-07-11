@@ -32,7 +32,7 @@ public class TodayTasks {
     private final Format FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
-    @Value("${mq.consumer.off}")
+    @Value("${mq.kline.off}")
     private String consumerOff;
 
 
@@ -48,7 +48,7 @@ public class TodayTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
-        dongfangManager.getKline("399006", "5",System.currentTimeMillis());
+        dongfangManager.getKline("399006", "5",false);
     }
 
 

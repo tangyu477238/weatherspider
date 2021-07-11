@@ -1,7 +1,9 @@
 package cn.zifangsky.task;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.login.LoginManager;
+import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.GupiaoKline;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,9 @@ public class CczqTasks {
     private GupiaoManager gupiaoManager;
 
     @Resource
+    private DongfangManager dongfangManager;
+
+    @Resource
     private LoginManager loginManager;
 
     String stock_code = "159949";
@@ -45,6 +50,11 @@ public class CczqTasks {
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
         GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m", DateTimeUtil.getBeforeDay(0)+" 09:35");
+        if (ComUtil.isEmpty(gupiaoKline)){
+            dongfangManager.getKline("399006", "5",true);
+            Thread.sleep(60000);
+            gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m", DateTimeUtil.getBeforeDay(0)+" 09:35");
+        }
         double newPrice = loginManager.getNewPriceCyb(); //获取最新价格
         if (gupiaoKline.getClose()>gupiaoKline.getOpen() && gupiaoKline.getPercent()>0.3){ //阳线且大于0.3
             String original_price = String.valueOf(newPrice+0.001); //获取触发价格

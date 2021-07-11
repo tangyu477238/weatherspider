@@ -144,7 +144,7 @@ public class LoginManager {
 
      */
     public String getNewPrice(String stock_code) throws Exception{
-        int exchange_type =  isShenshi(stock_code)  ? 2 : 1; //深/沪
+        int exchange_type =  StockUtil.isShenshi(stock_code)  ? 2 : 1; //深/沪
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/getCodeInfosByExchangeType?codes="+stock_code+"."+exchange_type;
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
         log.info(httpOrgCreateTestRtn);
@@ -477,11 +477,9 @@ public class LoginManager {
     }
 
     private String stockAccount(String stock_code){
-        int exchange_type = isShenshi(stock_code)  ? 2 : 1; //深/沪
-        String stock_account =  isShenshi(stock_code) ? s_stock_account : h_stock_account; //沪市或深市
+        int exchange_type = StockUtil.isShenshi(stock_code)  ? 2 : 1; //深/沪
+        String stock_account =  StockUtil.isShenshi(stock_code) ? s_stock_account : h_stock_account; //沪市或深市
         return "&exchange_type="+exchange_type+"&stock_account="+stock_account;
     }
-    private boolean isShenshi(String stock_code){
-        return !stock_code.startsWith("60") && !stock_code.startsWith("11") && !stock_code.startsWith("51");
-    }
+
 }
