@@ -1,5 +1,6 @@
 package cn.zifangsky.mq.consumer;
 
+import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.ProxyIp;
 import cn.zifangsky.model.bo.ProxyIpBO;
@@ -64,28 +65,42 @@ public class CheckIPReceiver {
 
 
 	private void runCheckIp(ProxyIpBO proxyIpBO){
+		Runnable run = new ProxyRunnable(proxyIpBO);
+		ExecutorProcessPool.getInstance().executeByCustomThread(run);
 
-		// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
-		if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
-			// 1 查询该IP是否已存在
-			ProxyIp oldIP = proxyIpManager.selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
-			if (oldIP != null){
-				return ;
-			}
-			if (CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-				// 2如果不存在则插入数据
-				proxyIpBO.setUsed(false);
-				try {
-					proxyIpManager.insert(proxyIpBO);
-				} catch (Exception e) {
-					log.info("");
+
+	}
+
+
+	public class ProxyRunnable implements Runnable{
+		private ProxyIpBO proxyIpBO;
+		public ProxyRunnable(ProxyIpBO proxyIpBO){
+			this.proxyIpBO=proxyIpBO;
+		}
+		@Override
+		public void run(){
+			// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
+			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
+				// 1 查询该IP是否已存在
+				ProxyIp oldIP = proxyIpManager.selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
+				if (oldIP != null){
+					return ;
 				}
-			}
-		} else if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
-			log.info("检查ip的有效性");
-			// 不能使用则删除
-			if (!CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-				proxyIpManager.deleteByPrimaryKey(proxyIpBO.getId());
+				if (CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
+					// 2如果不存在则插入数据
+					proxyIpBO.setUsed(false);
+					try {
+						proxyIpManager.insert(proxyIpBO);
+					} catch (Exception e) {
+						log.info("");
+					}
+				}
+			} else if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
+				log.info("检查ip的有效性");
+				// 不能使用则删除
+				if (!CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
+					proxyIpManager.deleteByPrimaryKey(proxyIpBO.getId());
+				}
 			}
 		}
 	}

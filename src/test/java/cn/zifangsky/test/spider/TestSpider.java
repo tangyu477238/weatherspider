@@ -56,19 +56,9 @@ public class TestSpider{
      */
     @Test
     public void crawlProxyIp1(){
-        crawlManager.proxyIPCrawl();
+        crawlManager.proxyIPCrawl(true);
     }
 
-    /**
-     * 测试通过接口2获取代理IP
-     * @author zifangsky
-     * @date 2018/6/21 14:13
-     * @since 1.0.0
-     */
-    @Test
-    public void crawlProxyIp2(){
-        crawlManager.proxyIPCrawl2();
-    }
 
 
     @Test
