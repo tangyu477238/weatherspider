@@ -1,7 +1,11 @@
 package cn.zifangsky.mq.consumer;
 
+import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.GupiaoKline;
+import cn.zifangsky.model.ProxyIp;
+import cn.zifangsky.model.bo.ProxyIpBO;
+import cn.zifangsky.spider.CheckIPUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -65,6 +69,18 @@ public class GupiaoKlineReceiver {
 
 
 	private void saveGupiaoKline(GupiaoKline gupiaoKline){
-		gupiaoManager.saveKline(gupiaoKline);
+		Runnable run = new GupiaoKlineRunnable(gupiaoKline);
+		ExecutorProcessPool.getInstance().executeByCustomThread(run);
+	}
+
+	public class GupiaoKlineRunnable implements Runnable{
+		private GupiaoKline gupiaoKline;
+		public GupiaoKlineRunnable(GupiaoKline gupiaoKline){
+			this.gupiaoKline=gupiaoKline;
+		}
+		@Override
+		public void run(){
+			gupiaoManager.saveKline(gupiaoKline);
+		}
 	}
 }

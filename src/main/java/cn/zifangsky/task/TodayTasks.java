@@ -48,7 +48,7 @@ public class TodayTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
-        dongfangManager.getKline("399006", "5",false);
+        dongfangManager.getKline("399006", "5",true);
     }
 
     /***
@@ -59,7 +59,7 @@ public class TodayTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
-        dongfangManager.getKline("000002", "101",false);
+        dongfangManager.getKline("000002", "101",true);
     }
 
 

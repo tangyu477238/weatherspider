@@ -51,7 +51,7 @@ public class DongfangManagerImplTest  {
 
     @Test
     public void getKline() {
-		dongfangManager.getKline("000002", "101",false);
+		dongfangManager.getKline("000002", "101",true);
     }
 
 

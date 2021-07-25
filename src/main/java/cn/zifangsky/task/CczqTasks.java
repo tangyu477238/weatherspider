@@ -62,11 +62,13 @@ public class CczqTasks {
     private void zaopan(boolean flag) throws Exception{
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
-        GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m", DateTimeUtil.getBeforeDay(0)+" 09:35");
+        GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m",
+                DateTimeUtil.getBeforeDay(0)+" 09:35");
         if (ComUtil.isEmpty(gupiaoKline)){
-            dongfangManager.getKline("399006", "5",true);
+            dongfangManager.getKline("399006", "5",false);
             Thread.sleep(60000);
-            gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m", DateTimeUtil.getBeforeDay(0)+" 09:35");
+            gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m",
+                    DateTimeUtil.getBeforeDay(0)+" 09:35");
         }
         double newPrice = loginManager.getNewPriceCyb(); //获取最新价格
 

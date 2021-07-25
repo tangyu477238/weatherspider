@@ -73,6 +73,6 @@ public class GupiaoReceiver {
 
 	private void saveGupiao(Gupiao gupiao){
 		try { gupiaoManager.saveGupiao(gupiao); }catch (Exception e){}
-		try { dongfangManager.getKline(gupiao.getSymbol(),"101",false); }catch (Exception e){}
+		try { dongfangManager.getKline(gupiao.getSymbol(),"101",true); }catch (Exception e){}
 	}
 }
