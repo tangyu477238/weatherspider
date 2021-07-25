@@ -53,7 +53,7 @@ public class CrawlManagerImpl implements CrawlManager {
 		try {
 			OOSpider.create(new ProxyIPSpider9())
 					.addUrl("https://www.kuaidaili.com/free/inha/1/").addPipeline(proxyIPPipeline)
-					.thread(5)
+					.thread(1)
 					.run();
 		} catch (Exception e) {
 			e.printStackTrace();

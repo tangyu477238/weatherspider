@@ -1,18 +1,16 @@
 package cn.zifangsky.manager;
 
-import cn.zifangsky.model.XueqiuGupiao;
-import cn.zifangsky.model.GupiaoKline;
-
 public interface DongfangManager {
 
+	//更新所有股票信息
 	void listGupiaoData();
-//	void getDataXueqiuDetail(String bondId);
 
+	//获取K线信息
 	void getKline(String bondId, String period, boolean flag);
 
-	void saveXueqiuKline(GupiaoKline gupiaoKline);
 
-	void saveGupiao(XueqiuGupiao xueqiuGupiao);
+
+
 
 
 }

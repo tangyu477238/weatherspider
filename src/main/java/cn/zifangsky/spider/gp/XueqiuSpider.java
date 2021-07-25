@@ -2,6 +2,8 @@ package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.spider.HttpClientUtil;
 import cn.zifangsky.spider.UserAgentUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
@@ -40,7 +42,10 @@ public class XueqiuSpider implements PageProcessor{
 	@Override
 	public void process(Page page) {
 		Json json= page.getJson();
-		page.putField("result", json.toString());
+
+		String result = json.toString();
+		JSONArray jsonArray = JSONObject.parseObject(result).getJSONObject("data").getJSONArray("list");
+		page.putField("result",jsonArray.toString());
 	}
 
 

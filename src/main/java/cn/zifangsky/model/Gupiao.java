@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "xueqiu_gupiao")
-public class XueqiuGupiao  implements Serializable {
+@Table(name = "gupiao")
+public class Gupiao implements Serializable {
 
 
     @Id

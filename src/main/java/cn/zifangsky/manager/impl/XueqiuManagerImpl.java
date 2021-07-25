@@ -3,28 +3,28 @@ package cn.zifangsky.manager.impl;
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.manager.XueqiuManager;
-import cn.zifangsky.model.XueqiuGupiao;
 import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.repository.GupiaoKlineRepository;
-import cn.zifangsky.repository.XueqiuGupiaoRepository;
+import cn.zifangsky.repository.GupiaoRepository;
 import cn.zifangsky.spider.gp.XueqiuGupiaoKlinePipeline;
-import cn.zifangsky.spider.gp.XueqiuGupiaoPipeline;
+import cn.zifangsky.spider.gp.GupiaoPipeline;
 import cn.zifangsky.spider.gp.XueqiuSpider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.model.OOSpider;
 
 import javax.annotation.Resource;
 
 @Slf4j
-@Service("xueqiuManager")
+@Service
 public class XueqiuManagerImpl implements XueqiuManager {
 
     @Resource(name = "gupiaoKlineRepository")
     private GupiaoKlineRepository gupiaoKlineRepository;
 
     @Resource
-    private XueqiuGupiaoRepository xueqiuGupiaoRepository;
+    private GupiaoRepository gupiaoRepository;
 
 
     @Resource(name="httpClientManager")
@@ -33,8 +33,8 @@ public class XueqiuManagerImpl implements XueqiuManager {
     @Resource(name="xueqiuGupiaoKlinePipeline")
     private XueqiuGupiaoKlinePipeline xueqiuGupiaoKlinePipeline;
 
-    @Resource(name="xueqiuGupiaoPipeline")
-    private XueqiuGupiaoPipeline xueqiuGupiaoPipeline;
+    @Autowired
+    private GupiaoPipeline gupiaoPipeline;
 
 
     /****
@@ -43,7 +43,7 @@ public class XueqiuManagerImpl implements XueqiuManager {
      */
     @Override
     public void listGupiaoData() {
-        OOSpider.create(new XueqiuSpider()).addPipeline(xueqiuGupiaoPipeline)
+        OOSpider.create(new XueqiuSpider()).addPipeline(gupiaoPipeline)
 				.setDownloader(httpClientManager.getHttpClientDownloader())
                 .addUrl("https://xueqiu.com/service/v5/stock/screener/quote/list?page=1&size=5000&order=desc&orderby=percent&order_by=percent&market=CN&type=sh_sz&_=1606612746025")
                 .thread(1)
@@ -78,21 +78,6 @@ public class XueqiuManagerImpl implements XueqiuManager {
     }
 
 
-    /***
-     * 股票数据存储
-     * @param gupiao
-     */
-    @Override
-    public void saveGupiao(XueqiuGupiao gupiao) {
-        XueqiuGupiao kzz1 = xueqiuGupiaoRepository.findBySymbol(gupiao.getSymbol());
-        if (kzz1 != null){
-            gupiao.setId(kzz1.getId());
-        }
-        xueqiuGupiaoRepository.save(gupiao);
-
-
-
-    }
 
     /***
      * 股票k线数据存储

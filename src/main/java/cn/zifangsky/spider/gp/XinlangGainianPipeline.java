@@ -1,12 +1,8 @@
 package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.common.ComUtil;
-import cn.zifangsky.model.XueqiuGupiao;
 import cn.zifangsky.model.XueqiuGupiaoGainian;
-import cn.zifangsky.mq.producer.GupiaoSender;
 import cn.zifangsky.repository.XueqiuGupiaoGainianRepository;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.ResultItems;

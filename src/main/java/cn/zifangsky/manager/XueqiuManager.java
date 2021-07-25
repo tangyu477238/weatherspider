@@ -1,6 +1,6 @@
 package cn.zifangsky.manager;
 
-import cn.zifangsky.model.XueqiuGupiao;
+import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.GupiaoKline;
 
 public interface XueqiuManager {
@@ -12,7 +12,7 @@ public interface XueqiuManager {
 
 	void saveXueqiuKline(GupiaoKline gupiaoKline);
 
-	void saveGupiao(XueqiuGupiao xueqiuGupiao);
+
 
 
 }

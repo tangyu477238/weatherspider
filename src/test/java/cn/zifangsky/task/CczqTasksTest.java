@@ -15,7 +15,23 @@ public class CczqTasksTest {
     @Resource
     private CczqTasks cczqTasks;
 
+    @Resource
+    private TodayTasks todayTasks;
 
+
+    @Test
+    public void todayByDay() throws Exception{
+
+        todayTasks.todayByDay();
+
+    }
+
+    @Test
+    public void zaopanCheck() throws Exception{
+
+        cczqTasks.zaopanCheck();
+
+    }
 
     @Test
     public void zaopan() throws Exception{

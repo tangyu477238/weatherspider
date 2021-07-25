@@ -39,6 +39,19 @@ public class ProxyIPTasks {
     private String consumerOff;
 
 
+    /**
+     * 代理IP定时获取任务3
+     * @author zifangsky
+     * @date 2018/6/21 13:53
+     * @since 1.0.0
+     */
+    @Scheduled(cron = "${task.crawlProxyIp_3.schedule}")
+    public void crawlProxyIpTask3(){
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
+        crawlManager.proxyIPCrawl();
+    }
 
     /**
      * 代理IP定时获取任务1
