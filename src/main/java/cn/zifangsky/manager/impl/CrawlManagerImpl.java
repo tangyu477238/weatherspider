@@ -7,7 +7,9 @@ import cn.zifangsky.spider.gp.JslPipeline;
 import cn.zifangsky.spider.gp.JslSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.model.OOSpider;
+import us.codecraft.webmagic.processor.PageProcessor;
 
 import javax.annotation.Resource;
 @Slf4j
@@ -44,94 +46,42 @@ public class CrawlManagerImpl implements CrawlManager {
 	*****/
 
 
-
-
-
-
-	@Override
-	public void proxyIPCrawl() {
+	/**
+	 * 启动抓取数据
+	 * @param pageProcessor
+	 * @param url
+	 * @param proxyFlag
+	 */
+	private void runSpider(PageProcessor pageProcessor, String url, boolean proxyFlag) {
 		try {
-			OOSpider.create(new ProxyIPSpider9())
-					.addUrl("https://www.kuaidaili.com/free/inha/1/").addPipeline(proxyIPPipeline)
-					.thread(1)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			OOSpider.create(new ProxyIPSpider()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("https://ip.jiangxianli.com/?page=1").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		try {
-			OOSpider.create(new ProxyIPSpider3()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			OOSpider.create(new ProxyIPSpider5()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("http://www.xiladaili.com/gaoni/").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			OOSpider.create(new ProxyIPSpider5()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("http://www.xiladaili.com/http/").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			OOSpider.create(new ProxyIPSpider5()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("http://www.xiladaili.com/https/").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-
-
-
-	}
-
-	@Override
-	public void proxyIPCrawl2() {
-		try {
-			OOSpider.create(new ProxyIPSpider2()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("http://www.89ip.cn/index_1.html").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			OOSpider.create(new ProxyIPSpider4()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("http://www.66ip.cn/1.html").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			OOSpider.create(new ProxyIPSpider6()).setDownloader(httpClientManager.getHttpClientDownloader())
-					.addUrl("http://www.ip3366.net/?stype=1&page=1").addPipeline(proxyIPPipeline)
-					.thread(2)
-					.run();
+			Spider spider = OOSpider.create(pageProcessor)
+					.addUrl(url).addPipeline(proxyIPPipeline);
+			if (proxyFlag){
+				spider.setDownloader(httpClientManager.getHttpClientDownloader());
+			}
+			spider.thread(1).run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+
+
+	@Override
+	public void proxyIPCrawl(boolean proxyFlag) {
+		runSpider(new ProxyIPSpider9(),"https://www.kuaidaili.com/free/inha/1/", proxyFlag);
+		runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=1", proxyFlag);
+		runSpider(new ProxyIPSpider3(),"https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1", proxyFlag);
+		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/gaoni/", proxyFlag);
+		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/http/", proxyFlag);
+		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/https/", proxyFlag);
+
+		runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_1.html", proxyFlag);
+		runSpider(new ProxyIPSpider4(),"http://www.66ip.cn/1.html", proxyFlag);
+		runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=1&page=1", proxyFlag);
+	}
+
+
 
 
 

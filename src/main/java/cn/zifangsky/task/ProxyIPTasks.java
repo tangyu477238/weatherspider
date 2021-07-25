@@ -1,13 +1,6 @@
 package cn.zifangsky.task;
 
-import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.CrawlManager;
-import cn.zifangsky.manager.DongfangManager;
-import cn.zifangsky.manager.GupiaoManager;
-import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.model.GupiaoKline;
-import cn.zifangsky.mq.producer.CheckIPSender;
-import cn.zifangsky.mq.producer.WeatherUpdateSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,20 +33,6 @@ public class ProxyIPTasks {
 
 
     /**
-     * 代理IP定时获取任务3
-     * @author zifangsky
-     * @date 2018/6/21 13:53
-     * @since 1.0.0
-     */
-    @Scheduled(cron = "${task.crawlProxyIp_3.schedule}")
-    public void crawlProxyIpTask3(){
-        if ("0".equals(consumerOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl();
-    }
-
-    /**
      * 代理IP定时获取任务1
      * @author zifangsky
      * @date 2018/6/21 13:53
@@ -64,7 +43,7 @@ public class ProxyIPTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl();
+        crawlManager.proxyIPCrawl(true);
     }
 
     /**
@@ -78,7 +57,7 @@ public class ProxyIPTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行代理IP定时获取任务2，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl2();
+        crawlManager.proxyIPCrawl(false);
     }
 
 
