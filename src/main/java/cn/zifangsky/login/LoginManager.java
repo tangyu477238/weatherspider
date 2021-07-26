@@ -410,7 +410,7 @@ public class LoginManager implements ILogin{
         }
         double newPrice = Double.parseDouble(getNewPrice(stock_code)); //获取最新
         String original_price = String.valueOf(newPrice+0.01);
-        risedownSell(stock_code, stock_name, original_price, "1.5", String.valueOf(newPrice), enable_amount);
+        risedownSell(stock_code, stock_name, original_price, decline_rate, String.valueOf(newPrice), enable_amount);
     }
 
     /**

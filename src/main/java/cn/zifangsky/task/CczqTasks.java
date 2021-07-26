@@ -143,7 +143,7 @@ public class CczqTasks {
     public void taskRisedownYmd() throws Exception{
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
+        log.debug(MessageFormat.format("taskRisedownYmd，Date：{0}",FORMAT.format(current)));
 //      添加回落单
         String json = loginManager.queryMyStockAmount ();
         JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
