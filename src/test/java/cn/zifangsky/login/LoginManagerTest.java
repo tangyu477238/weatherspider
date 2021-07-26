@@ -1,5 +1,8 @@
 package cn.zifangsky.login;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,18 +33,47 @@ public class LoginManagerTest {
 
     }
 
+    /***
+     * 查询指定产品可用仓位
+     * @throws Exception
+     */
+    @Test
+    public void queryStockEnablelNum() throws Exception{
+        String stock_code = "159949";
+        loginManager.queryStockEnablelNum(stock_code);
 
+    }
 
     /***
-     * 查询仓位
+     * 查询所有产品仓位
      * @throws Exception
      */
     @Test
     public void queryMyStockAmount() throws Exception{
-
-        loginManager.queryMyStockAmount ();
-
+        String json = loginManager.queryMyStockAmount ();
+        log.info(json);
     }
+
+    /***
+     * 添加回落条件单
+     * @throws Exception
+     */
+    @Test
+    public void addRisedownYmd() throws Exception{
+
+        String json = loginManager.queryMyStockAmount ();
+        JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
+        for (Object object : jsonArray){
+            JSONObject jsonObject = (JSONObject)object;
+            Integer enable_amount = jsonObject.getInt("enable_amount");
+            String stock_code = jsonObject.getStr("stock_code");
+            String stock_name = jsonObject.getStr("stock_name");
+            if (enable_amount>0){
+                loginManager.addRisedownYmd(stock_code, stock_name, enable_amount,"1");
+            }
+        }
+    }
+
 
     @Test
     public void gridYmd() throws Exception{
@@ -55,7 +87,6 @@ public class LoginManagerTest {
 //            String stock_code = "515210";
 //            String stock_name = "钢铁ETF";
 //
-
         String base_price  = "1.500";
         String lower_limit = "1.000";
         String upper_limit = "2.000";

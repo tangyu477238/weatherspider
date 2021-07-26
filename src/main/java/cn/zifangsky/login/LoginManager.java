@@ -12,7 +12,7 @@ import java.net.URLEncoder;
 
 @Slf4j
 @Service
-public class LoginManager {
+public class LoginManager implements ILogin{
 
     String comp_id = "1091";
 
@@ -158,7 +158,26 @@ public class LoginManager {
     }
 
     /***
-     *  仓位情况
+     * 指定产品
+     * 获取当前仓位和可用仓位
+     * @return
+     * @throws Exception
+     */
+    public String queryStockEnablelNum (String stock_code) throws Exception{
+
+        String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryStockEnablelNum?stock_code="+stock_code
+                +"&"+getAccountInfo() +getImeiInfo()+stockAccount(stock_code);
+
+        log.info("");
+        log.info(url);
+        log.info("");
+        String httpOrgCreateTestRtn = HttpClientUtil.get(url);
+        log.info(httpOrgCreateTestRtn);
+        return httpOrgCreateTestRtn;
+    }
+
+    /***
+     *  所有产品仓位情况
      * @return
      * @throws Exception
      */
@@ -193,12 +212,12 @@ public class LoginManager {
      * @return
      * @throws Exception
      */
-    public String queryMyYmdForPage () throws Exception{
+    public String queryMyYmdForPage() throws Exception{
 
 
         String page_start_p1="";
         String page_start_p2="";
-        String page_size="10";
+        String page_size="30";
         String search_status="1";
         String stock_code="";
         String cep_type="1";
@@ -222,23 +241,7 @@ public class LoginManager {
     }
 
 
-    /***
-     * 获取当前仓位和可用仓位
-     * @return
-     * @throws Exception
-     */
-    public String queryStockEnablelNum (String stock_code) throws Exception{
-        
-        String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryStockEnablelNum?stock_code="+stock_code
-                +"&"+getAccountInfo() +getImeiInfo()+stockAccount(stock_code);
 
-        log.info("");
-        log.info(url);
-        log.info("");
-        String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
-        return httpOrgCreateTestRtn;
-    }
 
 
 
@@ -384,19 +387,73 @@ public class LoginManager {
     public String hungSell(String stock_code, String stock_name, String original_price, String current_price,
                                  int entrust_amount ) throws Exception{
 
-
-
-
-
         String entrust_price_mode = "NewPrice"; //即时价格
-
-
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/hungSell?stock_code="+stock_code
                 +"&original_price="+original_price
                 +"&current_price="+current_price
                 +"&entrust_amount="+entrust_amount
                 +"&entrust_price_mode="+entrust_price_mode + "&"+getAccountInfo() +getImeiInfo() + getStockAccount(stock_code)+ getPriceInfo(stock_name);
+        log.info("");
+        log.info(url);
+        log.info("");
+        String httpOrgCreateTestRtn = HttpClientUtil.get(url);
+        log.info(httpOrgCreateTestRtn);
+        return httpOrgCreateTestRtn;
+    }
+
+
+    @Override
+    public void addRisedownYmd(String stock_code, String stock_name, Integer enable_amount, String decline_rate) throws Exception {
+        if (checkMyYmd(stock_code,"7")){ //回落
+            return;
+        }
+        double newPrice = Double.parseDouble(getNewPrice(stock_code)); //获取最新
+        String original_price = String.valueOf(newPrice+0.01);
+        risedownSell(stock_code, stock_name, original_price, "1.5", String.valueOf(newPrice), enable_amount);
+    }
+
+    /**
+     * 检查是否已经存在
+     * @param stock_code
+     * @param strategy_id
+     * @return
+     * @throws Exception
+     */
+    public boolean checkMyYmd(String stock_code, String strategy_id) throws Exception{
+        String json = queryMyYmdForPage();
+        JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
+        for (Object object : jsonArray){
+            JSONObject jsonObject = (JSONObject)object;
+            JSONObject stock = jsonObject.getJSONObject("ymd_trade");
+            JSONObject strategy = jsonObject.getJSONObject("ymd_base");
+            if (stock_code.equals(stock.getStr("stock_code")) && strategy_id.equals(strategy.getStr("strategy_id"))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /****
+     * 回落
+     * @param stock_code
+     * @param stock_name
+     * @param original_price 触发
+     * @param decline_rate 回落
+     * @param current_price
+     * @param entrust_amount
+     *
+     * @return
+     * @throws Exception
+     */
+    public String risedownSell(String stock_code, String stock_name,
+                                    String original_price, String decline_rate,
+                                    String current_price, int entrust_amount) throws Exception{
+        String entrust_price_mode = "NewPrice"; //即时价格
+        String url = "https://tjd.cczq.com:5000/cczq/biz/v/risedownSell?stock_code="+stock_code
+                +"&original_price="+original_price+"&decline_rate="+decline_rate
+                +"&current_price="+current_price+"&entrust_amount="+entrust_amount
+                +"&entrust_price_mode="+entrust_price_mode+ "&"+getAccountInfo() + getImeiInfo() + getStockAccount(stock_code) + getPriceInfo(stock_name);
         log.info("");
         log.info(url);
         log.info("");
@@ -444,7 +501,7 @@ public class LoginManager {
         log.info(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
-
+    //&expiry_days=xx&expiry_days_text=xx&entrust_price_type=xx&stock_name=xx
     private String getPriceInfo(String stock_name)throws Exception{
         int entrust_price_type = 1; //限价委托
         String expiry_days = "2021-07-26 15:00:00"; //失效日期+时间
@@ -457,7 +514,7 @@ public class LoginManager {
 
     }
 
-
+    //&op_station=1&ext=xx
     private String getImeiInfo() throws Exception{
         String op_station = "MA;IIP:111.196.241.22;IPORT:NA;LIP:192.168.16.10;MAC:5CC307738AE8;IMEI:NA;RMPN:13552379492;UMPN:+8613552379492;ICCID:NA;OSV:ANDROID10;IMSI:NA@TDXADR;V5.00;HSTJD";
         op_station = URLEncoder.encode(op_station, "UTF-8");
@@ -465,17 +522,16 @@ public class LoginManager {
         ext = URLEncoder.encode(ext, "UTF-8");
         return "&op_station="+op_station+"&ext="+ext;
     }
-
+    //&comp_id=1&hs_openid=xx&access_token=xx&fund_account=xx
     private String getAccountInfo(){
         return "comp_id="+comp_id+"&hs_openid="+hs_openid
                 +"&access_token="+access_token+"&fund_account="+fund_account;
     }
-
+    //&cep_type=1&exchange_type=xx&stock_account=xx
     private String getStockAccount(String stock_code){
-        int cep_type = 1;
-        return "&cep_type="+cep_type+stockAccount(stock_code);
+        return "&cep_type=1"+stockAccount(stock_code);
     }
-
+    //&exchange_type=xx&stock_account=xx
     private String stockAccount(String stock_code){
         int exchange_type = StockUtil.isShenshi(stock_code)  ? 2 : 1; //深/沪
         String stock_account =  StockUtil.isShenshi(stock_code) ? s_stock_account : h_stock_account; //沪市或深市

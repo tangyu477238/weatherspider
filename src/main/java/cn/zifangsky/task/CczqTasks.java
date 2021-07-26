@@ -1,5 +1,8 @@
 package cn.zifangsky.task;
 
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.login.LoginManager;
@@ -133,6 +136,26 @@ public class CczqTasks {
         log.debug(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
 //      心跳线程
         loginManager.queryMyStockAmount();
+    }
+
+
+    @Scheduled(cron = "${task.cczq.risedown}")
+    public void taskRisedownYmd() throws Exception{
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.debug(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
+//      添加回落单
+        String json = loginManager.queryMyStockAmount ();
+        JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
+        for (Object object : jsonArray){
+            JSONObject jsonObject = (JSONObject)object;
+            Integer enable_amount = jsonObject.getInt("enable_amount");
+            String stock_code = jsonObject.getStr("stock_code");
+            String stock_name = jsonObject.getStr("stock_name");
+            if (enable_amount>0){
+                loginManager.addRisedownYmd(stock_code, stock_name, enable_amount,"1");
+            }
+        }
     }
 
 }
