@@ -3,6 +3,7 @@ package cn.zifangsky.login;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.zifangsky.common.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -504,7 +505,7 @@ public class LoginManager implements ILogin{
     //&expiry_days=xx&expiry_days_text=xx&entrust_price_type=xx&stock_name=xx
     private String getPriceInfo(String stock_name)throws Exception{
         int entrust_price_type = 1; //限价委托
-        String expiry_days = "2021-07-26 15:00:00"; //失效日期+时间
+        String expiry_days = DateTimeUtil.getBeforeDay(30) + " 15:00:00"; //失效日期+时间
         expiry_days = URLEncoder.encode(expiry_days, "UTF-8");
         expiry_days = expiry_days.replaceAll("\\+", "%20");
         String expiry_days_text = "";

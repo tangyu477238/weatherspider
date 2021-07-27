@@ -152,7 +152,7 @@ public class CczqTasks {
             Integer enable_amount = jsonObject.getInt("enable_amount");
             String stock_code = jsonObject.getStr("stock_code");
             String stock_name = jsonObject.getStr("stock_name");
-            if (enable_amount>0){
+            if (enable_amount>0 && (stock_code.startsWith("11")||stock_code.startsWith("12"))){
                 loginManager.addRisedownYmd(stock_code, stock_name, enable_amount,"1.5");
             }
         }
