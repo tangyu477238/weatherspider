@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -148,12 +151,12 @@ public class LoginManager implements ILogin{
         int exchange_type =  StockUtil.isShenshi(stock_code)  ? 2 : 1; //深/沪
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/getCodeInfosByExchangeType?codes="+stock_code+"."+exchange_type;
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         String str = StringEscapeUtils.unescapeJava(httpOrgCreateTestRtn);
-        log.info(str);
+        log.debug(str);
         //只去两端的如下两行
         str = str.substring(13,str.length()-2);
-        log.info(str);
+        log.debug(str);
         JSONObject jsonObject = JSONUtil.parseObj(str);
         return jsonObject.getStr("newPrice");
     }
@@ -169,11 +172,11 @@ public class LoginManager implements ILogin{
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryStockEnablelNum?stock_code="+stock_code
                 +"&"+getAccountInfo() +getImeiInfo()+stockAccount(stock_code);
 
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
@@ -185,11 +188,11 @@ public class LoginManager implements ILogin{
     public String queryMyStockAmount () throws Exception{
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryMyStockAmount?"+getAccountInfo()+getImeiInfo();
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
@@ -233,11 +236,11 @@ public class LoginManager implements ILogin{
                 +"&stock_code="+stock_code+"&cep_type="+cep_type
                 +"&strategy_ids=8%2C34%2C35%2C16%2C9%2C7%2C15%2C22%2C12&date_type="+date_type
                 +"&order_column="+order_column+"&order_direction="+order_direction+"&"+getAccountInfo() +getImeiInfo();
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
@@ -281,11 +284,11 @@ public class LoginManager implements ILogin{
                 +"&position_upper_limit="+position_upper_limit+"&position_lower_limit="+position_lower_limit
                 +"&entrust_amount="+entrust_amount
                 +"&entrust_price_mode="+entrust_price_mode+"&"+getAccountInfo() +getImeiInfo()+ getStockAccount(stock_code)+ getPriceInfo(stock_name);
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
@@ -315,11 +318,11 @@ public class LoginManager implements ILogin{
                 +"&current_price="+current_price
                 +"&entrust_amount="+entrust_amount
                 +"&entrust_price_mode="+entrust_price_mode+"&"+getAccountInfo() +getImeiInfo()+ getStockAccount(stock_code)+ getPriceInfo(stock_name);
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
@@ -334,7 +337,7 @@ public class LoginManager implements ILogin{
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/deleteYmd?ymd_id="+ymd_id+"&is_delete=0"
                 +"&"+getAccountInfo() +getImeiInfo();
-        log.info(url);
+        log.debug(url);
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
 
         return httpOrgCreateTestRtn;
@@ -364,11 +367,11 @@ public class LoginManager implements ILogin{
                 +"&current_price="+current_price
                 +"&entrust_amount="+entrust_amount
                 +"&entrust_price_mode="+entrust_price_mode+"&"+getAccountInfo() +getImeiInfo()+ getStockAccount(stock_code)+ getPriceInfo(stock_name);
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
@@ -388,51 +391,38 @@ public class LoginManager implements ILogin{
     public String hungSell(String stock_code, String stock_name, String original_price, String current_price,
                                  int entrust_amount ) throws Exception{
 
-        String entrust_price_mode = "NewPrice"; //即时价格
+        String entrust_price_mode = "NewPrice3"; //即时价格 NewPrice3
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/hungSell?stock_code="+stock_code
-                +"&original_price="+original_price
-                +"&current_price="+current_price
-                +"&entrust_amount="+entrust_amount
+                +"&original_price="+original_price +"&current_price="+current_price +"&entrust_amount="+entrust_amount
                 +"&entrust_price_mode="+entrust_price_mode + "&"+getAccountInfo() +getImeiInfo() + getStockAccount(stock_code)+ getPriceInfo(stock_name);
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
 
-    @Override
-    public void addRisedownYmd(String stock_code, String stock_name, Integer enable_amount, String decline_rate) throws Exception {
-        if (checkMyYmd(stock_code,"7")){ //回落
-            return;
-        }
-        double newPrice = Double.parseDouble(getNewPrice(stock_code)); //获取最新
-        String original_price = String.valueOf(newPrice+0.01);
-        risedownSell(stock_code, stock_name, original_price, decline_rate, String.valueOf(newPrice), enable_amount);
-    }
+
 
     /**
-     * 检查是否已经存在
-     * @param stock_code
-     * @param strategy_id
+     *  get
      * @return
      * @throws Exception
      */
-    public boolean checkMyYmd(String stock_code, String strategy_id) throws Exception{
+    public Map listMyYmd() throws Exception{
+        Map map = new HashMap();
         String json = queryMyYmdForPage();
         JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
         for (Object object : jsonArray){
             JSONObject jsonObject = (JSONObject)object;
             JSONObject stock = jsonObject.getJSONObject("ymd_trade");
             JSONObject strategy = jsonObject.getJSONObject("ymd_base");
-            if (stock_code.equals(stock.getStr("stock_code")) && strategy_id.equals(strategy.getStr("strategy_id"))){
-                return true;
-            }
+            map.put(stock.getStr("stock_code")+strategy.getStr("strategy_id"), "");
         }
-        return false;
+        return map;
     }
 
     /****
@@ -450,56 +440,49 @@ public class LoginManager implements ILogin{
     public String risedownSell(String stock_code, String stock_name,
                                     String original_price, String decline_rate,
                                     String current_price, int entrust_amount) throws Exception{
-        String entrust_price_mode = "NewPrice"; //即时价格 BuyPrice3
+        String entrust_price_mode = "BuyPrice3"; //即时价格 BuyPrice3
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/risedownSell?stock_code="+stock_code
                 +"&original_price="+original_price+"&decline_rate="+decline_rate
                 +"&current_price="+current_price+"&entrust_amount="+entrust_amount
                 +"&entrust_price_mode="+entrust_price_mode+ "&"+getAccountInfo() + getImeiInfo() + getStockAccount(stock_code) + getPriceInfo(stock_name);
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
 
-
-    /****
+    /***
      * 止盈止损
      * @param stock_code
      * @param stock_name
      * @param base_price
      * @param stop_profit_rate
+     * @param stop_profit_price
      * @param stop_loss_rate
      * @param stop_loss_price
-     * @param stop_profit_price
      * @param current_price
      * @param entrust_amount
-     *  
      * @return
      * @throws Exception
      */
-    public String stopProfitAndLoss(String stock_code, String stock_name,
-                                           String base_price, String stop_profit_rate,String stop_loss_rate,String stop_loss_price,String stop_profit_price,
-                                           String current_price, int entrust_amount ) throws Exception{
+    public String stopProfitAndLoss(String stock_code, String stock_name, String base_price,
+                                    String stop_profit_rate, String stop_profit_price, String stop_loss_rate, String stop_loss_price,
+                                    String current_price, int entrust_amount ) throws Exception{
 
-
-
-
-        String entrust_price_mode = "NewPrice"; //即时价格
-
-
+        String entrust_price_mode = "BuyPrice3"; //即时价格 BuyPrice3
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/stopProfitAndLoss?stock_code="+stock_code
                 +"&base_price="+base_price
                 +"&stop_profit_rate="+stop_profit_rate+"&stop_loss_rate="+stop_loss_rate
                 +"&stop_loss_price="+stop_loss_price+"&stop_profit_price="+stop_profit_price
                 +"&current_price="+current_price+"&entrust_amount="+entrust_amount
                 +"&entrust_price_mode="+entrust_price_mode+ "&"+getAccountInfo() + getImeiInfo() + getStockAccount(stock_code) + getPriceInfo(stock_name);
-        log.info("");
-        log.info(url);
-        log.info("");
+        log.debug("");
+        log.debug(url);
+        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.info(httpOrgCreateTestRtn);
+        log.debug(httpOrgCreateTestRtn);
         return httpOrgCreateTestRtn;
     }
     //&expiry_days=xx&expiry_days_text=xx&entrust_price_type=xx&stock_name=xx

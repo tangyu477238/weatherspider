@@ -19,6 +19,7 @@ import java.text.Format;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 定时任务配置
@@ -144,16 +145,38 @@ public class CczqTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("taskRisedownYmd，Date：{0}",FORMAT.format(current)));
-//      添加回落单
+
         String json = loginManager.queryMyStockAmount ();
-        JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
+        JSONObject jsonObj = JSONUtil.parseObj(json);
+        if (jsonObj.getInt("total") == 0){
+            return ;
+        }
+        Map map = loginManager.listMyYmd(); //获取条件列表
+        JSONArray jsonArray = jsonObj.getJSONArray("data");
         for (Object object : jsonArray){
             JSONObject jsonObject = (JSONObject)object;
             Integer enable_amount = jsonObject.getInt("enable_amount");
             String stock_code = jsonObject.getStr("stock_code");
             String stock_name = jsonObject.getStr("stock_name");
             if (enable_amount>0 && (stock_code.startsWith("11")||stock_code.startsWith("12"))){
-                loginManager.addRisedownYmd(stock_code, stock_name, enable_amount,"1.5");
+                double newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新
+                log.info("-------------taskYmd------"+stock_code+"----"+enable_amount);
+
+                if (!map.containsKey(stock_code+"7")){ //落
+                    String original_price = String.valueOf(newPrice+0.001);
+                    loginManager.risedownSell(stock_code, stock_name, original_price, "1.5", String.valueOf(newPrice), enable_amount); //添加回落单
+                }
+
+                if (!map.containsKey(stock_code+"35")){ //止
+                    String original_price = String.valueOf(newPrice+0.001);
+                    loginManager.stopProfitAndLoss(stock_code,stock_name,
+                            String.valueOf(newPrice),"1","","1","", String.valueOf(newPrice), enable_amount);
+                }
+
+                if (!map.containsKey(stock_code+"34")){ //定
+                    String original_price = String.valueOf(newPrice+0.001);
+                    loginManager.hungSell(stock_code,stock_name, original_price, String.valueOf(newPrice), enable_amount);
+                }
             }
         }
     }
