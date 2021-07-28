@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -165,39 +166,86 @@ public class CczqTasks {
         }
     }
 
+
+
+    private void addRisedownSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
+        if (checkAddYmd(map, stock_code, enable_amount,"7")){
+            return;
+        }
+        String risedown_rate = "1.5";
+        double nPrice = Double.parseDouble(newPrice);
+        String original_price = String.valueOf(nPrice+0.001);
+        loginManager.risedownSell(stock_code, stock_name, original_price, risedown_rate, newPrice, enable_amount); //添加回落单
+     }
+
+    private void addStopProfitAndLoss(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
+        if (checkAddYmd(map, stock_code, enable_amount,"35")){
+            return;
+        }
+
+        String stop_loss_rate = "1"; //止
+
+        String stop_profit_rate = "100";
+        String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
+        String stop_loss_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
+        loginManager.stopProfitAndLoss(stock_code,stock_name,
+                newPrice,stop_profit_rate, stop_profit_price, stop_loss_rate, stop_loss_price, newPrice, enable_amount);
+
+    }
+
+    private void addHungSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
+        if (checkAddYmd(map, stock_code, enable_amount,"34")){
+            return;
+        }
+
+        String stop_loss_rate = "1"; //止
+        String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
+        loginManager.hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
+    }
+
+
     private void addYmd(Map map,String stock_code, String stock_name, Integer enable_amount) throws Exception{
         String newPrice = loginManager.getNewPrice(stock_code); //获取最新
         log.info("-------------taskYmd------"+stock_code+"----"+enable_amount);
-        String stop_loss_rate = "1.5"; //止
 
-        if (!map.containsKey(stock_code+"7")){ //落
-            double nPrice = Double.parseDouble(newPrice);
-            String original_price = String.valueOf(nPrice+0.001);
-            loginManager.risedownSell(stock_code, stock_name, original_price, stop_loss_rate, newPrice, enable_amount); //添加回落单
-        }
+        addRisedownSell(map, stock_code, stock_name, enable_amount, newPrice);
 
-        if (!map.containsKey(stock_code+"35")){ //止
-            String stop_profit_rate = "100";
-            String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
+        addStopProfitAndLoss(map, stock_code, stock_name, enable_amount, newPrice);
 
-            String stop_loss_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
+        addHungSell(map, stock_code, stock_name, enable_amount, newPrice);
 
-            loginManager.stopProfitAndLoss(stock_code,stock_name,
-                    newPrice,stop_profit_rate, stop_profit_price, stop_loss_rate, stop_loss_price, newPrice, enable_amount);
-        }
 
-        if (!map.containsKey(stock_code+"34")){ //定
-            String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
-            loginManager.hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
-        }
+
     }
 
     public String getLossPrice(String newPrice, double rate) {
         double nPrice = Double.parseDouble(newPrice);
-        return String.valueOf(nPrice-(rate*nPrice/100));
+        BigDecimal lossPrice = new BigDecimal(nPrice-(rate*nPrice/100));
+        return String.valueOf(lossPrice.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
     }
     public String getProfitPrice(String newPrice, double rate) {
         double nPrice = Double.parseDouble(newPrice);
-        return String.valueOf(nPrice+(rate*nPrice/100));
+        BigDecimal profitPrice = new BigDecimal(nPrice+(rate*nPrice/100));
+        return String.valueOf(profitPrice.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
+    }
+
+    /**
+     * 检查是否存在或不等
+     * @param map
+     * @param stock_code
+     * @param enable_amount
+     * @param strategy_id
+     * @return
+     * @throws Exception
+     */
+    public boolean checkAddYmd(Map map, String stock_code, Integer enable_amount, String strategy_id) throws Exception{
+        if (map.containsKey(stock_code+strategy_id)){
+            String arr[] = map.get(stock_code+strategy_id).toString().split("_");
+            if (arr[0].equals(String.valueOf(enable_amount))){
+                return true;
+            }
+            loginManager.deleteYmd(arr[1]); //删除原条件单
+        }
+        return false;
     }
 }
