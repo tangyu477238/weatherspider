@@ -46,7 +46,7 @@ public class CczqTasks {
     @Resource
     private LoginManager loginManager;
 
-    String stock_code = "159949";
+
 
     @Scheduled(cron = "${task.cczq.zaopan}")
     public void zaopan() throws Exception{
@@ -64,6 +64,7 @@ public class CczqTasks {
 
 
     private void zaopan(boolean flag) throws Exception{
+        String stock_code = "159949";
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
         GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m",
@@ -141,13 +142,13 @@ public class CczqTasks {
 
 
     @Scheduled(cron = "${task.cczq.risedown}")
-    public void taskRisedownYmd() throws Exception{
+    public void taskYmd() throws Exception{
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("taskRisedownYmd，Date：{0}",FORMAT.format(current)));
+        log.debug(MessageFormat.format("taskYmd，Date：{0}",FORMAT.format(current)));
 
-        String json = loginManager.queryMyStockAmount ();
-        JSONObject jsonObj = JSONUtil.parseObj(json);
+        String listJson = loginManager.queryMyStockAmount (); //数据列表
+        JSONObject jsonObj = JSONUtil.parseObj(listJson);
         if (jsonObj.getInt("total") == 0){
             return ;
         }
@@ -159,26 +160,44 @@ public class CczqTasks {
             String stock_code = jsonObject.getStr("stock_code");
             String stock_name = jsonObject.getStr("stock_name");
             if (enable_amount>0 && (stock_code.startsWith("11")||stock_code.startsWith("12"))){
-                double newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新
-                log.info("-------------taskYmd------"+stock_code+"----"+enable_amount);
-
-                if (!map.containsKey(stock_code+"7")){ //落
-                    String original_price = String.valueOf(newPrice+0.001);
-                    loginManager.risedownSell(stock_code, stock_name, original_price, "1.5", String.valueOf(newPrice), enable_amount); //添加回落单
-                }
-
-                if (!map.containsKey(stock_code+"35")){ //止
-                    String original_price = String.valueOf(newPrice+0.001);
-                    loginManager.stopProfitAndLoss(stock_code,stock_name,
-                            String.valueOf(newPrice),"1","","1","", String.valueOf(newPrice), enable_amount);
-                }
-
-                if (!map.containsKey(stock_code+"34")){ //定
-                    String original_price = String.valueOf(newPrice+0.001);
-                    loginManager.hungSell(stock_code,stock_name, original_price, String.valueOf(newPrice), enable_amount);
-                }
+                addYmd(map, stock_code, stock_name, enable_amount);
             }
         }
     }
 
+    private void addYmd(Map map,String stock_code, String stock_name, Integer enable_amount) throws Exception{
+        String newPrice = loginManager.getNewPrice(stock_code); //获取最新
+        log.info("-------------taskYmd------"+stock_code+"----"+enable_amount);
+        String stop_loss_rate = "1.5"; //止
+
+        if (!map.containsKey(stock_code+"7")){ //落
+            double nPrice = Double.parseDouble(newPrice);
+            String original_price = String.valueOf(nPrice+0.001);
+            loginManager.risedownSell(stock_code, stock_name, original_price, stop_loss_rate, newPrice, enable_amount); //添加回落单
+        }
+
+        if (!map.containsKey(stock_code+"35")){ //止
+            String stop_profit_rate = "100";
+            String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
+
+            String stop_loss_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
+
+            loginManager.stopProfitAndLoss(stock_code,stock_name,
+                    newPrice,stop_profit_rate, stop_profit_price, stop_loss_rate, stop_loss_price, newPrice, enable_amount);
+        }
+
+        if (!map.containsKey(stock_code+"34")){ //定
+            String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
+            loginManager.hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
+        }
+    }
+
+    public String getLossPrice(String newPrice, double rate) {
+        double nPrice = Double.parseDouble(newPrice);
+        return String.valueOf(nPrice-(rate*nPrice/100));
+    }
+    public String getProfitPrice(String newPrice, double rate) {
+        double nPrice = Double.parseDouble(newPrice);
+        return String.valueOf(nPrice+(rate*nPrice/100));
+    }
 }
