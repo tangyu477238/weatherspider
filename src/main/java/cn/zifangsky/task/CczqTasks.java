@@ -38,6 +38,9 @@ public class CczqTasks {
     @Value("${mq.consumer.off}")
     private String consumerOff;
 
+    @Value("${mq.consumer.etf.off}")
+    private String consumerOffEtf;
+
     @Resource
     private GupiaoManager gupiaoManager;
 
@@ -51,14 +54,14 @@ public class CczqTasks {
 
     @Scheduled(cron = "${task.cczq.zaopan}")
     public void zaopan() throws Exception{
-        if ("0".equals(consumerOff)) return;
+        if ("0".equals(consumerOffEtf)) return;
 
         zaopan(false);
 
     }
     @Scheduled(cron = "${task.cczq.zaopanCheck}")
     public void zaopanCheck() throws Exception{
-        if ("0".equals(consumerOff)) return;
+        if ("0".equals(consumerOffEtf)) return;
 
         zaopan(true);
     }
@@ -106,7 +109,7 @@ public class CczqTasks {
 
     @Scheduled(cron = "${task.cczq.wanpan}")
     public void wanpan() throws Exception{
-        if ("0".equals(consumerOff)) return;
+        if ("0".equals(consumerOffEtf)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("wanpan，Date：{0}",FORMAT.format(current)));
         log.info("清除条件单");
@@ -138,7 +141,7 @@ public class CczqTasks {
         Date current = new Date();
         log.debug(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
 //      心跳线程
-        loginManager.queryMyStockAmount();
+        loginManager.deleteAllMyYmd();
     }
 
 
@@ -163,6 +166,11 @@ public class CczqTasks {
             if (enable_amount>0 && (stock_code.startsWith("11")||stock_code.startsWith("12"))){
                 addYmd(map, stock_code, stock_name, enable_amount);
             }
+            if (enable_amount==0){
+                checkAddYmd(map, stock_code, -1 , "34");
+                checkAddYmd(map, stock_code, -1 , "35");
+                checkAddYmd(map, stock_code, -1 , "7");
+            }
         }
     }
 
@@ -172,7 +180,7 @@ public class CczqTasks {
         if (checkAddYmd(map, stock_code, enable_amount,"7")){
             return;
         }
-        String risedown_rate = "1.5";
+        String risedown_rate = "2.0";
         double nPrice = Double.parseDouble(newPrice);
         String original_price = String.valueOf(nPrice+0.001);
         loginManager.risedownSell(stock_code, stock_name, original_price, risedown_rate, newPrice, enable_amount); //添加回落单
@@ -183,7 +191,7 @@ public class CczqTasks {
             return;
         }
 
-        String stop_loss_rate = "1"; //止
+        String stop_loss_rate = "2.0"; //止
 
         String stop_profit_rate = "100";
         String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
@@ -198,7 +206,7 @@ public class CczqTasks {
             return;
         }
 
-        String stop_loss_rate = "1"; //止
+        String stop_loss_rate = "2.0"; //止
         String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
         loginManager.hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
     }
@@ -206,7 +214,7 @@ public class CczqTasks {
 
     private void addYmd(Map map,String stock_code, String stock_name, Integer enable_amount) throws Exception{
         String newPrice = loginManager.getNewPrice(stock_code); //获取最新
-        log.info("-------------taskYmd------"+stock_code+"----"+enable_amount);
+        log.info("-------------taskYmd------"+stock_code+"----"+enable_amount +"--" + newPrice);
 
         addRisedownSell(map, stock_code, stock_name, enable_amount, newPrice);
 
