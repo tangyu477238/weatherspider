@@ -209,7 +209,6 @@ public class LoginManager implements ILogin{
             if ("34".equals(strategy_id)){
                 deleteYmd(ymdId);
             }
-
         }
 //
     }
