@@ -2,7 +2,9 @@ package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.StringUtil;
+import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.GupiaoKline;
+import cn.zifangsky.model.GupiaoKline5m;
 import cn.zifangsky.mq.producer.GupiaoKlineSender;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -42,14 +44,20 @@ public class DongfangKlinePipeline implements Pipeline {
 		String url = resultItems.getRequest().getUrl();
 		Map<String, String> map = StringUtil.urlSplit(url);
 		String symbol = object.getString("code");
-		String period = map.get("klt");
+		String period = getPeriod(map.get("klt"));
 		JSONArray jsonArray = object.getJSONArray("klines");
 		log.info(jsonArray.toJSONString());
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			String jsonArray1[] = jsonArray.get(i).toString().split(",");
-			GupiaoKline kzz1 = new GupiaoKline();
+			BaseGupiaoKline kzz1;
+			if (period.equals("5m")){
+				kzz1 = new GupiaoKline5m();
+			} else {
+				kzz1 = new GupiaoKline();
+			}
+
 			kzz1.setSymbol(symbol);
-			kzz1.setPeriod(getPeriod(period));
+			kzz1.setPeriod(period);
 			try {
 				kzz1.setTimestamp(DateTimeUtil.parseToDate(jsonArray1[0]));
 			} catch (Exception e) {

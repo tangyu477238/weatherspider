@@ -8,6 +8,7 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
+import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.GupiaoKline;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,14 +54,14 @@ public class CczqTasks {
     public void zaopan() throws Exception{
         if ("0".equals(consumerOff)) return;
 
-        zaopan(false);
+//        zaopan(false);
 
     }
     @Scheduled(cron = "${task.cczq.zaopanCheck}")
     public void zaopanCheck() throws Exception{
         if ("0".equals(consumerOff)) return;
 
-        zaopan(true);
+//        zaopan(true);
     }
 
 
@@ -68,7 +69,7 @@ public class CczqTasks {
         String stock_code = "159949";
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
-        GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m",
+        BaseGupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m",
                 DateTimeUtil.getBeforeDay(0)+" 09:35");
         if (ComUtil.isEmpty(gupiaoKline)){
             dongfangManager.getKline("399006", "5",false);
@@ -138,7 +139,8 @@ public class CczqTasks {
         Date current = new Date();
         log.debug(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
 //      心跳线程
-        loginManager.queryMyStockAmount();
+//        loginManager.queryMyStockAmount();
+        loginManager.deleteAllMyYmd();
     }
 
 
@@ -172,7 +174,7 @@ public class CczqTasks {
         if (checkAddYmd(map, stock_code, enable_amount,"7")){
             return;
         }
-        String risedown_rate = "1.5";
+        String risedown_rate = "2";
         double nPrice = Double.parseDouble(newPrice);
         String original_price = String.valueOf(nPrice+0.001);
         loginManager.risedownSell(stock_code, stock_name, original_price, risedown_rate, newPrice, enable_amount); //添加回落单
@@ -183,7 +185,7 @@ public class CczqTasks {
             return;
         }
 
-        String stop_loss_rate = "1"; //止
+        String stop_loss_rate = "2"; //止
 
         String stop_profit_rate = "100";
         String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
@@ -198,7 +200,7 @@ public class CczqTasks {
             return;
         }
 
-        String stop_loss_rate = "1"; //止
+        String stop_loss_rate = "2"; //止
         String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
         loginManager.hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
     }

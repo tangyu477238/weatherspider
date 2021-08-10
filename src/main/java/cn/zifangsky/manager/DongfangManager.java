@@ -8,7 +8,7 @@ public interface DongfangManager {
 	//获取K线信息
 	void getKline(String bondId, String period, boolean flag);
 
-
+	void listKzzData();
 
 
 

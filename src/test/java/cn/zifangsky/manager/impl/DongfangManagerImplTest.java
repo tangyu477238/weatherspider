@@ -41,7 +41,10 @@ public class DongfangManagerImplTest  {
     @Resource
     private XinlangManager xinlangManager;
 
-
+    @Test
+    public void listKzzData() {
+        dongfangManager.listKzzData();
+    }
 
     @Test
     public void listGupiaoData() {
@@ -49,9 +52,10 @@ public class DongfangManagerImplTest  {
     }
 
 
+
     @Test
     public void getKline() {
-		dongfangManager.getKline("000002", "101",true);
+		dongfangManager.getKline("000001", "101",true);
     }
 
 

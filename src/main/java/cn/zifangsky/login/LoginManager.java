@@ -205,7 +205,11 @@ public class LoginManager implements ILogin{
         for (Object object : jsonArray){
             JSONObject jsonObject = (JSONObject)object;
             String ymdId = jsonObject.getJSONObject("ymd_base").getStr("ymd_id");
-            deleteYmd(ymdId);
+            String strategy_id = jsonObject.getJSONObject("ymd_base").getStr("strategy_id");
+            if ("34".equals(strategy_id)){
+                deleteYmd(ymdId);
+            }
+
         }
 //
     }

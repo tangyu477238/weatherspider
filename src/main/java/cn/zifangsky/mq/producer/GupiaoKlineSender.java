@@ -1,5 +1,7 @@
 package cn.zifangsky.mq.producer;
 
+import cn.zifangsky.model.BaseGupiaoKline;
+import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.GupiaoKline;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -26,7 +28,7 @@ public class GupiaoKlineSender {
 	 * 发送GupiaoKline可用性的消息到指定队列
 	 * @param gupiaoKline  消息内容
 	 */
-	public void send(GupiaoKline gupiaoKline){
+	public void send(BaseGupiaoKline gupiaoKline){
 
         try {
             String p = String.valueOf(new Random().nextInt(100) + 1);

@@ -5,10 +5,7 @@ import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.repository.GupiaoKlineRepository;
 import cn.zifangsky.repository.GupiaoRepository;
-import cn.zifangsky.spider.gp.DongfangGupiaoSpider;
-import cn.zifangsky.spider.gp.DongfangKlinePipeline;
-import cn.zifangsky.spider.gp.DongfangSpider;
-import cn.zifangsky.spider.gp.GupiaoPipeline;
+import cn.zifangsky.spider.gp.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
@@ -37,6 +34,20 @@ public class DongfangManagerImpl implements DongfangManager {
     private GupiaoPipeline gupiaoPipeline;
 
 
+
+    /****
+     * 获取当天
+     * 所有可转债清单
+     */
+    @Override
+    public void listKzzData() {
+        OOSpider.create(new DongfangKzzSpider()).addPipeline(gupiaoPipeline)
+                .setDownloader(httpClientManager.getHttpClientDownloader())
+                .addUrl("https://datacenter-web.eastmoney.com/api/data/v1/get?callback=jQuery1123033215716759271463_1628607150447&sortColumns=PUBLIC_START_DATE&sortTypes=-1&pageSize=5000&pageNumber=1&reportName=RPT_BOND_CB_LIST&columns=SECURITY_CODE&quoteColumns=f2&source=WEB&client=WEB")
+                .thread(1)
+                .run();
+    }
+
     /****
      * 获取当天
      * 所有股票清单
@@ -54,6 +65,7 @@ public class DongfangManagerImpl implements DongfangManager {
      * 根据股票编码获取数据
      * @param bondId 股票编码
      * @param period k线类型
+     * @param flag 是否需要代理
      */
     @Override
     public void getKline(String bondId, String period, boolean flag) {
