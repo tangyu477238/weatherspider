@@ -166,6 +166,11 @@ public class CczqTasks {
             if (enable_amount>0 && (stock_code.startsWith("11")||stock_code.startsWith("12"))){
                 addYmd(map, stock_code, stock_name, enable_amount);
             }
+            if (enable_amount==0){
+                checkAddYmd(map, stock_code, -1 , "34");
+                checkAddYmd(map, stock_code, -1 , "35");
+                checkAddYmd(map, stock_code, -1 , "7");
+            }
         }
     }
 
