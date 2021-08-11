@@ -1,13 +1,8 @@
 package cn.zifangsky.task;
 
-import cn.zifangsky.common.DateTimeUtil;
-import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
-import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.Gupiao;
-import cn.zifangsky.model.GupiaoKline;
-import cn.zifangsky.mq.producer.CheckIPSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

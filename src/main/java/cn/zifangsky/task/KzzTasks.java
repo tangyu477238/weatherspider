@@ -9,7 +9,7 @@ import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.BaseGupiaoKline;
-import cn.zifangsky.model.GupiaoKline;
+import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.repository.GupiaoKline5mRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +22,7 @@ import java.text.Format;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +34,7 @@ import java.util.Map;
  */
 @Component
 @Slf4j
-public class CczqTasks {
+public class KzzTasks {
 
     private final Format FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -52,7 +53,8 @@ public class CczqTasks {
     @Resource
     private LoginManager loginManager;
 
-
+    @Resource
+    private GupiaoManager gupiaoManager;
 
     @Scheduled(cron = "${task.cczq.zaopan}")
     public void zaopan() throws Exception{
@@ -61,15 +63,17 @@ public class CczqTasks {
         zaopan(false);
 
     }
-    @Scheduled(cron = "${task.cczq.zaopanCheck}")
-    public void zaopanCheck() throws Exception{
-        if ("0".equals(consumerOffEtf)) return;
 
-        zaopan(true);
-    }
 
 
     private void zaopan(boolean flag) throws Exception{
+
+        List<Gupiao> list = gupiaoManager.listKzz();
+        for (Gupiao gupiao : list){
+
+        }
+
+
         String stock_code = "159949";
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
