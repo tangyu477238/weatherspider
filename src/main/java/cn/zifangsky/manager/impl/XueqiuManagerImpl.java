@@ -59,7 +59,7 @@ public class XueqiuManagerImpl implements XueqiuManager {
     public void getDataXueqiuDetailKline(String bondId, String period, long timestamp) {
         String count = getCount(period); //记录数
         String url = "https://stock.xueqiu.com/v5/stock/chart/kline.json?symbol="+bondId+"&begin="+timestamp+"&period="+period+"&type=before&count="+count+"&indicator=kline,pe,pb,ps,pcf,market_capital,agt,ggt,balance";
-        log.info(url);
+        log.debug(url);
         OOSpider.create(new XueqiuSpider()).addPipeline(xueqiuGupiaoKlinePipeline)
                 .setDownloader(httpClientManager.getHttpClientDownloader())
                 .addUrl(url)
@@ -92,7 +92,7 @@ public class XueqiuManagerImpl implements XueqiuManager {
                 gupiaoKlineRepository.save(gupiaoKline);
             }
         } catch (Exception e){
-            log.info(e.getMessage());
+            log.debug(e.getMessage());
         }
     }
 

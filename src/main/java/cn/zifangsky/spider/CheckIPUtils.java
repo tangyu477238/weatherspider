@@ -20,7 +20,7 @@ public class CheckIPUtils {
 		URL url = null;
 		HttpURLConnection connection = null;
 		try {
-			url = new URL("https://www.jisilu.cn");
+			url = new URL("http://quote.eastmoney.com");
 			//代理服务器
 			InetSocketAddress proxyAddr = new InetSocketAddress(ip, port);
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);

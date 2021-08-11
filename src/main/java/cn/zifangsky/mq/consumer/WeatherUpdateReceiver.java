@@ -29,7 +29,7 @@ public class WeatherUpdateReceiver{
 	public void handle(List<String> list){
 
 	    list.forEach(stationCode -> {
-            log.info(MessageFormat.format("接收到消息，城镇CODE:{0}", stationCode));
+            log.debug(MessageFormat.format("接收到消息，城镇CODE:{0}", stationCode));
 
             //更新天气
 //            crawlManager.weatherCrawl(stationCode);

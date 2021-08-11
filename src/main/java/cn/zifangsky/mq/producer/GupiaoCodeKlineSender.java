@@ -31,13 +31,13 @@ public class GupiaoCodeKlineSender {
 	 * @param code  消息内容
 	 */
 	public void send(String code){
-        log.info(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，Kline：{1}",topicName, code));
+        log.debug(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，Kline：{1}",topicName, code));
 
         try {
             String p = String.valueOf(new Random().nextInt(100) + 1);
             ProducerRecord producerRecord = new ProducerRecord<String, Object>(topicName, p , code);
             kafkaTemplate.send(producerRecord);
-            log.info("推送数据成功！");
+            log.debug("推送数据成功！");
         } catch (Exception e) {
             log.error(MessageFormat.format("推送数据出错，topicName:{0},Kline:{1}"
                     ,topicName,code),e);

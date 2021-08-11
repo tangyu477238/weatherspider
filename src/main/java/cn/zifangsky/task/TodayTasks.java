@@ -5,6 +5,7 @@ import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.manager.ProxyIpManager;
+import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.mq.producer.CheckIPSender;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import java.text.Format;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 定时任务配置
@@ -39,6 +41,9 @@ public class TodayTasks {
     @Resource
     private DongfangManager dongfangManager;
 
+    @Resource
+    private GupiaoManager gupiaoManager;
+
 
     /***
      * 1分钟同步一次
@@ -47,8 +52,8 @@ public class TodayTasks {
     public void todayByFen(){
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
-        dongfangManager.getKline("399006", "5",true);
+        log.info(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        dongfangManager.getToDayKline5M("399006");
     }
 
     /***
@@ -58,9 +63,26 @@ public class TodayTasks {
     public void todayByDay(){
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
-        dongfangManager.getKline("000002", "101",true);
+        log.info(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+//        dongfangManager.getKline("000002");
     }
 
+
+
+    /***
+     * 30秒同步一次
+     */
+    @Scheduled(cron = "${task.today.kzz.fen}")
+    public void todayKzzByFen(){
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.debug(MessageFormat.format("todayKzzByFen，Date：{0}",FORMAT.format(current)));
+        List<Gupiao> list = gupiaoManager.listKzz();
+        for (Gupiao gupiao : list){
+            dongfangManager.getToDayKline5M(gupiao.getSymbol());
+//            dongfangManager.getToDayKline5M("123098");
+        }
+
+    }
 
 }

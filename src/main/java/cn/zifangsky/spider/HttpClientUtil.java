@@ -54,11 +54,11 @@ public class HttpClientUtil {
         UrlEncodedFormEntity param = new UrlEncodedFormEntity(formparams, "UTF-8");
         httpPost.setEntity(param);
         HttpResponse response = httpClient.execute(httpPost);
-        log.info("************{}", response);
+        log.debug("************{}", response);
         String httpEntityContent = getHttpEntityContent(response);
-        log.info("************{}", httpEntityContent);
+        log.debug("************{}", httpEntityContent);
         httpPost.abort();
-        log.info("************{}", httpEntityContent);
+        log.debug("************{}", httpEntityContent);
         return httpEntityContent;
 
     }
@@ -98,7 +98,7 @@ public class HttpClientUtil {
         try {
             response = httpClient.execute(httpGet);
             String str = response.getEntity().getContent().toString();
-            log.info(str);
+            log.debug(str);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -51,7 +51,7 @@ public class LoginManagerTest {
     @Test
     public void queryMyStockAmount() throws Exception{
         String json = loginManager.queryMyStockAmount ();
-        log.info(json);
+        log.debug(json);
     }
 
     /***

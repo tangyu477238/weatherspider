@@ -3,8 +3,6 @@ package cn.zifangsky.mq.producer;
 import cn.zifangsky.model.bo.ProxyIpBO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -15,7 +13,6 @@ import java.util.Random;
 @Slf4j
 @Component("checkIPSender")
 public class CheckIPSender {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CheckIPSender.class);
 
     @Autowired
     private KafkaTemplate<Object,Object> kafkaTemplate;
@@ -26,16 +23,16 @@ public class CheckIPSender {
 	 * @param proxyIpBO  消息内容
 	 */
 	public void send(String topicName,ProxyIpBO proxyIpBO){
-        LOGGER.info(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，代理IP：{1}",topicName, proxyIpBO));
+        log.debug(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，代理IP：{1}",topicName, proxyIpBO));
 
         try {
             String p = String.valueOf(new Random().nextInt(100) + 1);
             ProducerRecord producerRecord = new ProducerRecord<String, Object>(topicName, p , proxyIpBO);
             kafkaTemplate.send(producerRecord);
 //            kafkaTemplate.send(topicName, proxyIpBO);
-            LOGGER.info("推送数据成功！");
+            log.debug("推送数据成功！");
         } catch (Exception e) {
-            LOGGER.error(MessageFormat.format("推送数据出错，topicName:{0},代理IP:{1}"
+            log.error(MessageFormat.format("推送数据出错，topicName:{0},代理IP:{1}"
                     ,topicName,proxyIpBO),e);
         }
 	}

@@ -53,7 +53,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
                 saveKlines(gupiaoKline);
             }
         } catch (Exception e){
-            log.info(e.getMessage());
+            log.debug(e.getMessage());
         }
     }
 

@@ -46,7 +46,7 @@ public class DongfangKlinePipeline implements Pipeline {
 		String symbol = object.getString("code");
 		String period = getPeriod(map.get("klt"));
 		JSONArray jsonArray = object.getJSONArray("klines");
-		log.info(jsonArray.toJSONString());
+		log.debug(jsonArray.toJSONString());
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			String jsonArray1[] = jsonArray.get(i).toString().split(",");
 			BaseGupiaoKline kzz1;

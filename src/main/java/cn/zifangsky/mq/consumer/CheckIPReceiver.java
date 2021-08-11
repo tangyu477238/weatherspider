@@ -28,38 +28,38 @@ public class CheckIPReceiver {
 	@KafkaListener(id = "id0", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.checkIP}"), partitions = { "0" }) })
 	public void handle0(ProxyIpBO proxyIpBO) {
 		if ("0".equals(consumerOff)) return;
-		log.info(MessageFormat.format("接收到消息，000000000 分区 代理IP:{0}", proxyIpBO));
+		log.debug(MessageFormat.format("接收到消息，000000000 分区 代理IP:{0}", proxyIpBO));
 		runCheckIp(proxyIpBO);
 	}
 
 	@KafkaListener(id = "id1", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.checkIP}"), partitions = { "1" }) })
 	public void handle1(ProxyIpBO proxyIpBO) {
 		if ("0".equals(consumerOff)) return;
-		log.info(MessageFormat.format("接收到消息，11111111 分区 代理IP:{0}", proxyIpBO));
+		log.debug(MessageFormat.format("接收到消息，11111111 分区 代理IP:{0}", proxyIpBO));
 		runCheckIp(proxyIpBO);
 	}
 	@KafkaListener(id = "id2", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.checkIP}"), partitions = { "2" }) })
 	public void handle2(ProxyIpBO proxyIpBO) {
 		if ("0".equals(consumerOff)) return;
-		log.info(MessageFormat.format("接收到消息，22222222 分区 代理IP:{0}", proxyIpBO));
+		log.debug(MessageFormat.format("接收到消息，22222222 分区 代理IP:{0}", proxyIpBO));
 		runCheckIp(proxyIpBO);
 	}
 	@KafkaListener(id = "id3", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.checkIP}"), partitions = { "3" }) })
 	public void handle3(ProxyIpBO proxyIpBO) {
 		if ("0".equals(consumerOff)) return;
-		log.info(MessageFormat.format("接收到消息，33333333 分区 代理IP:{0}", proxyIpBO));
+		log.debug(MessageFormat.format("接收到消息，33333333 分区 代理IP:{0}", proxyIpBO));
 		runCheckIp(proxyIpBO);
 	}
 	@KafkaListener(id = "id4", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.checkIP}"), partitions = { "4" }) })
 	public void handle4(ProxyIpBO proxyIpBO) {
 		if ("0".equals(consumerOff)) return;
-		log.info(MessageFormat.format("接收到消息，44444444 分区 代理IP:{0}", proxyIpBO));
+		log.debug(MessageFormat.format("接收到消息，44444444 分区 代理IP:{0}", proxyIpBO));
 		runCheckIp(proxyIpBO);
 	}
 	@KafkaListener(id = "id5", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.checkIP}"), partitions = { "5" }) })
 	public void handle5(ProxyIpBO proxyIpBO) {
 		if ("0".equals(consumerOff)) return;
-		log.info(MessageFormat.format("接收到消息，55555555 分区 代理IP:{0}", proxyIpBO));
+		log.debug(MessageFormat.format("接收到消息，55555555 分区 代理IP:{0}", proxyIpBO));
 		runCheckIp(proxyIpBO);
 	}
 
@@ -92,11 +92,11 @@ public class CheckIPReceiver {
 					try {
 						proxyIpManager.insert(proxyIpBO);
 					} catch (Exception e) {
-						log.info("");
+						log.debug("");
 					}
 				}
 			} else if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
-				log.info("检查ip的有效性");
+				log.debug("检查ip的有效性");
 				// 不能使用则删除
 				if (!CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
 					proxyIpManager.deleteByPrimaryKey(proxyIpBO.getId());

@@ -49,7 +49,7 @@ public class DongfangGupiaoSpider implements PageProcessor{
 		JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
 		List<Gupiao> list = new ArrayList();
 		JSONArray jsonArray = object.getJSONArray("diff");
-		log.info(jsonArray.toJSONString());
+		log.debug(jsonArray.toJSONString());
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			JSONObject object1 =  JSONObject.parseObject(jsonArray.get(i).toString());
 			Gupiao gupiao = new Gupiao();

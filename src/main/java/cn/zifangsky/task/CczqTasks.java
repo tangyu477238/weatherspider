@@ -84,7 +84,7 @@ public class CczqTasks {
 
         if (gupiaoKline.getClose()<gupiaoKline.getOpen() || gupiaoKline.getPercent()<0.3) { //阳线且大于0.3
             String original_price = String.valueOf(newPrice-0.001); //获取触发价格
-            log.info("触发清仓");
+            log.debug("触发清仓");
             loginManager.hungSellCyb(original_price,""+newPrice,
                     loginManager.getEnableAmount(stock_code));
             return;
@@ -97,9 +97,9 @@ public class CczqTasks {
         if (gupiaoKline.getClose()>gupiaoKline.getOpen() && gupiaoKline.getPercent()>0.3){ //阳线且大于0.3
 
             String original_price = String.valueOf(newPrice+0.001); //获取触发价格
-            log.info("触发首次购买");
+            log.debug("触发首次购买");
             loginManager.hungBuyCyb(original_price , ""+newPrice,2000);
-            log.info("触发网格交易");
+            log.debug("触发网格交易");
             loginManager.gridYmdCyb(newPrice+"");
             return;
         }
@@ -113,23 +113,23 @@ public class CczqTasks {
         if ("0".equals(consumerOffEtf)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("wanpan，Date：{0}",FORMAT.format(current)));
-        log.info("清除条件单");
+        log.debug("清除条件单");
         loginManager.deleteAllMyYmd();
 
 //        根据实际情况补仓
         int num = loginManager.buchongStockNum();
         double newPrice = loginManager.getNewPriceCyb(); //获取最新价格
         if (num < 0){
-            log.info("补充仓位");
+            log.debug("补充仓位");
 
             String original_price = String.valueOf(newPrice+0.001); //触发价格
-            log.info("触发首次购买");
+            log.debug("触发首次购买");
             loginManager.hungBuyCyb(original_price,""+newPrice, Math.abs(num));
         }
         if (num > 0){
             String original_price = String.valueOf(newPrice-0.001);  //触发价格
 
-            log.info("处理多出仓位");
+            log.debug("处理多出仓位");
             loginManager.hungSellCyb(original_price,""+newPrice, num);
         }
 
@@ -215,7 +215,7 @@ public class CczqTasks {
 
     private void addYmd(Map map,String stock_code, String stock_name, Integer enable_amount) throws Exception{
         String newPrice = loginManager.getNewPrice(stock_code); //获取最新
-        log.info("-------------taskYmd------"+stock_code+"----"+enable_amount +"--" + newPrice);
+        log.debug("-------------taskYmd------"+stock_code+"----"+enable_amount +"--" + newPrice);
 
         addRisedownSell(map, stock_code, stock_name, enable_amount, newPrice);
 

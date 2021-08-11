@@ -1,5 +1,6 @@
 package cn.zifangsky.manager.impl;
 
+import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.HttpClientManager;
@@ -12,6 +13,7 @@ import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.model.OOSpider;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 @Slf4j
 @Service("dongfangManagerImpl")
@@ -65,23 +67,48 @@ public class DongfangManagerImpl implements DongfangManager {
      * 根据股票编码获取数据
      * @param bondId 股票编码
      * @param period k线类型
-     * @param flag 是否需要代理
+     * @param isProxy 是否需要代理
      */
     @Override
-    public void getKline(String bondId, String period, boolean flag) {
+    public void getKline(String bondId, String period, boolean isProxy, boolean isToday) {
+        String beg = "20170101";
+        if (isToday){
+            beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
+        }
         int exchange_type =  StockUtil.isShenshi(bondId)  ? 0 : 1; //深/沪
-        String url = "http://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6" +
-                "&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989" +
-                "&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg=20160101&end=20500000&_=1618930055730";
-        log.info(url);
-        Spider spider = OOSpider.create(new DongfangSpider()).addPipeline(dongfangKlinePipeline).addUrl(url);
-        if (flag){
+        StringBuffer url = new StringBuffer("http://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6")
+                .append("&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989")
+                .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
+        log.debug(url.toString());
+        Spider spider = OOSpider.create(new DongfangSpider()).addPipeline(dongfangKlinePipeline).addUrl(url.toString());
+        if (isProxy){
             spider.setDownloader(httpClientManager.getHttpClientDownloader());
         }
         spider.thread(1).run();
     }
 
+    @Override
+    public void getKline(String bondId, String period, boolean isProxy) {
+        getKline(bondId, period, true, false);
+    }
 
+    @Override
+    public void getKline(String bondId, String period) {
+        getKline(bondId, period, true);
+    }
 
+    @Override
+    public void getKline(String bondId) {
+        getKline(bondId, "101");
+    }
 
+    @Override
+    public void getKline5M(String bondId) {
+        getKline(bondId, "5");
+    }
+
+    @Override
+    public void getToDayKline5M(String bondId) {
+        getKline(bondId, "5", true, true);
+    }
 }
