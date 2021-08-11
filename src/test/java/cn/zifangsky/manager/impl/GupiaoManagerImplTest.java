@@ -31,7 +31,7 @@ public class GupiaoManagerImplTest   {
     public void listKzz(){
         List<Gupiao> list = gupiaoManager.listKzz();
         for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),"5",true);
+            dongfangManager.getKline(gupiao.getSymbol(),"5",false);
         }
 
     }

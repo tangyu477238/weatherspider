@@ -8,6 +8,7 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
+import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.GupiaoKline;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -71,7 +72,7 @@ public class CczqTasks {
         String stock_code = "159949";
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
-        GupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m",
+        BaseGupiaoKline gupiaoKline = gupiaoManager.getGupiaoKline("399006", "5m",
                 DateTimeUtil.getBeforeDay(0)+" 09:35");
         if (ComUtil.isEmpty(gupiaoKline)){
             dongfangManager.getKline("399006", "5",false);
