@@ -9,18 +9,12 @@ import java.text.MessageFormat;
 
 public class CheckIPUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckIPUtils.class);
-	
-	/**
-	 * 校验代理IP的有效性，测试地址为：http://www.ip138.com
-	 * @param ip 代理IP地址
-	 * @param port  代理IP端口
-	 * @return  此代理IP是否有效
-	 */
-	public static boolean checkValidIP(String ip,Integer port){
-		URL url = null;
+
+
+    private static boolean checkValidIP(String ip,Integer port, URL url){
+
 		HttpURLConnection connection = null;
 		try {
-			url = new URL("http://quote.eastmoney.com");
 			//代理服务器
 			InetSocketAddress proxyAddr = new InetSocketAddress(ip, port);
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
@@ -50,13 +44,41 @@ public class CheckIPUtils {
 			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
-            LOGGER.error(MessageFormat.format("代理IP[{0} {1}]不可用", ip,port));
+			LOGGER.error(MessageFormat.format("代理IP[{0} {1}]不可用", ip,port));
 		} finally {
-            if(connection != null){
-                connection.disconnect();
-            }
-        }
+			if(connection != null){
+				connection.disconnect();
+			}
+		}
 		return false;
+	}
+
+
+	/**
+	 * 校验代理IP的有效性，测试地址为：http://www.ip138.com
+	 * @param ip 代理IP地址
+	 * @param port  代理IP端口
+	 * @return  此代理IP是否有效
+	 */
+	public static boolean checkValidIP(String ip, Integer port) {
+		URL url1 = null;
+		try {
+			url1 = new URL("http://quote.eastmoney.com");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		URL url2 = null;
+		try {
+			url2 = new URL("https://www.jisilu.cn");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		boolean flag =checkValidIP(ip,port , url1) ;
+		if (!flag){
+			return false;
+		}
+		return  checkValidIP(ip,port , url2) ;
 	}
 
 	public static void main(String[] args) {

@@ -71,7 +71,7 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void getKline(String bondId, String period, boolean isProxy, boolean isToday) {
-        String beg = "20170101";
+        String beg = "20190601";
         if (isToday){
             beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
         }
