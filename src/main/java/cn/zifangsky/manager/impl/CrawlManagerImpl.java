@@ -81,9 +81,15 @@ public class CrawlManagerImpl implements CrawlManager {
 		runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=1&page=1", proxyFlag);
 	}
 
+	@Override
+	public void proxyIPCrawl() {
+		proxyIPCrawl(true);
+	}
 
-
-
+	@Override
+	public void getIPCrawl() {
+		proxyIPCrawl(false);
+	}
 
 	@Override
 	public void getDataJsl() {

@@ -43,7 +43,7 @@ public class ProxyIPTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl(true);
+        crawlManager.proxyIPCrawl();
     }
 
     /**
@@ -57,7 +57,7 @@ public class ProxyIPTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行代理IP定时获取任务2，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl(false);
+        crawlManager.getIPCrawl();
     }
 
 
