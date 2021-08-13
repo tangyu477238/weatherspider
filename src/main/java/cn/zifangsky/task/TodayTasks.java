@@ -118,4 +118,19 @@ public class TodayTasks {
 
     }
 
+    /***
+     * 可转债 1天 5fen
+     */
+    @Scheduled(cron = "${task.every.kzz.5fen}")
+    public void kzzBy5Fen(){
+        if ("0".equals(klineOff)) return;
+        Date current = new Date();
+        log.debug(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
+        List<Gupiao> list = gupiaoManager.listKzz();
+        for (Gupiao gupiao : list){
+            dongfangManager.getKline(gupiao.getSymbol(),"5");
+        }
+
+    }
+
 }
