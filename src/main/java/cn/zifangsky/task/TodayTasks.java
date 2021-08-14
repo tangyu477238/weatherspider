@@ -3,6 +3,7 @@ package cn.zifangsky.task;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.Gupiao;
+import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -39,6 +40,8 @@ public class TodayTasks {
     @Resource
     private GupiaoManager gupiaoManager;
 
+    @Resource
+    private GupiaoCodeKlineSender gupiaoCodeKlineSender; //获取k线列表
 
 
     /***
@@ -49,7 +52,7 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
-        dongfangManager.getToDayKline5M("399006");
+//        dongfangManager.getToDayKline5M("399006");
     }
 
     /***
@@ -125,10 +128,11 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol());
-        }
+//        List<Gupiao> list = gupiaoManager.listKzz();
+//        for (Gupiao gupiao : list){
+//            gupiao.setPeriod("day");
+//            gupiaoCodeKlineSender.send(gupiao);
+//        }
 
     }
 
@@ -137,13 +141,14 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.every.kzz.5fen}")
     public void kzzBy5Fen(){
-//        if ("0".equals(klineOff)) return;
-//        Date current = new Date();
-//        log.debug(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
-//        List<Gupiao> list = gupiaoManager.listKzz();
-//        for (Gupiao gupiao : list){
-//            dongfangManager.getKline(gupiao.getSymbol(),"5");
-//        }
+        if ("0".equals(klineOff)) return;
+        Date current = new Date();
+        log.debug(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
+        List<Gupiao> list = gupiaoManager.listKzz();
+        for (Gupiao gupiao : list){
+            gupiao.setPeriod("5m");
+            gupiaoCodeKlineSender.send(gupiao);
+        }
 
     }
 

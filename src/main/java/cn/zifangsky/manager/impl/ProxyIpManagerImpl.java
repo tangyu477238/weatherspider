@@ -102,7 +102,8 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		if (CheckIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
 			return proxyIp;
 		}
-		deleteByPrimaryKey(proxyIp.getId());
+		try {deleteByPrimaryKey(proxyIp.getId());}catch (Exception e){}
+
 		return selectRandomIP();
 	}
 

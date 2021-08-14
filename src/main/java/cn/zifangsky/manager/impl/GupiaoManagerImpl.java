@@ -98,7 +98,6 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
     @Override
     public List<Gupiao> listKzz() {
-
         return gupiaoRepository.getSymbolTop();
     }
 }

@@ -52,7 +52,7 @@ public class JslPipeline implements Pipeline {
 			jslKzzRepository.save(kzz);
 
 			//获取1年的k线
-			gupiaoCodeKlineSender.send(kzz.getPreBondId().toUpperCase());
+//			gupiaoCodeKlineSender.send(kzz.getPreBondId().toUpperCase());
 
 			//开始取k线数据
 //			gupiaoCodeKlineSender.send(kzz.getPreBondId().toUpperCase());

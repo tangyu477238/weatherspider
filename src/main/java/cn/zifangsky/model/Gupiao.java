@@ -16,6 +16,7 @@ public class Gupiao implements Serializable {
     private Integer id;
 
     private String symbol;
+    private String period;
     private double net_profit_cagr;
     private double ps;
     private int type;
