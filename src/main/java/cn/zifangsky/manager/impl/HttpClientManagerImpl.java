@@ -1,5 +1,6 @@
 package cn.zifangsky.manager.impl;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.ProxyIp;
@@ -17,12 +18,15 @@ public class HttpClientManagerImpl implements HttpClientManager {
 	private ProxyIpManager proxyIpManager;
 
 	@Override
-	public synchronized HttpClientDownloader getHttpClientDownloader(){
+	public  HttpClientDownloader getHttpClientDownloader(){
 		ProxyIp proxyIp = proxyIpManager.selectRandomIP();
+		if (ComUtil.isEmpty(proxyIp)){
+			return null;
+		}
 		HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
 		httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy(proxyIp.getIp(),proxyIp.getPort())));
 		try {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

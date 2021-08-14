@@ -1,5 +1,6 @@
 package cn.zifangsky.manager.impl;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.spider.*;
@@ -8,6 +9,7 @@ import cn.zifangsky.spider.gp.JslSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.model.OOSpider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
@@ -57,7 +59,11 @@ public class CrawlManagerImpl implements CrawlManager {
 			Spider spider = OOSpider.create(pageProcessor)
 					.addUrl(url).addPipeline(proxyIPPipeline);
 			if (proxyFlag){
-				spider.setDownloader(httpClientManager.getHttpClientDownloader());
+				HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader();
+				if (ComUtil.isEmpty(httpClientManager)){
+					return;
+				}
+				spider.setDownloader(httpClientDownloader);
 			}
 			spider.thread(1).run();
 		} catch (Exception e) {

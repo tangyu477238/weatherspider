@@ -10,6 +10,7 @@ import cn.zifangsky.spider.gp.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
 import us.codecraft.webmagic.model.OOSpider;
 
 import javax.annotation.Resource;
@@ -77,12 +78,17 @@ public class DongfangManagerImpl implements DongfangManager {
         StringBuffer url = new StringBuffer("http://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6")
                 .append("&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989")
                 .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
-        log.info(url.toString());
+        log.debug(url.toString());
         Spider spider = OOSpider.create(new DongfangKlineSpider())
                 .addPipeline(dongfangKlinePipeline).addUrl(url.toString());
         if (isProxy){
-            spider.setDownloader(httpClientManager.getHttpClientDownloader());
+            HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader();
+            if (httpClientDownloader==null){
+                return;
+            }
+            spider.setDownloader(httpClientDownloader);
         }
+        log.info(url.toString());
         spider.thread(1).run();
     }
 

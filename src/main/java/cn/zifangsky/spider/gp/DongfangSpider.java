@@ -1,5 +1,6 @@
 package cn.zifangsky.spider.gp;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.spider.UserAgentUtils;
@@ -52,7 +53,21 @@ public class DongfangSpider implements PageProcessor{
 		log.debug(jsonArray.toJSONString());
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			JSONObject object1 =  JSONObject.parseObject(jsonArray.get(i).toString());
+			Long volume = object1.getString("f5").equals("-")?0:object1.getLong("f5");
+			if (ComUtil.isEmpty(volume)){ //无成交量
+				continue;
+			}
+
 			Gupiao gupiao = new Gupiao();
+			gupiao.setPercent(object1.getString("f3").equals("-")?0:object1.getDouble("f3"));//涨幅(百分比)
+			gupiao.setVolume(volume);
+			gupiao.setAmount(object1.getString("f6").equals("-")?0:object1.getLong("f6"));
+			gupiao.setPs(object1.getString("f7").equals("-")?0:object1.getDouble("f7"));//振幅(百分比)
+			gupiao.setSymbol(object1.getString("f12"));
+			gupiao.setName(object1.getString("f14"));
+			gupiao.setType(StockUtil.isShenshi(gupiao.getSymbol())  ? 0 : 1); //深/沪
+			list.add(gupiao);
+
 
 //			kzz1.setOpen(Double.parseDouble(jsonArray1[1]));
 //			kzz1.setClose(Double.parseDouble(jsonArray1[2]));
@@ -66,14 +81,7 @@ public class DongfangSpider implements PageProcessor{
 //			kzz1.setChg(Double.parseDouble(jsonArray1[9]));//涨跌
 //			kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
 
-			gupiao.setPercent(object1.getString("f3").equals("-")?0:object1.getDouble("f3"));//涨幅(百分比)
-			gupiao.setVolume(object1.getString("f5").equals("-")?0:object1.getLong("f5"));
-			gupiao.setAmount(object1.getString("f6").equals("-")?0:object1.getLong("f6"));
-			gupiao.setPs(object1.getString("f7").equals("-")?0:object1.getDouble("f7"));//振幅(百分比)
-			gupiao.setSymbol(object1.getString("f12"));
-			gupiao.setName(object1.getString("f14"));
-			gupiao.setType(StockUtil.isShenshi(gupiao.getSymbol())  ? 0 : 1); //深/沪
-			list.add(gupiao);
+
 		}
 		page.putField("result", list);
 	}
