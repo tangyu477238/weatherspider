@@ -1,24 +1,17 @@
 package cn.zifangsky.spider.gp;
 
-import cn.zifangsky.login.StockUtil;
-import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.spider.UserAgentUtils;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Json;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@Slf4j
-public class DongfangKzzSpider implements PageProcessor{
 
+public class DongfangKlineSpider implements PageProcessor{
+	
 	private Site site = Site.me().setTimeOut(20000).setRetryTimes(3)
 			.setCharset("UTF-8")
 			.setSleepTime(2000);
@@ -43,22 +36,7 @@ public class DongfangKzzSpider implements PageProcessor{
 	@Override
 	public void process(Page page) {
 		Json json = page.getJson();
-
-		String result = json.toString();
-		result = result.split("\\(")[1].split("\\)")[0];
-		JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
-		List<Gupiao> list = new ArrayList();
-		JSONArray jsonArray = object.getJSONArray("diff");
-		log.debug(jsonArray.toJSONString());
-		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
-			JSONObject object1 =  JSONObject.parseObject(jsonArray.get(i).toString());
-			Gupiao gupiao = new Gupiao();
-			gupiao.setSymbol(object1.getString("f12"));
-			gupiao.setName(object1.getString("f14"));
-			gupiao.setType(StockUtil.isShenshi(gupiao.getSymbol())  ? 0 : 1); //深/沪
-			list.add(gupiao);
-		}
-		page.putField("result", list);
+		page.putField("result", json.toString());
 	}
 
 

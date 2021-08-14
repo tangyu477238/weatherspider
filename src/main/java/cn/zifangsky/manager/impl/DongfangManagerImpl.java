@@ -43,9 +43,8 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void listKzzData() {
-        OOSpider.create(new DongfangKzzSpider()).addPipeline(gupiaoPipeline)
-                .setDownloader(httpClientManager.getHttpClientDownloader())
-                .addUrl("https://datacenter-web.eastmoney.com/api/data/v1/get?callback=jQuery1123033215716759271463_1628607150447&sortColumns=PUBLIC_START_DATE&sortTypes=-1&pageSize=5000&pageNumber=1&reportName=RPT_BOND_CB_LIST&columns=SECURITY_CODE&quoteColumns=f2&source=WEB&client=WEB")
+        OOSpider.create(new DongfangSpider()).addPipeline(gupiaoPipeline)
+                .addUrl("https://97.push2.eastmoney.com/api/qt/clist/get?cb=jQuery1124009866857718349142_1628899426141&pn=1&pz=500&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=b:MK0354&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20&_=1628899426142")
                 .thread(1)
                 .run();
     }
@@ -56,9 +55,8 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void listGupiaoData() {
-        OOSpider.create(new DongfangGupiaoSpider()).addPipeline(gupiaoPipeline)
-				.setDownloader(httpClientManager.getHttpClientDownloader())
-                .addUrl("https://14.push2.eastmoney.com/api/qt/clist/get?cb=jQuery112400669458161096197_1625868279098&pn=1&pz=5000&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f14&_=1625868279108")
+        OOSpider.create(new DongfangSpider()).addPipeline(gupiaoPipeline)
+                .addUrl("https://96.push2.eastmoney.com/api/qt/clist/get?cb=jQuery112400669458161096197_1625868279098&pn=1&pz=5000&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20&_=1625868279108")
                 .thread(1)
                 .run();
     }
@@ -80,7 +78,8 @@ public class DongfangManagerImpl implements DongfangManager {
                 .append("&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989")
                 .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
         log.info(url.toString());
-        Spider spider = OOSpider.create(new DongfangSpider()).addPipeline(dongfangKlinePipeline).addUrl(url.toString());
+        Spider spider = OOSpider.create(new DongfangKlineSpider())
+                .addPipeline(dongfangKlinePipeline).addUrl(url.toString());
         if (isProxy){
             spider.setDownloader(httpClientManager.getHttpClientDownloader());
         }
@@ -105,6 +104,12 @@ public class DongfangManagerImpl implements DongfangManager {
     @Override
     public void getKline5M(String bondId) {
         getKline(bondId, "5");
+    }
+
+
+    @Override
+    public void getToDayKline(String bondId) {
+        getKline(bondId, "101", true, true);
     }
 
     @Override

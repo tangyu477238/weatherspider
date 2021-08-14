@@ -40,6 +40,7 @@ public class TodayTasks {
     private GupiaoManager gupiaoManager;
 
 
+
     /***
      * 1分钟同步一次
      */
@@ -69,13 +70,13 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.kzz.5fen}")
     public void todayKzzBy5Fen(){
-        if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("todayKzzBy5Fen，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getToDayKline5M(gupiao.getSymbol());
-        }
+//        if ("0".equals(klineOff)) return;
+//        Date current = new Date();
+//        log.debug(MessageFormat.format("todayKzzBy5Fen，Date：{0}",FORMAT.format(current)));
+//        List<Gupiao> list = gupiaoManager.listKzz();
+//        for (Gupiao gupiao : list){
+//            dongfangManager.getToDayKline5M(gupiao.getSymbol());
+//        }
 
     }
 
@@ -84,13 +85,13 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.kzz.day}")
     public void todayKzzByDay(){
-        if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getToDayKline5M(gupiao.getSymbol());
-        }
+//        if ("0".equals(klineOff)) return;
+//        Date current = new Date();
+//        log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
+//        List<Gupiao> list = gupiaoManager.listKzz();
+//        for (Gupiao gupiao : list){
+//            dongfangManager.getToDayKline5M(gupiao.getSymbol());
+//        }
 
     }
 
@@ -100,11 +101,24 @@ public class TodayTasks {
 
 
 
-    /////////////////////////////////一天一次////////////////////////////////////////////////////
+    /////////////////////////////////一天一次///////////全量数据同步/////////////////////////////////////////
+
+    /***
+     * 全量可转债
+     */
+    @Scheduled(cron = "${task.every.gupiao.all}")
+    public void gupiaoByAll(){
+        if ("0".equals(klineOff)) return;
+        Date current = new Date();
+        log.debug(MessageFormat.format("gupiaoByAll，Date：{0}",FORMAT.format(current)));
+        dongfangManager.listKzzData();
+        dongfangManager.listGupiaoData();
+    }
+
 
 
     /***
-     * 可转债 1天 同步一次
+     * 日k线
      */
     @Scheduled(cron = "${task.every.kzz.day}")
     public void kzzByDay(){
@@ -119,17 +133,17 @@ public class TodayTasks {
     }
 
     /***
-     * 可转债 1天 5fen
+     * 5分k线
      */
     @Scheduled(cron = "${task.every.kzz.5fen}")
     public void kzzBy5Fen(){
-        if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),"5");
-        }
+//        if ("0".equals(klineOff)) return;
+//        Date current = new Date();
+//        log.debug(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
+//        List<Gupiao> list = gupiaoManager.listKzz();
+//        for (Gupiao gupiao : list){
+//            dongfangManager.getKline(gupiao.getSymbol(),"5");
+//        }
 
     }
 

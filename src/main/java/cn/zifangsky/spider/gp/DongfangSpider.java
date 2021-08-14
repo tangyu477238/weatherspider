@@ -1,17 +1,24 @@
 package cn.zifangsky.spider.gp;
 
+import cn.zifangsky.login.StockUtil;
+import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.spider.UserAgentUtils;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Json;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-
+@Slf4j
 public class DongfangSpider implements PageProcessor{
-	
+
 	private Site site = Site.me().setTimeOut(20000).setRetryTimes(3)
 			.setCharset("UTF-8")
 			.setSleepTime(2000);
@@ -36,7 +43,39 @@ public class DongfangSpider implements PageProcessor{
 	@Override
 	public void process(Page page) {
 		Json json = page.getJson();
-		page.putField("result", json.toString());
+
+		String result = json.toString();
+		result = result.split("\\(")[1].split("\\)")[0];
+		JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
+		List<Gupiao> list = new ArrayList();
+		JSONArray jsonArray = object.getJSONArray("diff");
+		log.debug(jsonArray.toJSONString());
+		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
+			JSONObject object1 =  JSONObject.parseObject(jsonArray.get(i).toString());
+			Gupiao gupiao = new Gupiao();
+
+//			kzz1.setOpen(Double.parseDouble(jsonArray1[1]));
+//			kzz1.setClose(Double.parseDouble(jsonArray1[2]));
+//			kzz1.setHigh(Double.parseDouble(jsonArray1[3]));
+//			kzz1.setLow(Double.parseDouble(jsonArray1[4]));
+//			kzz1.setVolume(Double.parseDouble(jsonArray1[5]));
+//			kzz1.setAmount(jsonArray1[6]);
+
+//			kzz1.setPs(jsonArray1[7]);//振幅(百分比)
+//			kzz1.setPercent(Double.parseDouble(jsonArray1[8])); //涨幅(百分比)
+//			kzz1.setChg(Double.parseDouble(jsonArray1[9]));//涨跌
+//			kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
+
+			gupiao.setPercent(object1.getString("f3").equals("-")?0:object1.getDouble("f3"));//涨幅(百分比)
+			gupiao.setVolume(object1.getString("f5").equals("-")?0:object1.getLong("f5"));
+			gupiao.setAmount(object1.getString("f6").equals("-")?0:object1.getLong("f6"));
+			gupiao.setPs(object1.getString("f7").equals("-")?0:object1.getDouble("f7"));//振幅(百分比)
+			gupiao.setSymbol(object1.getString("f12"));
+			gupiao.setName(object1.getString("f14"));
+			gupiao.setType(StockUtil.isShenshi(gupiao.getSymbol())  ? 0 : 1); //深/沪
+			list.add(gupiao);
+		}
+		page.putField("result", list);
 	}
 
 
