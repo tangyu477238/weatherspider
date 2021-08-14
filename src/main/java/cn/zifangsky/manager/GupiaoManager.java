@@ -17,4 +17,8 @@ public interface GupiaoManager {
 	void updateAllGupiaoKline();
 
 	List<Gupiao> listKzz();
+
+
+	boolean getKlineMaxBizdate(String bondId, String period);
+
 }

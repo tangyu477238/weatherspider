@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @Slf4j
@@ -100,4 +101,19 @@ public class GupiaoManagerImpl implements GupiaoManager {
     public List<Gupiao> listKzz() {
         return gupiaoRepository.getSymbolTop();
     }
+
+    @Override
+    public boolean getKlineMaxBizdate(String bondId, String period) {
+        Integer sl = 0;
+        if ("5m".equals(period)){
+            sl = gupiaoKlineRepository.getKlineM5MaxBizdate(bondId, period);
+        } else if ("day".equals(period)){
+            sl = gupiaoKlineRepository.getKlineMaxBizdate(bondId, period);
+        }
+        if (sl==0){
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -17,10 +17,15 @@ public class HttpClientManagerImpl implements HttpClientManager {
 	private ProxyIpManager proxyIpManager;
 
 	@Override
-	public HttpClientDownloader getHttpClientDownloader(){
+	public synchronized HttpClientDownloader getHttpClientDownloader(){
 		ProxyIp proxyIp = proxyIpManager.selectRandomIP();
 		HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
 		httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy(proxyIp.getIp(),proxyIp.getPort())));
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return httpClientDownloader;
 	}
 

@@ -128,11 +128,14 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
-//        List<Gupiao> list = gupiaoManager.listKzz();
-//        for (Gupiao gupiao : list){
-//            gupiao.setPeriod("day");
-//            gupiaoCodeKlineSender.send(gupiao);
-//        }
+        List<Gupiao> list = gupiaoManager.listKzz();
+        for (Gupiao gupiao : list){
+            gupiao.setPeriod("day");
+            if (gupiaoManager.getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
+                continue;
+            }
+            gupiaoCodeKlineSender.send(gupiao);
+        }
 
     }
 
@@ -147,6 +150,9 @@ public class TodayTasks {
         List<Gupiao> list = gupiaoManager.listKzz();
         for (Gupiao gupiao : list){
             gupiao.setPeriod("5m");
+            if (gupiaoManager.getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
+                continue;
+            }
             gupiaoCodeKlineSender.send(gupiao);
         }
 

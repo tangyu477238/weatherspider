@@ -84,7 +84,7 @@ public class ExecutorProcessPool {
      */
     public void log(String name, ThreadPoolExecutor tpe) {
         String status = "[Thread] "+ name +" activeCount: " + tpe.getActiveCount() + " ; CompletedTaskCount: " + tpe.getCompletedTaskCount() + " ; Queue Size: "+ tpe.getQueue().size() + "; taskCount: " + tpe.getTaskCount();
-        logger.warn(status );
+        logger.info(status );
     }
 
     /**
