@@ -92,6 +92,8 @@ public class DongfangManagerImpl implements DongfangManager {
         spider.thread(1).run();
     }
 
+
+
     @Override
     public void getKline(String bondId, String period, boolean isProxy) {
         getKline(bondId, period, true, false);
@@ -103,7 +105,7 @@ public class DongfangManagerImpl implements DongfangManager {
     }
 
     @Override
-    public void getKline(String bondId) {
+    public void getKlineDay(String bondId) {
         getKline(bondId, "101");
     }
 

@@ -10,7 +10,7 @@ public interface GupiaoManager {
 	void saveKline(BaseGupiaoKline gupiaoKline);
 	void saveKlineAll(List<BaseGupiaoKline> list);
 
-	BaseGupiaoKline getGupiaoKline(String bondId, String period, String bizDate);
+	BaseGupiaoKline getGupiaoKline(String bondId, String bizDate);
 
 	void saveGupiao(Gupiao gupiao);
 
@@ -19,6 +19,9 @@ public interface GupiaoManager {
 	List<Gupiao> listKzz();
 
 
-	boolean getKlineMaxBizdate(String bondId, String period);
+	boolean getKlineMaxBizdate(String bondId);
+
+
+	void sysnKzzKlineAll();
 
 }

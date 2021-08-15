@@ -74,12 +74,12 @@ public class CczqTasks {
         String stock_code = "159949";
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
-        BaseGupiaoKline gupiaoKline = gupiaoKlineRepository.getKline5m("399006", "5m",
+        BaseGupiaoKline gupiaoKline = gupiaoKlineRepository.getKline5m("399006", 5,
                 DateTimeUtil.getBeforeDay(0)+" 09:35");
         if (ComUtil.isEmpty(gupiaoKline)){
             dongfangManager.getKline("399006", "5",false);
             Thread.sleep(60000);
-            gupiaoKline = gupiaoKlineRepository.getKline5m("399006", "5m",
+            gupiaoKline = gupiaoKlineRepository.getKline5m("399006", 5,
                     DateTimeUtil.getBeforeDay(0)+" 09:35");
         }
         double newPrice = loginManager.getNewPriceCyb(); //获取最新价格

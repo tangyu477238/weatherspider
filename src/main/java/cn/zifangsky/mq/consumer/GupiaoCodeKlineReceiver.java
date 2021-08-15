@@ -80,11 +80,7 @@ public class GupiaoCodeKlineReceiver {
 		}
 		@Override
 		public void run(){
-			if ("5m".equals(gupiao.getPeriod())){
-				dongfangManager.getKline5M(gupiao.getSymbol());
-			} else if ("day".equals(gupiao.getPeriod())){
-				dongfangManager.getKline(gupiao.getSymbol());
-			}
+			dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
 		}
 	}
 

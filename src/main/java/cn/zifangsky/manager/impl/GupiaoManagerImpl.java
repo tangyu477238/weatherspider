@@ -3,14 +3,14 @@ package cn.zifangsky.manager.impl;
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.GupiaoManager;
-import cn.zifangsky.model.BaseGupiaoKline;
-import cn.zifangsky.model.Gupiao;
-import cn.zifangsky.model.GupiaoKline;
-import cn.zifangsky.model.GupiaoKline5m;
+import cn.zifangsky.model.*;
+import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
 import cn.zifangsky.mq.producer.GupiaoSender;
+import cn.zifangsky.repository.GupiaoKline30mRepository;
 import cn.zifangsky.repository.GupiaoKline5mRepository;
 import cn.zifangsky.repository.GupiaoKlineRepository;
 import cn.zifangsky.repository.GupiaoRepository;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -20,20 +20,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Service("gupiaoManagerImpl")
+@Service("gupiaoManager")
+@Data
 public class GupiaoManagerImpl implements GupiaoManager {
 
-    @Resource
-    private GupiaoKlineRepository gupiaoKlineRepository;
-
-    @Resource
-    private GupiaoKline5mRepository gupiaoKline5mRepository;
+    private Integer period;
 
     @Resource
     private GupiaoRepository gupiaoRepository;
 
     @Resource
     private GupiaoSender gupiaoSender;
+
+    @Resource
+    private GupiaoCodeKlineSender gupiaoCodeKlineSender; //获取k线列表
+
+
+    @Resource
+    private GupiaoKlineRepository gupiaoKlineRepository; //获取day k线对象
+
+    @Resource
+    private GupiaoKline5mRepository gupiaoKline5mRepository; //获取5k线对象
+
+    @Resource
+    private GupiaoKline30mRepository gupiaoKline30mRepository; //获取30k线对象
+
+
 
 
     /***
@@ -43,7 +55,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public void saveKline(BaseGupiaoKline gupiaoKline) {
         try {
-            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
+            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
                 saveKlines(gupiaoKline);
                 return;
@@ -72,7 +84,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     private List getAddGupiaoKline(List<BaseGupiaoKline> list){
         List<BaseGupiaoKline> addList = new ArrayList<>(); //新增数据
         for (BaseGupiaoKline gupiaoKline : list){
-            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
+            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
                 addList.add(gupiaoKline);
                 continue;
@@ -85,7 +97,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     private List<BaseGupiaoKline> getTodayGupiaoKline(List<BaseGupiaoKline> list){
         List<BaseGupiaoKline> todayList = new ArrayList<>(); //当天数据
         for (BaseGupiaoKline gupiaoKline : list){
-            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
+            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
                 continue;
             }
@@ -114,16 +126,27 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
             List<GupiaoKline> todayGupiaoKline = (List<GupiaoKline>)(List<?>) getTodayGupiaoKline(list);
             gupiaoKlineRepository.saveAll(todayGupiaoKline); //覆盖当天数据
+        } else if (list.get(0).getPeriod().equals("30m")){
+            List<GupiaoKline30m> addGupiaoKline = (List<GupiaoKline30m>)(List<?>) getAddGupiaoKline(list);
+            gupiaoKline30mRepository.saveAll(addGupiaoKline); //保存新增数据
+
+            List<GupiaoKline30m> todayGupiaoKline = (List<GupiaoKline30m>)(List<?>) getTodayGupiaoKline(list);
+            gupiaoKline30mRepository.saveAll(todayGupiaoKline); //覆盖当天数据
         }
     }
 
 
     @Override
-    public GupiaoKline getGupiaoKline(String bondId, String period, String bizDate) {
-        if (period.equals("5m")){
-            return gupiaoKlineRepository.getKline5m(bondId,period, bizDate);
+    public GupiaoKline getGupiaoKline(String bondId, String bizDate) {
+
+        if (period.equals("5")){
+            return gupiaoKlineRepository.getKline5m(bondId, period, bizDate);
+        } else if (period.equals("30")){
+            return gupiaoKlineRepository.getKline30m(bondId, period, bizDate);
+        } else if (period.equals("101")){
+            return gupiaoKlineRepository.getKline(bondId, period, bizDate);
         }
-        return gupiaoKlineRepository.getKline(bondId,period, bizDate);
+        return null;
     }
 
 
@@ -155,11 +178,13 @@ public class GupiaoManagerImpl implements GupiaoManager {
     }
 
     @Override
-    public boolean getKlineMaxBizdate(String bondId, String period) {
+    public boolean getKlineMaxBizdate(String bondId) {
         Integer sl = 0;
-        if ("5m".equals(period)){
-            sl = gupiaoKlineRepository.getKlineM5MaxBizdate(bondId, period);
-        } else if ("day".equals(period)){
+        if ("5".equals(period)){
+            sl = gupiaoKlineRepository.getKline5mMaxBizdate(bondId, period);
+        } else if ("30".equals(period)){
+            sl = gupiaoKlineRepository.getKline30mMaxBizdate(bondId, period);
+        } else if ("101".equals(period)){
             sl = gupiaoKlineRepository.getKlineMaxBizdate(bondId, period);
         }
         if (sl==0){
@@ -168,4 +193,15 @@ public class GupiaoManagerImpl implements GupiaoManager {
         return true;
     }
 
+    @Override
+    public void sysnKzzKlineAll() {
+        List<Gupiao> list = listKzz();
+        for (Gupiao gupiao : list){
+            gupiao.setPeriod(period.toString());
+            if (getKlineMaxBizdate(gupiao.getSymbol())){
+                continue;
+            }
+            gupiaoCodeKlineSender.send(gupiao);
+        }
+    }
 }

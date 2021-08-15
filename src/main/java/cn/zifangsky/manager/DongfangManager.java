@@ -10,7 +10,7 @@ public interface DongfangManager {
 	void getKline(String bondId, String period, boolean isProxy);
 	void getKline(String bondId, String period);
 
-	void getKline(String bondId);
+	void getKlineDay(String bondId);
 	void getKline5M(String bondId);
 
 	void getToDayKline(String bondId);

@@ -87,7 +87,7 @@ public class XueqiuManagerImpl implements XueqiuManager {
     public void saveXueqiuKline(GupiaoKline gupiaoKline) {
         try {
             GupiaoKline kline = gupiaoKlineRepository.getKline(gupiaoKline.getSymbol(),
-                    gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
+                    5, gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
                 gupiaoKlineRepository.save(gupiaoKline);
             }

@@ -93,13 +93,12 @@ public class DongfangKlinePipeline implements Pipeline {
 
 	private String getPeriod(String period){
 		int periodNum = Integer.parseInt(period);
-		if (periodNum<100){
-			return period+"m";
-		}
 		if (periodNum==101){
 			return "day";
 		}
-		return null;
+
+		return period+"m";
+
 	}
 //	private void sendNewPost(String symbol,String period, long timestamp, JSONArray jsonArray){
 //		if (period.equals("day") && jsonArray.size()==800){

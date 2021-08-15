@@ -2,6 +2,7 @@ package cn.zifangsky.task;
 
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoManager;
+import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +39,9 @@ public class TodayTasks {
     private DongfangManager dongfangManager;
 
     @Resource
-    private GupiaoManager gupiaoManager;
+    private GupiaoManagerImpl gupiaoManager;
 
-    @Resource
-    private GupiaoCodeKlineSender gupiaoCodeKlineSender; //获取k线列表
+
 
 
     /***
@@ -128,34 +128,31 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            gupiao.setPeriod("day");
-            if (gupiaoManager.getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
-                continue;
-            }
-            gupiaoCodeKlineSender.send(gupiao);
-        }
+//        gupiaoManager.sysnKzzKlineAll("101");
 
     }
 
     /***
      * 5分k线
      */
-    @Scheduled(cron = "${task.every.kzz.5fen}")
-    public void kzzBy5Fen(){
+    @Scheduled(cron = "${task.every.kzz.5m}")
+    public void kzzBy5m(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.info(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            gupiao.setPeriod("5m");
-            if (gupiaoManager.getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
-                continue;
-            }
-            gupiaoCodeKlineSender.send(gupiao);
-        }
+        log.info(MessageFormat.format("kzzBy5m，Date：{0}",FORMAT.format(current)));
+//        gupiaoManager.sysnKzzKlineAll("5");
+    }
 
+    /***
+     * 30分k线
+     */
+    @Scheduled(cron = "${task.every.kzz.30m}")
+    public void kzzBy30m(){
+        if ("0".equals(klineOff)) return;
+        Date current = new Date();
+        log.info(MessageFormat.format("kzzBy30m，Date：{0}",FORMAT.format(current)));
+        gupiaoManager.setPeriod(30);
+        gupiaoManager.sysnKzzKlineAll();
     }
 
 }
