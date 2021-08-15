@@ -68,8 +68,10 @@ public class TodayTasks {
 
 
 
+    ///////////////////////////////////////K线同步//////////////////////////////////////////////
+
     /***
-     * 可转债 30秒同步一次
+     * 5m
      */
     @Scheduled(cron = "${task.today.kzz.5m}")
     public void todayKzzBy5m(){
@@ -83,7 +85,7 @@ public class TodayTasks {
     }
 
     /***
-     * 可转债 30秒同步一次
+     * 30m
      */
     @Scheduled(cron = "${task.today.kzz.30m}")
     public void todayKzzBy30m(){
@@ -97,7 +99,7 @@ public class TodayTasks {
     }
 
     /***
-     * 可转债 1天 同步一次
+     * day
      */
     @Scheduled(cron = "${task.today.kzz.day}")
     public void todayKzzByDay(){
