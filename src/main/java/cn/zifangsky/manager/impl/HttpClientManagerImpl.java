@@ -26,7 +26,7 @@ public class HttpClientManagerImpl implements HttpClientManager {
 		HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
 		httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy(proxyIp.getIp(),proxyIp.getPort())));
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

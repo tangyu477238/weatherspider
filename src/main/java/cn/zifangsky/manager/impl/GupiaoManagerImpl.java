@@ -109,41 +109,57 @@ public class GupiaoManagerImpl implements GupiaoManager {
         return todayList;
     }
 
+    @Override
     public void saveKlineAll(List<BaseGupiaoKline> list){
         if (ComUtil.isEmpty(list)){
             return;
         }
-        if (list.get(0).getPeriod().equals("5m")){
-            List<GupiaoKline5m> addGupiaoKline = (List<GupiaoKline5m>)(List<?>) getAddGupiaoKline(list);
-            gupiaoKline5mRepository.saveAll(addGupiaoKline); //保存新增数据
-
-            List<GupiaoKline5m> todayGupiaoKline = (List<GupiaoKline5m>)(List<?>) getTodayGupiaoKline(list);
-            gupiaoKline5mRepository.saveAll(todayGupiaoKline); //覆盖当天数据
-            return ;
-        } else if (list.get(0).getPeriod().equals("day")){
-            List<GupiaoKline> addGupiaoKline = (List<GupiaoKline>)(List<?>) getAddGupiaoKline(list);
-            gupiaoKlineRepository.saveAll(addGupiaoKline); //保存新增数据
-
-            List<GupiaoKline> todayGupiaoKline = (List<GupiaoKline>)(List<?>) getTodayGupiaoKline(list);
-            gupiaoKlineRepository.saveAll(todayGupiaoKline); //覆盖当天数据
-        } else if (list.get(0).getPeriod().equals("30m")){
-            List<GupiaoKline30m> addGupiaoKline = (List<GupiaoKline30m>)(List<?>) getAddGupiaoKline(list);
-            gupiaoKline30mRepository.saveAll(addGupiaoKline); //保存新增数据
-
-            List<GupiaoKline30m> todayGupiaoKline = (List<GupiaoKline30m>)(List<?>) getTodayGupiaoKline(list);
-            gupiaoKline30mRepository.saveAll(todayGupiaoKline); //覆盖当天数据
-        }
+        addGupiaoKlineAll(getAddGupiaoKline(list));  //保存新增数据
+        addGupiaoKlineAll(getTodayGupiaoKline(list));  //覆盖当天数据
     }
 
+    private void addGupiaoKlineAll(List<BaseGupiaoKline> listBase) {
+        if (ComUtil.isEmpty(listBase)){
+            return;
+        }
+        if (listBase.get(0).getPeriod().equals("5")){
+            GupiaoKline5m gupiaoKline5m;
+            List<GupiaoKline5m> list = new ArrayList<>();
+            for (BaseGupiaoKline kline : listBase){
+                gupiaoKline5m = new GupiaoKline5m();
+                BeanUtils.copyProperties(kline, gupiaoKline5m);
+                list.add(gupiaoKline5m);
+            }
+            gupiaoKline5mRepository.saveAll(list); //保存新增数据
+        } else if (listBase.get(0).getPeriod().equals("30")){
+            GupiaoKline30m gupiaoKline30m;
+            List<GupiaoKline30m> list = new ArrayList<>();
+            for (BaseGupiaoKline kline : listBase){
+                gupiaoKline30m = new GupiaoKline30m();
+                BeanUtils.copyProperties(kline, gupiaoKline30m);
+                list.add(gupiaoKline30m);
+            }
+            gupiaoKline30mRepository.saveAll(list); //保存新增数据
+        } else if (listBase.get(0).getPeriod().equals("101")){
+            GupiaoKline gupiaoKline;
+            List<GupiaoKline> list = new ArrayList<>();
+            for (BaseGupiaoKline kline : listBase){
+                gupiaoKline = new GupiaoKline();
+                BeanUtils.copyProperties(kline, gupiaoKline);
+                list.add(gupiaoKline);
+            }
+            gupiaoKlineRepository.saveAll(list); //保存新增数据
+        }
+
+    }
 
     @Override
     public GupiaoKline getGupiaoKline(String bondId, String bizDate) {
-
-        if (period.equals("5")){
+        if (period==5){
             return gupiaoKlineRepository.getKline5m(bondId, period, bizDate);
-        } else if (period.equals("30")){
+        } else if (period==30){
             return gupiaoKlineRepository.getKline30m(bondId, period, bizDate);
-        } else if (period.equals("101")){
+        } else if (period==101){
             return gupiaoKlineRepository.getKline(bondId, period, bizDate);
         }
         return null;
@@ -180,11 +196,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public boolean getKlineMaxBizdate(String bondId) {
         Integer sl = 0;
-        if ("5".equals(period)){
+        if (period==5){
             sl = gupiaoKlineRepository.getKline5mMaxBizdate(bondId, period);
-        } else if ("30".equals(period)){
+        } else if (period==30){
             sl = gupiaoKlineRepository.getKline30mMaxBizdate(bondId, period);
-        } else if ("101".equals(period)){
+        } else if (period==101){
             sl = gupiaoKlineRepository.getKlineMaxBizdate(bondId, period);
         }
         if (sl==0){

@@ -49,19 +49,13 @@ public class DongfangKlinePipeline implements Pipeline {
 			String url = resultItems.getRequest().getUrl();
 			Map<String, String> map = StringUtil.urlSplit(url);
 			String symbol = object.getString("code");
-			String period = getPeriod(map.get("klt"));
+			String period = map.get("klt");
 			JSONArray jsonArray = object.getJSONArray("klines");
 			log.debug(jsonArray.toJSONString());
 			List<BaseGupiaoKline> list = new ArrayList<>();
 			for (int i = 0; jsonArray != null && i < jsonArray.size(); i++) {
 				String jsonArray1[] = jsonArray.get(i).toString().split(",");
-				BaseGupiaoKline kzz1;
-				if (period.equals("5m")) {
-					kzz1 = new GupiaoKline5m();
-				} else {
-					kzz1 = new GupiaoKline();
-				}
-
+				BaseGupiaoKline kzz1 = new BaseGupiaoKline();
 				kzz1.setSymbol(symbol);
 				kzz1.setPeriod(period);
 				try {
@@ -91,33 +85,6 @@ public class DongfangKlinePipeline implements Pipeline {
 		}
 	}
 
-	private String getPeriod(String period){
-		int periodNum = Integer.parseInt(period);
-		if (periodNum==101){
-			return "day";
-		}
-
-		return period+"m";
-
-	}
-//	private void sendNewPost(String symbol,String period, long timestamp, JSONArray jsonArray){
-//		if (period.equals("day") && jsonArray.size()==800){
-//			try { Thread.sleep(3000);} catch (InterruptedException ie){}//n为毫秒数
-//			xueqiuManager.getDataXueqiuDetailKline(symbol.toUpperCase(),period,timestamp);
-//			return ;
-//		}
-//		return ;
-//	}
-
-	private String getBizDate(String period, Date Timestamp){
-		if (period.equals("day")){
-			return DateTimeUtil.formatDateTimetoString(Timestamp, DateTimeUtil.FMT_yyyyMMdd);
-		}
-		if (period.indexOf("m")>-1){
-			return DateTimeUtil.formatDateTimetoString(Timestamp, DateTimeUtil.FMT_yyyyMMddHHmm);
-		}
-		return "";
-	}
 
 
 }
