@@ -2,6 +2,7 @@ package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.StringUtil;
+import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.model.GupiaoKline5m;
@@ -15,7 +16,9 @@ import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.pipeline.Pipeline;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,8 +30,9 @@ import java.util.Map;
 @Slf4j
 public class DongfangKlinePipeline implements Pipeline {
 
-	@Resource(name="gupiaoKlineSender")
-	private GupiaoKlineSender gupiaoKlineSender;
+	@Resource(name="gupiaoManager")
+	private GupiaoManager gupiaoManager;
+
 
 	/**
 	 * 保存数据
@@ -48,6 +52,7 @@ public class DongfangKlinePipeline implements Pipeline {
 			String period = getPeriod(map.get("klt"));
 			JSONArray jsonArray = object.getJSONArray("klines");
 			log.debug(jsonArray.toJSONString());
+			List<BaseGupiaoKline> list = new ArrayList<>();
 			for (int i = 0; jsonArray != null && i < jsonArray.size(); i++) {
 				String jsonArray1[] = jsonArray.get(i).toString().split(",");
 				BaseGupiaoKline kzz1;
@@ -78,14 +83,10 @@ public class DongfangKlinePipeline implements Pipeline {
 				kzz1.setPercent(Double.parseDouble(jsonArray1[8])); //涨幅(百分比)
 				kzz1.setChg(Double.parseDouble(jsonArray1[9]));//涨跌
 				kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
-
-
-				//检测任务添加到队列中
-				gupiaoKlineSender.send(kzz1);
-
+				list.add(kzz1);
 			}
-
-		}catch (Exception e){
+			gupiaoManager.saveKlineAll(list);
+		} catch (Exception e){
 			log.info(e.toString());
 		}
 	}

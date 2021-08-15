@@ -11,6 +11,7 @@ import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.repository.GupiaoKline5mRepository;
+import cn.zifangsky.repository.GupiaoKlineRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -44,7 +45,7 @@ public class CczqTasks {
     private String consumerOffEtf;
 
     @Resource
-    private GupiaoKline5mRepository gupiaoKline5mRepository;
+    private GupiaoKlineRepository gupiaoKlineRepository;
 
     @Resource
     private DongfangManager dongfangManager;
@@ -73,12 +74,12 @@ public class CczqTasks {
         String stock_code = "159949";
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行zaopan，Date：{0}",FORMAT.format(current)));
-        BaseGupiaoKline gupiaoKline = gupiaoKline5mRepository.findBySymbolAndPeriodAndBizDate("399006", "5m",
+        BaseGupiaoKline gupiaoKline = gupiaoKlineRepository.getKline5m("399006", "5m",
                 DateTimeUtil.getBeforeDay(0)+" 09:35");
         if (ComUtil.isEmpty(gupiaoKline)){
             dongfangManager.getKline("399006", "5",false);
             Thread.sleep(60000);
-            gupiaoKline = gupiaoKline5mRepository.findBySymbolAndPeriodAndBizDate("399006", "5m",
+            gupiaoKline = gupiaoKlineRepository.getKline5m("399006", "5m",
                     DateTimeUtil.getBeforeDay(0)+" 09:35");
         }
         double newPrice = loginManager.getNewPriceCyb(); //获取最新价格

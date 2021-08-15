@@ -3,6 +3,7 @@ package cn.zifangsky.spider.gp;
 import cn.zifangsky.model.BizOrder;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.mq.producer.GupiaoSender;
+import cn.zifangsky.repository.GupiaoRepository;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
@@ -22,19 +23,17 @@ import java.util.List;
 @Service
 public class GupiaoPipeline implements Pipeline {
 
+	@Resource(name="gupiaoRepository")
+	private GupiaoRepository gupiaoRepository;
 
-	@Resource(name="gupiaoSender")
-	private GupiaoSender gupiaoSender;
-	
+
 	/**
 	 * 保存数据
 	 */
 	@Override
 	public void process(ResultItems resultItems, Task task) {
 		List<Gupiao> list = resultItems.get("result");
-		for (Gupiao gupiao : list){
-			gupiaoSender.send(gupiao);
-		}
+		gupiaoRepository.saveAll(list);
 
 	}
 

@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface GupiaoManager {
 
-
 	void saveKline(BaseGupiaoKline gupiaoKline);
+	void saveKlineAll(List<BaseGupiaoKline> list);
 
 	BaseGupiaoKline getGupiaoKline(String bondId, String period, String bizDate);
 

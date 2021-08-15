@@ -86,7 +86,7 @@ public class XueqiuManagerImpl implements XueqiuManager {
     @Override
     public void saveXueqiuKline(GupiaoKline gupiaoKline) {
         try {
-            GupiaoKline kline = gupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(gupiaoKline.getSymbol(),
+            GupiaoKline kline = gupiaoKlineRepository.getKline(gupiaoKline.getSymbol(),
                     gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
             if (ComUtil.isEmpty(kline)){
                 gupiaoKlineRepository.save(gupiaoKline);

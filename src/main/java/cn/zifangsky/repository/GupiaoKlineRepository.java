@@ -4,15 +4,36 @@ import cn.zifangsky.model.GupiaoKline;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 public interface GupiaoKlineRepository extends JpaRepository<GupiaoKline,Integer> {
 
-    GupiaoKline findBySymbol(String bondId);
 
-    GupiaoKline findBySymbolAndPeriodAndTimestamp(String bondId, String period, Date date);
 
-    GupiaoKline findBySymbolAndPeriodAndBizDate(String bondId, String period, String bizDate);
+    @Query(value = "select * from gupiao_kline where symbol=?1 and period =?2 and biz_date =?3 ", nativeQuery = true)
+    GupiaoKline getKline(String bondId, String period, String bizDate);
+
+    @Query(value = "select * from gupiao_kline_5m where symbol=?1 and period =?2 and biz_date =?3 ", nativeQuery = true)
+    GupiaoKline getKline5m(String bondId, String period, String bizDate);
+
+    @Query(value = "select * from gupiao_kline_15m where symbol=?1 and period =?2 and biz_date =?3 ", nativeQuery = true)
+    GupiaoKline getKline15m(String bondId, String period, String bizDate);
+
+    @Query(value = "select * from gupiao_kline_30m where symbol=?1 and period =?2 and biz_date =?3 ", nativeQuery = true)
+    GupiaoKline getKline30m(String bondId, String period, String bizDate);
+
+    @Query(value = "select * from gupiao_kline_60m where symbol=?1 and period =?2 and biz_date =?3 ", nativeQuery = true)
+    GupiaoKline getKline60m(String bondId, String period, String bizDate);
+
+    @Query(value = "select * from gupiao_kline_120m where symbol=?1 and period =?2 and biz_date =?3 ", nativeQuery = true)
+    GupiaoKline getKline120m(String bondId, String period, String bizDate);
+
+
+
 
 
 

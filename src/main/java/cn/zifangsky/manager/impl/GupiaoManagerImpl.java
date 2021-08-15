@@ -16,7 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.persistence.criteria.CriteriaBuilder;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -62,16 +62,68 @@ public class GupiaoManagerImpl implements GupiaoManager {
         if (gupiaoKline.getPeriod().equals("5m")){
             gupiaoKline5mRepository.save((GupiaoKline5m)gupiaoKline);
             return ;
+        } else if (gupiaoKline.getPeriod().equals("day")){
+            gupiaoKlineRepository.save((GupiaoKline)gupiaoKline);
         }
-        gupiaoKlineRepository.save((GupiaoKline)gupiaoKline);
+
     }
 
-    @Override
-    public BaseGupiaoKline getGupiaoKline(String bondId, String period, String bizDate) {
-        if (period.equals("5m")){
-            return gupiaoKline5mRepository.findBySymbolAndPeriodAndBizDate(bondId,period, bizDate);
+
+    private List getAddGupiaoKline(List<BaseGupiaoKline> list){
+        List<BaseGupiaoKline> addList = new ArrayList<>(); //新增数据
+        for (BaseGupiaoKline gupiaoKline : list){
+            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
+            if (ComUtil.isEmpty(kline)){
+                addList.add(gupiaoKline);
+                continue;
+            }
         }
-        return gupiaoKlineRepository.findBySymbolAndPeriodAndBizDate(bondId,period, bizDate);
+        return addList;
+    }
+
+
+    private List<BaseGupiaoKline> getTodayGupiaoKline(List<BaseGupiaoKline> list){
+        List<BaseGupiaoKline> todayList = new ArrayList<>(); //当天数据
+        for (BaseGupiaoKline gupiaoKline : list){
+            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getPeriod(), gupiaoKline.getBizDate());
+            if (ComUtil.isEmpty(kline)){
+                continue;
+            }
+            if (gupiaoKline.getBizDate().startsWith(DateTimeUtil.getBeforeDay(0))){ //如果是当天，请覆盖
+                gupiaoKline.setId(kline.getId());
+                todayList.add(gupiaoKline);
+            }
+        }
+        return todayList;
+    }
+
+    public void saveKlineAll(List<BaseGupiaoKline> list){
+        if (ComUtil.isEmpty(list)){
+            return;
+        }
+        if (list.get(0).getPeriod().equals("5m")){
+            List<GupiaoKline5m> addGupiaoKline = (List<GupiaoKline5m>)(List<?>) getAddGupiaoKline(list);
+            gupiaoKline5mRepository.saveAll(addGupiaoKline); //保存新增数据
+
+            List<GupiaoKline5m> todayGupiaoKline = (List<GupiaoKline5m>)(List<?>) getTodayGupiaoKline(list);
+            gupiaoKline5mRepository.saveAll(todayGupiaoKline); //覆盖当天数据
+            return ;
+        } else if (list.get(0).getPeriod().equals("day")){
+            List<GupiaoKline> addGupiaoKline = (List<GupiaoKline>)(List<?>) getAddGupiaoKline(list);
+            gupiaoKlineRepository.saveAll(addGupiaoKline); //保存新增数据
+
+            List<GupiaoKline> todayGupiaoKline = (List<GupiaoKline>)(List<?>) getTodayGupiaoKline(list);
+            gupiaoKlineRepository.saveAll(todayGupiaoKline); //覆盖当天数据
+        }
+    }
+
+
+    @Override
+    public GupiaoKline getGupiaoKline(String bondId, String period, String bizDate) {
+        if (period.equals("5m")){
+            return gupiaoKlineRepository.getKline5m(bondId,period, bizDate);
+        }
+        return gupiaoKlineRepository.getKline(bondId,period, bizDate);
     }
 
 
