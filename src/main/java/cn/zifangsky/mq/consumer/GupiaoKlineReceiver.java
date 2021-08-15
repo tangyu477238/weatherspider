@@ -64,7 +64,7 @@ public class GupiaoKlineReceiver {
 	@KafkaListener(id = "gpklineid5", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.gupiaoKline}"), partitions = { "5" }) })
 	public void handle5(BaseGupiaoKline gupiaoKline) {
 		if ("0".equals(consumerOff)) return;
-		log.debug(MessageFormat.format("接收到消息，55555555 分区 代理IP:{0}", gupiaoKline));
+		log.info(MessageFormat.format("接收到消息，55555555 分区 代理IP:{0}", gupiaoKline));
 		saveGupiaoKline(gupiaoKline);
 	}
 

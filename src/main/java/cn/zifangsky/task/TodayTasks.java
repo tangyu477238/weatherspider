@@ -51,7 +51,7 @@ public class TodayTasks {
     public void todayByFen(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.info(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
 //        dongfangManager.getToDayKline5M("399006");
     }
 
@@ -62,7 +62,7 @@ public class TodayTasks {
     public void todayByDay(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.info(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
 //        dongfangManager.getKline("000002");
     }
 
@@ -127,7 +127,7 @@ public class TodayTasks {
     public void kzzByDay(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
+        log.info(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
         List<Gupiao> list = gupiaoManager.listKzz();
         for (Gupiao gupiao : list){
             gupiao.setPeriod("day");
@@ -146,7 +146,7 @@ public class TodayTasks {
     public void kzzBy5Fen(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
+        log.info(MessageFormat.format("kzzBy5Fen，Date：{0}",FORMAT.format(current)));
         List<Gupiao> list = gupiaoManager.listKzz();
         for (Gupiao gupiao : list){
             gupiao.setPeriod("5m");
