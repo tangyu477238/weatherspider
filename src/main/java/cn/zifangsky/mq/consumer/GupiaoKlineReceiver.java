@@ -70,8 +70,10 @@ public class GupiaoKlineReceiver {
 
 
 	private void saveGupiaoKline(BaseGupiaoKline gupiaoKline){
-		Runnable run = new GupiaoKlineRunnable(gupiaoKline);
-		ExecutorProcessPool.getInstance().executeByCustomThread(run);
+		try {
+			Runnable run = new GupiaoKlineRunnable(gupiaoKline);
+			ExecutorProcessPool.getInstance().executeByCustomThread(run);
+		}catch (Exception e){log.debug(e.toString());}
 	}
 
 	public class GupiaoKlineRunnable implements Runnable{

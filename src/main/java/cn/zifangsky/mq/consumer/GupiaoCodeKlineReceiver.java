@@ -69,8 +69,10 @@ public class GupiaoCodeKlineReceiver {
 
 
 	private void getKlineData(Gupiao gupiao){
-		Runnable run = new GupiaoCodeKlineReceiver.GupiaoKlineCodeRunnable(gupiao);
-		ExecutorProcessPool.getInstance().executeByCustomThread(run);
+		try {
+			Runnable run = new GupiaoCodeKlineReceiver.GupiaoKlineCodeRunnable(gupiao);
+			ExecutorProcessPool.getInstance().executeByCustomThread(run);
+		}catch (Exception e){log.debug(e.toString());}
 	}
 
 	public class GupiaoKlineCodeRunnable implements Runnable{

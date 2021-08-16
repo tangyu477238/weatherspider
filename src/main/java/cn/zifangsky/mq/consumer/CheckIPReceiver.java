@@ -65,9 +65,10 @@ public class CheckIPReceiver {
 
 
 	private void runCheckIp(ProxyIpBO proxyIpBO){
-		Runnable run = new ProxyRunnable(proxyIpBO);
-		ExecutorProcessPool.getInstance().executeByCustomThread(run);
-
+		try {
+			Runnable run = new ProxyRunnable(proxyIpBO);
+			ExecutorProcessPool.getInstance().executeByCustomThread(run);
+		}catch (Exception e){log.debug(e.toString());}
 
 	}
 
