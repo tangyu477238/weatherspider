@@ -130,7 +130,6 @@ public class TodayTasks {
         Date current = new Date();
         log.info(MessageFormat.format("gupiaoByAll，Date：{0}",FORMAT.format(current)));
         dongfangManager.listKzzData();
-        dongfangManager.listGupiaoData();
     }
 
 

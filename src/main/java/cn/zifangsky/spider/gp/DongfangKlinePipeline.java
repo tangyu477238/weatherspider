@@ -3,6 +3,7 @@ package cn.zifangsky.spider.gp;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.StringUtil;
 import cn.zifangsky.manager.GupiaoManager;
+import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.GupiaoKline;
 import cn.zifangsky.model.GupiaoKline5m;
@@ -30,8 +31,8 @@ import java.util.Map;
 @Slf4j
 public class DongfangKlinePipeline implements Pipeline {
 
-	@Resource(name="gupiaoManager")
-	private GupiaoManager gupiaoManager;
+	@Resource
+	private GupiaoManagerImpl gupiaoManager;
 
 
 	/**
@@ -79,6 +80,7 @@ public class DongfangKlinePipeline implements Pipeline {
 				kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
 				list.add(kzz1);
 			}
+			gupiaoManager.setPeriod(Integer.parseInt(period));
 			gupiaoManager.saveKlineAll(list);
 		} catch (Exception e){
 			log.info(e.toString());

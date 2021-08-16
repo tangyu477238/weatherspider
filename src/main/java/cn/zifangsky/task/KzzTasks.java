@@ -170,96 +170,17 @@ public class KzzTasks {
             String stock_code = jsonObject.getStr("stock_code");
             String stock_name = jsonObject.getStr("stock_name");
             if (enable_amount>0 && (stock_code.startsWith("11")||stock_code.startsWith("12"))){
-                addYmd(map, stock_code, stock_name, enable_amount);
+                loginManager.addYmd(map, stock_code, stock_name, enable_amount);
             }
             if (enable_amount==0){
-                checkAddYmd(map, stock_code, -1 , "34");
-                checkAddYmd(map, stock_code, -1 , "35");
-                checkAddYmd(map, stock_code, -1 , "7");
+                loginManager.checkAddYmd(map, stock_code, -1 , "34");
+                loginManager.checkAddYmd(map, stock_code, -1 , "35");
+                loginManager.checkAddYmd(map, stock_code, -1 , "7");
             }
         }
     }
 
 
 
-    private void addRisedownSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
-        if (checkAddYmd(map, stock_code, enable_amount,"7")){
-            return;
-        }
-        String risedown_rate = "2.0";
-        double nPrice = Double.parseDouble(newPrice);
-        String original_price = String.valueOf(nPrice+0.001);
-        loginManager.risedownSell(stock_code, stock_name, original_price, risedown_rate, newPrice, enable_amount); //添加回落单
-     }
 
-    private void addStopProfitAndLoss(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
-        if (checkAddYmd(map, stock_code, enable_amount,"35")){
-            return;
-        }
-
-        String stop_loss_rate = "2.0"; //止
-
-        String stop_profit_rate = "100";
-        String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
-        String stop_loss_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
-        loginManager.stopProfitAndLoss(stock_code,stock_name,
-                newPrice,stop_profit_rate, stop_profit_price, stop_loss_rate, stop_loss_price, newPrice, enable_amount);
-
-    }
-
-    private void addHungSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
-        if (checkAddYmd(map, stock_code, enable_amount,"34")){
-            return;
-        }
-
-        String stop_loss_rate = "1"; //止
-        String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
-        loginManager.hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
-    }
-
-
-    private void addYmd(Map map,String stock_code, String stock_name, Integer enable_amount) throws Exception{
-        String newPrice = loginManager.getNewPrice(stock_code); //获取最新
-        log.debug("-------------taskYmd------"+stock_code+"----"+enable_amount +"--" + newPrice);
-
-        addRisedownSell(map, stock_code, stock_name, enable_amount, newPrice);
-
-        addStopProfitAndLoss(map, stock_code, stock_name, enable_amount, newPrice);
-
-        addHungSell(map, stock_code, stock_name, enable_amount, newPrice);
-
-
-
-    }
-
-    public String getLossPrice(String newPrice, double rate) {
-        double nPrice = Double.parseDouble(newPrice);
-        BigDecimal lossPrice = new BigDecimal(nPrice-(rate*nPrice/100));
-        return String.valueOf(lossPrice.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
-    }
-    public String getProfitPrice(String newPrice, double rate) {
-        double nPrice = Double.parseDouble(newPrice);
-        BigDecimal profitPrice = new BigDecimal(nPrice+(rate*nPrice/100));
-        return String.valueOf(profitPrice.setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
-    }
-
-    /**
-     * 检查是否存在或不等
-     * @param map
-     * @param stock_code
-     * @param enable_amount
-     * @param strategy_id
-     * @return
-     * @throws Exception
-     */
-    public boolean checkAddYmd(Map map, String stock_code, Integer enable_amount, String strategy_id) throws Exception{
-        if (map.containsKey(stock_code+strategy_id)){
-            String arr[] = map.get(stock_code+strategy_id).toString().split("_");
-            if (arr[0].equals(String.valueOf(enable_amount))){
-                return true;
-            }
-            loginManager.deleteYmd(arr[1]); //删除原条件单
-        }
-        return false;
-    }
 }

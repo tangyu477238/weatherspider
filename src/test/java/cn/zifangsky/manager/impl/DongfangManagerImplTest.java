@@ -30,7 +30,7 @@ public class DongfangManagerImplTest  {
     private DongfangManager dongfangManager;
 
     @Resource
-    private XinlangManager xinlangManager;
+    private GupiaoManagerImpl gupiaoManager;
 
     @Test
     public void listKzzData() {
@@ -46,7 +46,8 @@ public class DongfangManagerImplTest  {
 
     @Test
     public void getKline() {
-		dongfangManager.getKline("000001", "101",true);
+        gupiaoManager.setPeriod(30);
+        gupiaoManager.sysnKzzKlineAll();
     }
 
 

@@ -1,6 +1,7 @@
 package cn.zifangsky.common;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.assertj.core.util.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1832,18 +1833,28 @@ public class DateTimeUtil {
         }
     }
 
+    private static String getPeriodDate(double period){
+        Double minute = Math.floor(DateTimeUtil.getMinutesOfHour(new Date())/period) * period;
+        String minuteStr = String.valueOf(minute.intValue());
+        if (minute<9){
+            minuteStr = "0"+minuteStr;
+        }
+        return DateTimeUtil.formatDateTimetoString(new Date(),"yyyy-MM-dd HH:"+minuteStr);
+    }
     public static void main (String str []){
 //        System.out.println(DateTimeUtil.getMonthOfFistDay(2).substring(5,10));
 //        System.out.println(DateTimeUtil.getMonthOfLastDay(2).substring(5,10));
 //        System.out.println(DateTimeUtil.getSecondsOfTwoDate(new Date(),DateTimeUtil.addHours(new Date(),1)));
-
+//
 //        SimpleDateFormat formater = new SimpleDateFormat("H:mm");
 //        String strCurrentTime = formater.format(new Date());
 //        System.out.print(strCurrentTime);
 
-        System.out.println(DateTimeUtil.addDays(new Date(),7));
-        System.out.println(getDaysOfTwoDate(getMonthOfLastDayDate(0),new Date()));
-        System.out.println(getDaysOfTwoDate(getMonthOfLastDayDate(0), DateTimeUtil.addDays(new Date(),-1)));
+//        System.out.println(DateTimeUtil.addDays(new Date(),7));
+//        System.out.println(getDaysOfTwoDate(getMonthOfLastDayDate(0),new Date()));
+//        System.out.println(getDaysOfTwoDate(getMonthOfLastDayDate(0), DateTimeUtil.addDays(new Date(),-1)));
+
+        System.out.println(getPeriodDate(5));
     }
 
 }
