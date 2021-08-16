@@ -63,21 +63,21 @@ public class CheckIPUtils {
 	public static boolean checkValidIP(String ip, Integer port) {
 		URL url1 = null;
 		try {
-			url1 = new URL("http://quote.eastmoney.com");
+			url1 = new URL("https://www.jisilu.cn");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 		URL url2 = null;
 		try {
-			url2 = new URL("https://www.jisilu.cn");
+			url2 = new URL("https://baike.baidu.com");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 
-		boolean flag =checkValidIP(ip,port , url1) ;
-		if (!flag){
-			return false;
-		}
+//		boolean flag =checkValidIP(ip,port , url1) ;
+//		if (!flag){
+//			return false;
+//		}
 		return  checkValidIP(ip,port , url2) ;
 	}
 
