@@ -50,7 +50,7 @@ public class DongfangKlinePipeline implements Pipeline {
 			String url = resultItems.getRequest().getUrl();
 			Map<String, String> map = StringUtil.urlSplit(url);
 			String symbol = object.getString("code");
-			String period = map.get("klt");
+			Integer period = Integer.parseInt(map.get("klt"));
 			JSONArray jsonArray = object.getJSONArray("klines");
 			log.debug(jsonArray.toJSONString());
 			List<BaseGupiaoKline> list = new ArrayList<>();
@@ -80,7 +80,7 @@ public class DongfangKlinePipeline implements Pipeline {
 				kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
 				list.add(kzz1);
 			}
-			gupiaoManager.setPeriod(Integer.parseInt(period));
+			gupiaoManager.setPeriod(period);
 			gupiaoManager.saveKlineAll(list);
 		} catch (Exception e){
 			log.info(e.toString());

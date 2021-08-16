@@ -46,13 +46,13 @@ public class XueqiuGupiaoKlinePipeline implements Pipeline {
 			JSONArray jsonArray1 = jsonArray.getJSONArray(i);
 			GupiaoKline kzz1 = new GupiaoKline();
 			kzz1.setSymbol(symbol);
-			kzz1.setPeriod(period);
+//			kzz1.setPeriod(period);
 			Long time =jsonArray1.getLong(0);
 			if (i==0){
 				timestamp = time;
 			}
 			kzz1.setTimestamp(new Date(time));
-			kzz1.setBizDate(getBizDate(kzz1.getPeriod(),kzz1.getTimestamp()));
+//			kzz1.setBizDate(getBizDate(kzz1.getPeriod(),kzz1.getTimestamp()));
 
 			kzz1.setVolume(jsonArray1.getDouble(1));
 			kzz1.setOpen(jsonArray1.getDouble(2));

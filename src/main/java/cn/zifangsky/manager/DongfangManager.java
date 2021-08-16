@@ -6,9 +6,9 @@ public interface DongfangManager {
 	void listGupiaoData();
 
 	//获取K线信息
-	void getKline(String bondId, String period, boolean isProxy, boolean isToday);
-	void getKline(String bondId, String period, boolean isProxy);
-	void getKline(String bondId, String period);
+	void getKline(String bondId, Integer period, boolean isProxy, boolean isToday);
+	void getKline(String bondId, Integer period, boolean isProxy);
+	void getKline(String bondId, Integer period);
 
 	void getKlineDay(String bondId);
 	void getKline5M(String bondId);

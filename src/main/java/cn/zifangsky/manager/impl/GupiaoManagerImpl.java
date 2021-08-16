@@ -122,7 +122,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
         if (ComUtil.isEmpty(listBase)){
             return;
         }
-        if (listBase.get(0).getPeriod().equals("5")){
+        if (listBase.get(0).getPeriod()==5){
             GupiaoKline5m gupiaoKline5m;
             List<GupiaoKline5m> list = new ArrayList<>();
             for (BaseGupiaoKline kline : listBase){
@@ -131,7 +131,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
                 list.add(gupiaoKline5m);
             }
             gupiaoKline5mRepository.saveAll(list); //保存新增数据
-        } else if (listBase.get(0).getPeriod().equals("30")){
+        } else if (listBase.get(0).getPeriod()==30){
             GupiaoKline30m gupiaoKline30m;
             List<GupiaoKline30m> list = new ArrayList<>();
             for (BaseGupiaoKline kline : listBase){
@@ -140,7 +140,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
                 list.add(gupiaoKline30m);
             }
             gupiaoKline30mRepository.saveAll(list); //保存新增数据
-        } else if (listBase.get(0).getPeriod().equals("101")){
+        } else if (listBase.get(0).getPeriod()==101){
             GupiaoKline gupiaoKline;
             List<GupiaoKline> list = new ArrayList<>();
             for (BaseGupiaoKline kline : listBase){
@@ -213,7 +213,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     public void sysnKzzKlineAll() {
         List<Gupiao> list = listKzz();
         for (Gupiao gupiao : list){
-            gupiao.setPeriod(period.toString());
+            gupiao.setPeriod(period);
             if (getKlineMaxBizdate(gupiao.getSymbol())){
                 continue;
             }

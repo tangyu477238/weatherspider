@@ -77,7 +77,7 @@ public class CczqTasks {
         BaseGupiaoKline gupiaoKline = gupiaoKlineRepository.getKline5m("399006", 5,
                 DateTimeUtil.getBeforeDay(0)+" 09:35");
         if (ComUtil.isEmpty(gupiaoKline)){
-            dongfangManager.getKline("399006", "5",false);
+            dongfangManager.getKline("399006", 5,false);
             Thread.sleep(60000);
             gupiaoKline = gupiaoKlineRepository.getKline5m("399006", 5,
                     DateTimeUtil.getBeforeDay(0)+" 09:35");

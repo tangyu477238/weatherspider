@@ -80,7 +80,7 @@ public class TodayTasks {
         log.debug(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
         List<Gupiao> list = gupiaoManager.listKzz();
         for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),"5",true,true);
+            dongfangManager.getKline(gupiao.getSymbol(),5,true,true);
         }
     }
 
@@ -94,7 +94,7 @@ public class TodayTasks {
         log.debug(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
         List<Gupiao> list = gupiaoManager.listKzz();
         for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),"30",true,true);
+            dongfangManager.getKline(gupiao.getSymbol(),30,true,true);
         }
     }
 
@@ -108,7 +108,7 @@ public class TodayTasks {
         log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
         List<Gupiao> list = gupiaoManager.listKzz();
         for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),"101",true,true);
+            dongfangManager.getKline(gupiao.getSymbol(),101,true,true);
         }
 
     }

@@ -16,7 +16,7 @@ public class GupiaoKline extends BaseGupiaoKline{
     private Integer id;
 
     private String symbol;
-    private String period;
+    private Integer period;
 
     @JsonProperty("biz_date")
     private String bizDate;

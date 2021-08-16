@@ -20,13 +20,6 @@ import java.util.Date;
 @Service("dongfangManagerImpl")
 public class DongfangManagerImpl implements DongfangManager {
 
-    @Resource
-    private GupiaoKlineRepository gupiaoKlineRepository;
-
-    @Resource
-    private GupiaoRepository gupiaoRepository;
-
-
     @Resource(name="httpClientManager")
     private HttpClientManager httpClientManager;
 
@@ -45,7 +38,7 @@ public class DongfangManagerImpl implements DongfangManager {
     @Override
     public void listKzzData() {
         OOSpider.create(new DongfangSpider()).addPipeline(gupiaoPipeline)
-                .addUrl("https://97.push2.eastmoney.com/api/qt/clist/get?cb=jQuery1124009866857718349142_1628899426141&pn=1&pz=500&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=b:MK0354&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20&_=1628899426142")
+                .addUrl("https://"+System.currentTimeMillis()+".push2.eastmoney.com/api/qt/clist/get?cb=jQuery1124009866857718349142_1628899426141&pn=1&pz=500&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=b:MK0354&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20&_=1628899426142")
                 .thread(1)
                 .run();
     }
@@ -57,7 +50,7 @@ public class DongfangManagerImpl implements DongfangManager {
     @Override
     public void listGupiaoData() {
         OOSpider.create(new DongfangSpider()).addPipeline(gupiaoPipeline)
-                .addUrl("https://96.push2.eastmoney.com/api/qt/clist/get?cb=jQuery112400669458161096197_1625868279098&pn=1&pz=5000&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20&_=1625868279108")
+                .addUrl("https://"+System.currentTimeMillis()+".push2.eastmoney.com/api/qt/clist/get?cb=jQuery112400669458161096197_1625868279098&pn=1&pz=5000&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20&_=1625868279108")
                 .thread(1)
                 .run();
     }
@@ -69,13 +62,13 @@ public class DongfangManagerImpl implements DongfangManager {
      * @param isProxy 是否需要代理
      */
     @Override
-    public void getKline(String bondId, String period, boolean isProxy, boolean isToday) {
+    public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
         String beg = "20190601";
         if (isToday){
             beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
         }
         int exchange_type =  StockUtil.isShenshi(bondId)  ? 0 : 1; //深/沪
-        StringBuffer url = new StringBuffer("http://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6")
+        StringBuffer url = new StringBuffer("http://"+System.currentTimeMillis()+".push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6")
                 .append("&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989")
                 .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
         log.debug(url.toString());
@@ -95,33 +88,33 @@ public class DongfangManagerImpl implements DongfangManager {
 
 
     @Override
-    public void getKline(String bondId, String period, boolean isProxy) {
+    public void getKline(String bondId, Integer period, boolean isProxy) {
         getKline(bondId, period, true, false);
     }
 
     @Override
-    public void getKline(String bondId, String period) {
+    public void getKline(String bondId, Integer period) {
         getKline(bondId, period, true);
     }
 
     @Override
     public void getKlineDay(String bondId) {
-        getKline(bondId, "101");
+        getKline(bondId, 101);
     }
 
     @Override
     public void getKline5M(String bondId) {
-        getKline(bondId, "5");
+        getKline(bondId, 5);
     }
 
 
     @Override
     public void getToDayKline(String bondId) {
-        getKline(bondId, "101", true, true);
+        getKline(bondId, 101, true, true);
     }
 
     @Override
     public void getToDayKline5M(String bondId) {
-        getKline(bondId, "5", true, true);
+        getKline(bondId, 5, true, true);
     }
 }
