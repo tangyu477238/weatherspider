@@ -5,7 +5,6 @@ import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.spider.*;
 import cn.zifangsky.spider.gp.JslPipeline;
-import cn.zifangsky.spider.gp.JslSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
@@ -59,7 +58,7 @@ public class CrawlManagerImpl implements CrawlManager {
 			Spider spider = OOSpider.create(pageProcessor)
 					.addUrl(url).addPipeline(proxyIPPipeline);
 			if (proxyFlag){
-				HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader();
+				HttpClientDownloader httpClientDownloader = httpClientManager.getCheckHttpClientDownloader();
 				if (ComUtil.isEmpty(httpClientManager)){
 					return;
 				}
@@ -97,23 +96,21 @@ public class CrawlManagerImpl implements CrawlManager {
 		proxyIPCrawl(false);
 	}
 
-	@Override
-	public void getDataJsl() {
-		OOSpider.create(new JslSpider()).addPipeline(jslPipeline)
-//				.setDownloader(getHttpClientDownloader())
-				.addUrl("https://www.jisilu.cn/data/cbnew/cb_list/?___jsl=LST___t=1600677498531")
-				.thread(2)
-				.run();
-	}
 
-	@Override
-	public void getDataJslDetail(String bondId) {
-		OOSpider.create(new JslSpider()).addPipeline(jslPipeline)
-//				.setDownloader(getHttpClientDownloader())
-				.addUrl("https://www.jisilu.cn/data/cbnew/detail_hist/"+bondId)
-				.thread(1)
-				.run();
-	}
+//	public void getDataJsl() {
+//		OOSpider.create(new JslSpider()).addPipeline(jslPipeline)
+//				.addUrl("https://www.jisilu.cn/data/cbnew/cb_list/?___jsl=LST___t=1600677498531")
+//				.thread(2)
+//				.run();
+//	}
+//
+//
+//	public void getDataJslDetail(String bondId) {
+//		OOSpider.create(new JslSpider()).addPipeline(jslPipeline)
+//				.addUrl("https://www.jisilu.cn/data/cbnew/detail_hist/"+bondId)
+//				.thread(1)
+//				.run();
+//	}
 
 
 

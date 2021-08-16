@@ -5,4 +5,6 @@ import us.codecraft.webmagic.downloader.HttpClientDownloader;
 public interface HttpClientManager {
 
     HttpClientDownloader getHttpClientDownloader();
+
+    HttpClientDownloader getCheckHttpClientDownloader();
 }

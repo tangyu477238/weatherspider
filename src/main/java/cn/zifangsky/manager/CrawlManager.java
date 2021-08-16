@@ -8,8 +8,6 @@ public interface CrawlManager {
 	 void proxyIPCrawl();
 	 void getIPCrawl();
 
-	 void getDataJsl();
-	 void getDataJslDetail(String bondId);
 
 
 }

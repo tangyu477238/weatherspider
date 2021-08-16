@@ -19,18 +19,27 @@ public class HttpClientManagerImpl implements HttpClientManager {
 
 	@Override
 	public  HttpClientDownloader getHttpClientDownloader(){
-		ProxyIp proxyIp = proxyIpManager.selectRandomIP();
+		return getHttpClient(false);
+	}
+
+	@Override
+	public HttpClientDownloader getCheckHttpClientDownloader() {
+		return getHttpClient(true);
+	}
+
+
+	private HttpClientDownloader getHttpClient(boolean isCheck) {
+		ProxyIp proxyIp ;
+		if (isCheck){
+			proxyIp = proxyIpManager.selectCheckRandomIP();
+		} else {
+			proxyIp = proxyIpManager.selectRandomIP();
+		}
 		if (ComUtil.isEmpty(proxyIp)){
 			return null;
 		}
 		HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
 		httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy(proxyIp.getIp(),proxyIp.getPort())));
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		return httpClientDownloader;
 	}
-
 }

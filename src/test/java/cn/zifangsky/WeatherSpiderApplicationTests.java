@@ -49,10 +49,7 @@ public class WeatherSpiderApplicationTests {
 
 	}
 
-	@Test
-	public void getJsl() {
-		crawlManager.getDataJsl(); //可转债
-	}
+
 
 	@Test
 	public void getXueqiu() {
