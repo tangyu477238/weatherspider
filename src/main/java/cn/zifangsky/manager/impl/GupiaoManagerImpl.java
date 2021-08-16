@@ -165,18 +165,18 @@ public class GupiaoManagerImpl implements GupiaoManager {
     }
 
 
-    /***
-     * 股票数据存储
-     * @param gupiao
-     */
-    @Override
-    public void saveGupiao(Gupiao gupiao) {
-        Gupiao gupiao1 = gupiaoRepository.findBySymbol(gupiao.getSymbol());
-        if (gupiao1 != null){
-            gupiao.setId(gupiao1.getId());
-        }
-        gupiaoRepository.save(gupiao);
-    }
+//    /***
+//     * 股票数据存储
+//     * @param gupiao
+//     */
+//    @Override
+//    public void saveGupiao(Gupiao gupiao) {
+//        Gupiao gupiao1 = gupiaoRepository.findBySymbol(gupiao.getSymbol());
+//        if (gupiao1 != null){
+//            gupiao.setId(gupiao1.getId());
+//        }
+//        gupiaoRepository.save(gupiao);
+//    }
 
 //    @Override
 //    public void updateAllGupiaoKline() {

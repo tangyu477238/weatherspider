@@ -25,18 +25,18 @@ public class GupiaoSender {
 	 * 发送XueqiuGupiao可用性的消息到指定队列
 	 * @param gupiao  消息内容
 	 */
-	public void send(Gupiao gupiao){
-        log.debug(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，gupiao：{1}",topicName, gupiao));
-
-        try {
-            String p = String.valueOf(new Random().nextInt(100) + 1);
-            ProducerRecord producerRecord = new ProducerRecord<String, Object>(topicName, p , gupiao);
-            kafkaTemplate.send(producerRecord);
-            log.debug("推送数据成功！");
-        } catch (Exception e) {
-            log.error(MessageFormat.format("推送数据出错，topicName:{0},gupiao:{1}"
-                    ,topicName, gupiao),e);
-        }
-	}
+//	public void send(Gupiao gupiao){
+//        log.debug(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，gupiao：{1}",topicName, gupiao));
+//
+//        try {
+//            String p = String.valueOf(new Random().nextInt(100) + 1);
+//            ProducerRecord producerRecord = new ProducerRecord<String, Object>(topicName, p , gupiao);
+//            kafkaTemplate.send(producerRecord);
+//            log.debug("推送数据成功！");
+//        } catch (Exception e) {
+//            log.error(MessageFormat.format("推送数据出错，topicName:{0},gupiao:{1}"
+//                    ,topicName, gupiao),e);
+//        }
+//	}
 
 }

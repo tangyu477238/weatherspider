@@ -12,7 +12,7 @@ public interface GupiaoManager {
 
 	BaseGupiaoKline getGupiaoKline(String bondId, String bizDate);
 
-	void saveGupiao(Gupiao gupiao);
+//	void saveGupiao(Gupiao gupiao);
 
 //	void updateAllGupiaoKline();
 

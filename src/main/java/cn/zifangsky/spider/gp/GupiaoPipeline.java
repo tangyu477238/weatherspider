@@ -1,12 +1,7 @@
 package cn.zifangsky.spider.gp;
 
-import cn.zifangsky.model.BizOrder;
 import cn.zifangsky.model.Gupiao;
-import cn.zifangsky.mq.producer.GupiaoSender;
 import cn.zifangsky.repository.GupiaoRepository;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.ResultItems;
 import us.codecraft.webmagic.Task;
