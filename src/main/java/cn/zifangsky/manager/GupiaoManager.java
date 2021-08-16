@@ -14,7 +14,7 @@ public interface GupiaoManager {
 
 	void saveGupiao(Gupiao gupiao);
 
-	void updateAllGupiaoKline();
+//	void updateAllGupiaoKline();
 
 	List<Gupiao> listKzz();
 

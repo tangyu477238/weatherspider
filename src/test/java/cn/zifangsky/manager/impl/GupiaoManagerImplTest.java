@@ -23,10 +23,10 @@ public class GupiaoManagerImplTest   {
     @Resource
     private DongfangManager dongfangManager;
 
-    @Test
-    public void updateAllGupiaoKline(){
-        gupiaoManager.updateAllGupiaoKline();
-    }
+//    @Test
+//    public void updateAllGupiaoKline(){
+//        gupiaoManager.updateAllGupiaoKline();
+//    }
     @Test
     public void listKzz(){
         List<Gupiao> list = gupiaoManager.listKzz();

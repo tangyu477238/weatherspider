@@ -5,7 +5,6 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.*;
 import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
-import cn.zifangsky.mq.producer.GupiaoSender;
 import cn.zifangsky.repository.GupiaoKline30mRepository;
 import cn.zifangsky.repository.GupiaoKline5mRepository;
 import cn.zifangsky.repository.GupiaoKlineRepository;
@@ -29,8 +28,8 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Resource
     private GupiaoRepository gupiaoRepository;
 
-    @Resource
-    private GupiaoSender gupiaoSender;
+//    @Resource
+//    private GupiaoSender gupiaoSender;
 
     @Resource
     private GupiaoCodeKlineSender gupiaoCodeKlineSender; //获取k线列表
@@ -179,13 +178,13 @@ public class GupiaoManagerImpl implements GupiaoManager {
         gupiaoRepository.save(gupiao);
     }
 
-    @Override
-    public void updateAllGupiaoKline() {
-        List<Gupiao> list = gupiaoRepository.findAll();
-        for (Gupiao gupiao : list){
-            gupiaoSender.send(gupiao);
-        }
-    }
+//    @Override
+//    public void updateAllGupiaoKline() {
+//        List<Gupiao> list = gupiaoRepository.findAll();
+//        for (Gupiao gupiao : list){
+//            gupiaoSender.send(gupiao);
+//        }
+//    }
 
 
     @Override
