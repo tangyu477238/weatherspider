@@ -21,6 +21,9 @@ public class ProxyIPSpider9 implements PageProcessor {
 
 	@Override
 	public void process(Page page) {
+		try {
+
+
 		List<String> ipList = page.getHtml().xpath("//table[@class='table table-bordered table-striped']/tbody/tr").all();
 		List<ProxyIp> result = new ArrayList<>();
 	
@@ -40,6 +43,7 @@ public class ProxyIPSpider9 implements PageProcessor {
 		page.putField("result", result);
 		page.addTargetRequest("https://www.kuaidaili.com/free/inha/2/");
 		page.addTargetRequest("https://www.kuaidaili.com/free/inha/3/");
+		}catch (Exception e){}
 	}
 
 }

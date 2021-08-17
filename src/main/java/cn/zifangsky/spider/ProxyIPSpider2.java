@@ -24,6 +24,9 @@ public class ProxyIPSpider2 implements PageProcessor {
 
 	@Override
 	public void process(Page page) {
+		try {
+
+
 		List<String> ipList = page.getHtml().xpath("//table[@class='layui-table']/tbody/tr").all();
 		List<ProxyIp> result = new ArrayList<>();
 	
@@ -44,6 +47,7 @@ public class ProxyIPSpider2 implements PageProcessor {
 		page.putField("result", result);
 		page.addTargetRequest("http://www.89ip.cn/index_2.html");
 		page.addTargetRequest("http://www.89ip.cn/index_3.html");
+	}catch (Exception e){}
 	}
 
 }
