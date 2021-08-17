@@ -72,18 +72,24 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		return list.get(0);
 	}
 
+	private synchronized void synProxy(){
+		List<ProxyIp> list = new ArrayList<>();
+		log.info("---------废弃IP重新利用----开始-----"+ DateUtil.formatAsDatetime(new Date()));
+		ProxyIp proxyIp;
+		for (ProxyIp proxyIp1 : map.values()) {
+			proxyIp = new ProxyIp();
+			BeanUtils.copyProperties(proxyIp1, proxyIp);
+			list.add(proxyIp);
+		}
+		proxyIpRepository.saveAll(list);
+		log.info(list.size()+"---------废弃IP重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
+	}
 	@Override
 	public ProxyIp selectCheckRandomIP() {
 		ProxyIp proxyIp = selectRandomIP();
 		if (ComUtil.isEmpty(proxyIp)){
 			if (map.size()>0){
-				List<ProxyIp> list = new ArrayList<>();
-				for (ProxyIp proxyIp1 : map.values()) {
-					list.add(proxyIp1);
-				}
-				log.info("---------废弃IP重新利用----开始-----"+ DateUtil.formatAsDatetime(new Date()));
-				proxyIpRepository.saveAll(list);
-				log.info("---------废弃IP重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
+				synProxy();
 			}
 			return null;
 		}
