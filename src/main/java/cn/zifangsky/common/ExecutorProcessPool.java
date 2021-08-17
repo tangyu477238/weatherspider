@@ -4,6 +4,7 @@ package cn.zifangsky.common;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +17,10 @@ import org.slf4j.LoggerFactory;
  * 由于 Executors工具类自定义的队列大小为Integer.MAX_VALUE, 当任务队列过多时，可能会出现OOM
  * ExecutorProcessPool.getInstance().executeByCustomThread( new Runnable(){ ... });
  */
+@Slf4j
 public class ExecutorProcessPool {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExecutorProcessPool.class);
+    
 
     private static ExecutorProcessPool pool = new ExecutorProcessPool();
 
@@ -84,7 +86,7 @@ public class ExecutorProcessPool {
      */
     public void log(String name, ThreadPoolExecutor tpe) {
         String status = "[Thread] "+ name +" activeCount: " + tpe.getActiveCount() + " ; CompletedTaskCount: " + tpe.getCompletedTaskCount() + " ; Queue Size: "+ tpe.getQueue().size() + "; taskCount: " + tpe.getTaskCount();
-        logger.info(status );
+        log.debug(status );
     }
 
     /**
