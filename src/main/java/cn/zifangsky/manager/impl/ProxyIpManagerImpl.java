@@ -8,6 +8,7 @@ import cn.zifangsky.model.bo.ProxyIpBO;
 import cn.zifangsky.repository.ProxyIpRepository;
 import cn.zifangsky.spider.CheckIPUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.DateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ import javax.annotation.Resource;
 @Slf4j
 public class ProxyIpManagerImpl implements ProxyIpManager {
 
-	private Map<String, Object> map = new ConcurrentHashMap<>();
+	private Map<String, ProxyIp> map = new ConcurrentHashMap<>();
 
 	@Resource
 	private ProxyIpRepository proxyIpRepository;
@@ -75,6 +76,15 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	public ProxyIp selectCheckRandomIP() {
 		ProxyIp proxyIp = selectRandomIP();
 		if (ComUtil.isEmpty(proxyIp)){
+			if (map.size()>0){
+				List<ProxyIp> list = new ArrayList<>();
+				for (ProxyIp proxyIp1 : map.values()) {
+					list.add(proxyIp1);
+				}
+				log.info("---------废弃IP重新利用----开始-----"+ DateUtil.formatAsDatetime(new Date()));
+				proxyIpRepository.saveAll(list);
+				log.info("---------废弃IP重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
+			}
 			return null;
 		}
 		if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {

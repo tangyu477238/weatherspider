@@ -66,7 +66,7 @@ public class CrawlManagerImpl implements CrawlManager {
 			}
 			spider.thread(1).run();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.debug(e.toString());
 		}
 	}
 
@@ -74,12 +74,14 @@ public class CrawlManagerImpl implements CrawlManager {
 
 	@Override
 	public void proxyIPCrawl(boolean proxyFlag) {
-		runSpider(new ProxyIPSpider9(),"https://www.kuaidaili.com/free/inha/1/", proxyFlag);
-		runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=1", proxyFlag);
-		runSpider(new ProxyIPSpider3(),"https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1", proxyFlag);
 		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/gaoni/", proxyFlag);
 		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/http/", proxyFlag);
 		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/https/", proxyFlag);
+
+		runSpider(new ProxyIPSpider9(),"https://www.kuaidaili.com/free/inha/1/", proxyFlag);
+		runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=1", proxyFlag);
+		runSpider(new ProxyIPSpider3(),"https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1", proxyFlag);
+
 
 		runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_1.html", proxyFlag);
 		runSpider(new ProxyIPSpider4(),"http://www.66ip.cn/1.html", proxyFlag);
