@@ -71,7 +71,6 @@ public class CrawlManagerImpl implements CrawlManager {
 	}
 
 
-
 	@Override
 	public void proxyIPCrawl(boolean proxyFlag) {
 		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/gaoni/", proxyFlag);
