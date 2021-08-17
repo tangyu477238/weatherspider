@@ -1,9 +1,7 @@
 package cn.zifangsky.manager.impl;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.model.bo.ProxyIpBO;
@@ -22,6 +20,7 @@ import javax.annotation.Resource;
 @Slf4j
 public class ProxyIpManagerImpl implements ProxyIpManager {
 
+	private Map<String, Object> map = new ConcurrentHashMap<>();
 
 	@Resource
 	private ProxyIpRepository proxyIpRepository;
@@ -36,13 +35,13 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		ProxyIp proxyIp = proxyIpRepository.getOne(id);
-		proxyIp.setUsed(proxyIp.getUsed()+1);
-		if (proxyIp.getUsed()>100){
+//		ProxyIp proxyIp = proxyIpRepository.getOne(id);
+//		proxyIp.setUsed(proxyIp.getUsed()+1);
+//		if (proxyIp.getUsed()>100){
 			proxyIpRepository.deleteById(id);
-		} else {
-			proxyIpRepository.save(proxyIp);
-		}
+//		} else {
+//			proxyIpRepository.save(proxyIp);
+//		}
 		return 1;
 	}
 
@@ -91,6 +90,20 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	@Override
 	public void addPropx(ProxyIpBO proxyIpBO) {
 		try {
+			if (map.containsKey(proxyIpBO.getIp()+proxyIpBO.getPort())){
+				if (map.size()>200000){
+					log.info("--------map:达到了20万,开始减半--------");
+					map.forEach((k,v) -> {
+						if (map.size()<100000){
+							log.info("--------map:减半至10万-------");
+							return;
+						}
+						map.remove(k);
+					});
+				}
+				return;
+			}
+			map.put(proxyIpBO.getIp()+proxyIpBO.getPort(), proxyIpBO); //存进集合
 			// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
 			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
 				// 1 查询该IP是否已存在
