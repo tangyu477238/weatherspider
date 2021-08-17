@@ -18,7 +18,7 @@ public class ProxyIpBO extends ProxyIp implements Serializable{
         this.checkType = checkType;
     }
 
-    public ProxyIpBO(Long id, String ip, Integer port, String type, String addr, Boolean used, String other, CheckIPType checkType) {
+    public ProxyIpBO(Long id, String ip, Integer port, String type, String addr, Integer used, String other, CheckIPType checkType) {
         super(id, ip, port, type, addr, used, other);
         this.checkType = checkType;
     }

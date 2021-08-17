@@ -30,7 +30,6 @@ public class CheckIPUtils {
 			connection.setReadTimeout(4000);
 			connection.setConnectTimeout(4000);
 			connection.setRequestMethod("GET");
-
 			if(connection.getResponseCode() == 200){
 				log.info(MessageFormat.format("============代理IP[{0} {1}]可用=====================", ip,port));
 				return true;

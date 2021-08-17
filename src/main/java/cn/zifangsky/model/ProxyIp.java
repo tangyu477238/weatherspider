@@ -15,7 +15,7 @@ public class ProxyIp implements Serializable{
     public ProxyIp() {
     }
 
-    public ProxyIp(Long id, String ip, Integer port, String type, String addr, Boolean used, String other) {
+    public ProxyIp(Long id, String ip, Integer port, String type, String addr, Integer used, String other) {
         this.id = id;
         this.ip = ip;
         this.port = port;
@@ -36,7 +36,7 @@ public class ProxyIp implements Serializable{
 
     private String addr;
 
-    private Boolean used;
+    private Integer used;
 
     private String other;
 

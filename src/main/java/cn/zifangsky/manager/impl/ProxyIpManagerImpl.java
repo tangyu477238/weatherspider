@@ -36,7 +36,13 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-		proxyIpRepository.deleteById(id);
+		ProxyIp proxyIp = proxyIpRepository.getOne(id);
+		proxyIp.setUsed(proxyIp.getUsed()+1);
+		if (proxyIp.getUsed()>100){
+			proxyIpRepository.deleteById(id);
+		} else {
+			proxyIpRepository.save(proxyIp);
+		}
 		return 1;
 	}
 
@@ -75,35 +81,37 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
 			return proxyIp;
 		}
-		try {deleteByPrimaryKey(proxyIp.getId());}catch (Exception e){}
+		try {
+			deleteByPrimaryKey(proxyIp.getId());
+		}catch (Exception e){}
 		return selectCheckRandomIP();
 	}
 
 
 	@Override
 	public void addPropx(ProxyIpBO proxyIpBO) {
-		// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
-		if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
-			// 1 查询该IP是否已存在
-			ProxyIp oldIP = selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
-			if (oldIP != null){
-				return ;
-			}
-			if (checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-				// 2如果不存在则插入数据
-				proxyIpBO.setUsed(false);
-				try {
-					insert(proxyIpBO);
-				} catch (Exception e) {
-					log.debug("");
+		try {
+			// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
+			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
+				// 1 查询该IP是否已存在
+				ProxyIp oldIP = selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
+				if (oldIP != null) {
+					return ;
 				}
+				if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
+					return ;
+				}
+				insert(proxyIpBO);
 			}
-		} else if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
-			log.debug("检查ip的有效性");
-			// 不能使用则删除
-			if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-				deleteByPrimaryKey(proxyIpBO.getId());
+			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
+				log.debug("检查ip的有效性");
+				if (checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
+					return ;
+				}
+				deleteByPrimaryKey(proxyIpBO.getId()); // 不能使用则删除
 			}
+		} catch (Exception e) {
+			log.debug("");
 		}
 	}
 }

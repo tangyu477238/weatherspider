@@ -42,7 +42,7 @@ public class ProxyIPPipeline implements Pipeline {
 				proxyIpBO.setPort(proxyIp.getPort());
 				proxyIpBO.setType(proxyIp.getType());
 				proxyIpBO.setAddr(proxyIp.getAddr());
-				proxyIpBO.setUsed(proxyIp.getUsed());
+				proxyIpBO.setUsed(0);
 				proxyIpBO.setOther(proxyIp.getOther());
 				proxyIpBO.setCheckType(CheckIPType.ADD);
 
