@@ -42,13 +42,11 @@ public class TestSpider{
     @Test
 	public void testCheckProxyIp(){
         ProxyIpBO proxyIpBO = new ProxyIpBO();
-        proxyIpBO.setIp("122.72.18.160");
-        proxyIpBO.setPort(80);
+        proxyIpBO.setIp("178.134.208.126");
+        proxyIpBO.setPort(50824);
 
+        checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort());
 
-        if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-            proxyIpManager.deleteByPrimaryKey(proxyIpBO.getId());
-        }
     }
     
     /**

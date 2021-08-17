@@ -68,16 +68,19 @@ public class CheckIPUtils {
 	 * @return  此代理IP是否有效
 	 */
 	public  boolean checkValidIP(String ip, Integer port){
-		boolean isTrue = false;
 		try{
 			List<ProxyUrl> list = proxyUrlRepository.findAll();
 			Collections.shuffle(list);
-			URL url = new URL(list.get(0).getUrl());
-			isTrue = checkValidIP(ip, port, url);
+			for (ProxyUrl proxyUrl : list){
+				URL url = new URL(proxyUrl.getUrl());
+				if (checkValidIP(ip, port, url)){
+					return  true;
+				}
+			}
 		} catch (Exception e) {
 			log.debug(e.toString());
 		}
-		return isTrue;
+		return false;
 	}
 
 
