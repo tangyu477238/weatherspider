@@ -41,7 +41,9 @@ public class ProxyIPSpider9 implements PageProcessor {
 			} 
 		}
 		page.putField("result", result);
+			Thread.sleep(3000);
 		page.addTargetRequest("https://www.kuaidaili.com/free/inha/2/");
+			Thread.sleep(3000);
 		page.addTargetRequest("https://www.kuaidaili.com/free/inha/3/");
 		}catch (Exception e){}
 	}

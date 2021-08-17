@@ -44,7 +44,9 @@ public class ProxyIPSpider implements PageProcessor {
 			} 
 		}
 		page.putField("result", result);
+		Thread.sleep(3000);
 		page.addTargetRequest("https://ip.jiangxianli.com/?page=2");
+		Thread.sleep(3000);
 		page.addTargetRequest("https://ip.jiangxianli.com/?page=3");
 		}catch (Exception e){}
 	}
