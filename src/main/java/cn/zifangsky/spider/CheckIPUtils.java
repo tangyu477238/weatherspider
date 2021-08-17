@@ -1,17 +1,25 @@
 package cn.zifangsky.spider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.zifangsky.model.ProxyUrl;
+import cn.zifangsky.repository.ProxyUrlRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.*;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.List;
 
+@Slf4j
+@Service
 public class CheckIPUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CheckIPUtils.class);
 
+	@Resource
+	private ProxyUrlRepository proxyUrlRepository;
 
-    private static boolean checkValidIP(String ip,Integer port, URL url){
+    private  boolean checkValidIP(String ip,Integer port, URL url){
 
 		HttpURLConnection connection = null;
 		try {
@@ -24,7 +32,7 @@ public class CheckIPUtils {
 			connection.setRequestMethod("GET");
 
 			if(connection.getResponseCode() == 200){
-				LOGGER.info(MessageFormat.format("============代理IP[{0} {1}]可用=====================", ip,port));
+				log.info(MessageFormat.format("============代理IP[{0} {1}]可用=====================", ip,port));
 				return true;
 			}
 
@@ -44,7 +52,7 @@ public class CheckIPUtils {
 			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error(MessageFormat.format("代理IP[{0} {1}]不可用", ip,port));
+			log.error(MessageFormat.format("代理IP[{0} {1}]不可用", ip,port));
 		} finally {
 			if(connection != null){
 				connection.disconnect();
@@ -60,28 +68,18 @@ public class CheckIPUtils {
 	 * @param port  代理IP端口
 	 * @return  此代理IP是否有效
 	 */
-	public static boolean checkValidIP(String ip, Integer port) {
-		URL url1 = null;
-		try {
-			url1 = new URL("https://www.jisilu.cn");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+	public  boolean checkValidIP(String ip, Integer port){
+		boolean isTrue = false;
+		try{
+			List<ProxyUrl> list = proxyUrlRepository.findAll();
+			Collections.shuffle(list);
+			URL url = new URL(list.get(0).getUrl());
+			isTrue = checkValidIP(ip, port, url);
+		} catch (Exception e) {
+			log.debug(e.toString());
 		}
-		URL url2 = null;
-		try {
-			url2 = new URL("https://baike.baidu.com");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-
-//		boolean flag =checkValidIP(ip,port , url1) ;
-//		if (!flag){
-//			return false;
-//		}
-		return  checkValidIP(ip,port , url2) ;
+		return isTrue;
 	}
 
-	public static void main(String[] args) {
-		CheckIPUtils.checkValidIP("114.249.115.239",9000);
-	}
+
 }

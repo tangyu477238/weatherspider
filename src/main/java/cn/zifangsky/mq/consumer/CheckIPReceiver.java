@@ -80,29 +80,7 @@ public class CheckIPReceiver {
 		}
 		@Override
 		public void run(){
-			// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
-			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
-				// 1 查询该IP是否已存在
-				ProxyIp oldIP = proxyIpManager.selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
-				if (oldIP != null){
-					return ;
-				}
-				if (CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-					// 2如果不存在则插入数据
-					proxyIpBO.setUsed(false);
-					try {
-						proxyIpManager.insert(proxyIpBO);
-					} catch (Exception e) {
-						log.debug("");
-					}
-				}
-			} else if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
-				log.debug("检查ip的有效性");
-				// 不能使用则删除
-				if (!CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-					proxyIpManager.deleteByPrimaryKey(proxyIpBO.getId());
-				}
-			}
+			proxyIpManager.addPropx(proxyIpBO);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package cn.zifangsky.manager;
 
 import cn.zifangsky.model.ProxyIp;
+import cn.zifangsky.model.bo.ProxyIpBO;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface ProxyIpManager {
     ProxyIp selectCheckRandomIP();
 
     ProxyIp selectRandomIP();
+
+    void addPropx(ProxyIpBO proxyIpBO);
 }

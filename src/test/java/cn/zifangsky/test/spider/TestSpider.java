@@ -28,6 +28,9 @@ public class TestSpider{
     @Resource(name = "proxyIpManager")
     private ProxyIpManager proxyIpManager;
 
+    @Resource
+    private CheckIPUtils checkIPUtils;
+
 
 
     /**
@@ -43,7 +46,7 @@ public class TestSpider{
         proxyIpBO.setPort(80);
 
 
-        if (!CheckIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
+        if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
             proxyIpManager.deleteByPrimaryKey(proxyIpBO.getId());
         }
     }
