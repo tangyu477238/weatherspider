@@ -71,8 +71,11 @@ public class CheckIPUtils {
 		try{
 			List<ProxyUrl> list = proxyUrlRepository.findAll();
 			Collections.shuffle(list);
-			for (ProxyUrl proxyUrl : list){
-				URL url = new URL(proxyUrl.getUrl());
+			for (int i = 0 ; i<list.size() ; i++){
+				URL url = new URL(list.get(i).getUrl());
+				if (i==5){
+					return false;
+				}
 				if (checkValidIP(ip, port, url)){
 					return  true;
 				}
