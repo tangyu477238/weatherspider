@@ -29,7 +29,7 @@ public class ProxyIPTasks {
     private CrawlManager crawlManager;
 
     @Value("${mq.proxyIp.off}")
-    private String consumerOff;
+    private String proxyOff;
 
 
     /**
@@ -40,7 +40,7 @@ public class ProxyIPTasks {
      */
     @Scheduled(cron = "${task.crawlProxyIp_1.schedule}")
     public void crawlProxyIpTask1(){
-        if ("0".equals(consumerOff)) return;
+        if ("0".equals(proxyOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
         crawlManager.proxyIPCrawl();
@@ -54,7 +54,7 @@ public class ProxyIPTasks {
      */
     @Scheduled(cron = "${task.crawlProxyIp_2.schedule}")
     public void crawlProxyIpTask2(){
-        if ("0".equals(consumerOff)) return;
+        if ("0".equals(proxyOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("开始执行代理IP定时获取任务2，Date：{0}",FORMAT.format(current)));
         crawlManager.getIPCrawl();
