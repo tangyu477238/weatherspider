@@ -4,6 +4,7 @@ import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.bo.ProxyIpBO;
 import cn.zifangsky.spider.CheckIPUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,7 @@ import javax.annotation.Resource;
  * @date 2018/6/21
  * @since 1.0.0
  */
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @WebAppConfiguration
@@ -42,10 +44,10 @@ public class TestSpider{
     @Test
 	public void testCheckProxyIp(){
         ProxyIpBO proxyIpBO = new ProxyIpBO();
-        proxyIpBO.setIp("182.84.144.104");
+        proxyIpBO.setIp("106.45.104.88");
         proxyIpBO.setPort(3256);
 
-        checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort());
+        log.info(checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())+"");
 
     }
     

@@ -44,10 +44,6 @@ public class ProxyIPSpider6 implements PageProcessor {
 			} 
 		}
 		page.putField("result", result);
-			Thread.sleep(3000);
-		page.addTargetRequest("http://www.ip3366.net/?stype=1&page=2");
-			Thread.sleep(3000);
-		page.addTargetRequest("http://www.ip3366.net/?stype=1&page=3");
 		}catch (Exception e){}
 	}
 
