@@ -117,14 +117,13 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public void addProxyAll(List<ProxyIp> list) {
-//		List<ProxyIp> proxyIpList = new ArrayList<>();
-//		ProxyIp proxyIp;
-//		for (ProxyIp proxyIpBO : list) {
-//			proxyIp = new ProxyIp();
-//			BeanUtils.copyProperties(proxyIpBO, proxyIp);
-//			proxyIpList.add(proxyIp);
-//		}
-		proxyIpRepository.saveAll(list);
+		List<ProxyIp> proxyIpList = new ArrayList<>();
+		for (ProxyIp proxyIp : list) {
+			if (!map.containsKey(proxyIp.getIp()+proxyIp.getPort())){
+				proxyIpList.add(proxyIp);
+			}
+		}
+		proxyIpRepository.saveAll(proxyIpList);
 	}
 
 	@Override

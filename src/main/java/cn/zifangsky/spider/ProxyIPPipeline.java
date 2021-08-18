@@ -22,16 +22,9 @@ import java.util.List;
 @Component("proxyIPPipeline")
 public class ProxyIPPipeline implements Pipeline {
 
-	@Value("${mq.topicName.checkIP}")
-	private String checkIPTopicName;
-	
 	@Resource(name="checkIPSender")
 	private CheckIPSender checkIPSender;
 
-
-
-	@Resource
-	private ProxyIpManager proxyIpManager;
 	/**
 	 * 保存数据
 	 */
@@ -40,22 +33,20 @@ public class ProxyIPPipeline implements Pipeline {
 		List<ProxyIp> list = resultItems.get("result");
 		
 		if(list != null && list.size() > 0){
-//			list.forEach(proxyIp -> {
-//				ProxyIpBO proxyIpBO = new ProxyIpBO();
-//				proxyIpBO.setId(proxyIp.getId());
-//				proxyIpBO.setIp(proxyIp.getIp());
-//				proxyIpBO.setPort(proxyIp.getPort());
-//				proxyIpBO.setType(proxyIp.getType());
-//				proxyIpBO.setAddr(proxyIp.getAddr());
-//				proxyIpBO.setUsed(0);
-//				proxyIpBO.setOther(proxyIp.getOther());
-//				proxyIpBO.setCheckType(CheckIPType.ADD);
-//
-//				//检测任务添加到队列中
-////				checkIPSender.send(checkIPTopicName, proxyIpBO);
-//			});
+			list.forEach(proxyIp -> {
+				ProxyIpBO proxyIpBO = new ProxyIpBO();
+				proxyIpBO.setId(proxyIp.getId());
+				proxyIpBO.setIp(proxyIp.getIp());
+				proxyIpBO.setPort(proxyIp.getPort());
+				proxyIpBO.setType(proxyIp.getType());
+				proxyIpBO.setAddr(proxyIp.getAddr());
+				proxyIpBO.setUsed(0);
+				proxyIpBO.setOther(proxyIp.getOther());
+				proxyIpBO.setCheckType(CheckIPType.ADD);
 
-			proxyIpManager.addProxyAll(list);
+				//检测任务添加到队列中
+				checkIPSender.send(proxyIpBO);
+			});
 		}
 
 	}

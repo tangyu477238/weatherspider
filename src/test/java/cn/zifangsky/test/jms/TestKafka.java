@@ -25,8 +25,7 @@ import java.util.List;
 @SpringBootTest
 @WebAppConfiguration
 public class TestKafka {
-    @Value("${mq.topicName.checkIP}")
-	private String checkIPTopicName;
+
 
     @Resource(name="proxyIpManager")
     private ProxyIpManager proxyIpManager;
@@ -59,7 +58,7 @@ public class TestKafka {
 				proxyIpBO.setCheckType(ProxyIpBO.CheckIPType.UPDATE);
 
 				//3 添加到队列中
-				checkIPSender.send(checkIPTopicName, proxyIpBO);
+				checkIPSender.send(proxyIpBO);
 			});
 
 		    //暂停线程，查看效果
