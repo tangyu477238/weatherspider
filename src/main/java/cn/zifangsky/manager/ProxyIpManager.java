@@ -9,7 +9,10 @@ public interface ProxyIpManager {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(ProxyIp proxyIp);
+    boolean insert(ProxyIpBO proxyIpBO);
+
+    boolean update(ProxyIpBO proxyIpBO);
+
 
     /**
      * 根据IP和端口查询
@@ -35,4 +38,6 @@ public interface ProxyIpManager {
     void addProxy(ProxyIpBO proxyIpBO);
 
     void addProxyAll(List<ProxyIp> list);
+
+
 }

@@ -51,14 +51,40 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	}
 
 	@Override
-	public int insert(ProxyIp proxyIp) {
+	public boolean insert(ProxyIpBO proxyIpBO) {
+		// 0 查询该IP是否 验证过
+		if (map.containsKey(proxyIpBO.getIp()+proxyIpBO.getPort())){
+			return false;
+		}
+		map.put(proxyIpBO.getIp()+proxyIpBO.getPort(), proxyIpBO); //存进集合
 
+		// 1 查询该IP 是否已存在
+		ProxyIp oldIP = selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
+		if (!ComUtil.isEmpty(oldIP)) {
+			return false;
+		}
+		if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
+			return false;
+		}
 		ProxyIp proxy = new ProxyIp();
-		BeanUtils.copyProperties(proxyIp, proxy);
+		BeanUtils.copyProperties(proxyIpBO, proxy);
 		proxy.setUpdateTime(new Date());
 		proxyIpRepository.save(proxy);
 
-		return 1;
+		return true;
+	}
+
+	@Override
+	public boolean update(ProxyIpBO proxyIpBO) {
+		log.debug("检查有效性");
+		if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
+			deleteByPrimaryKey(proxyIpBO.getId()); // 不能使用则删除
+		}
+		ProxyIp px = new ProxyIp();
+		BeanUtils.copyProperties(proxyIpBO, px);
+		px.setUpdateTime(new Date());
+		proxyIpRepository.save(px);
+		return true;
 	}
 
 	@Override
@@ -111,8 +137,10 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 			list.add(proxyIp);
 		}
 		proxyIpRepository.saveAll(list);
-		log.info(list.size()+"---------废弃IP重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
+		log.info(list.size()+"---------废弃重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
 	}
+
+
 
 
 	@Override
@@ -126,44 +154,35 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		proxyIpRepository.saveAll(proxyIpList);
 	}
 
+	private void reMap(){
+		log.info("--------map:达到了20万,开始减半--------");
+		map.forEach((k,v) -> {
+			if (map.size()<100000){
+				log.info("--------map:减半至10万-------");
+				return;
+			}
+			map.remove(k);
+		});
+	}
 	@Override
 	public void addProxy(ProxyIpBO proxyIpBO) {
 		try {
-			if (map.containsKey(proxyIpBO.getIp()+proxyIpBO.getPort())){
-				if (map.size()>200000){
-					log.info("--------map:达到了20万,开始减半--------");
-					map.forEach((k,v) -> {
-						if (map.size()<100000){
-							log.info("--------map:减半至10万-------");
-							return;
-						}
-						map.remove(k);
-					});
-				}
-				return;
+			//验证库有点大,处理一下
+			if (map.size()>200000){
+				reMap();
 			}
-			map.put(proxyIpBO.getIp()+proxyIpBO.getPort(), proxyIpBO); //存进集合
+
 			// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
 			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
-				// 1 查询该IP是否已存在
-				ProxyIp oldIP = selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
-				if (oldIP != null) {
-					return ;
-				}
-				if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-					return ;
-				}
 				insert(proxyIpBO);
+				return;
 			}
 			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
-				log.debug("检查ip的有效性");
-				if (checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-					return ;
-				}
-				deleteByPrimaryKey(proxyIpBO.getId()); // 不能使用则删除
+				update(proxyIpBO);
+				return;
 			}
 		} catch (Exception e) {
-			log.debug("");
+			log.debug( e.toString());
 		}
 	}
 }
