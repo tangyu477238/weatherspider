@@ -7,6 +7,7 @@ import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.model.bo.ProxyIpBO;
 import cn.zifangsky.repository.ProxyIpRepository;
 import cn.zifangsky.spider.CheckIPUtils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
 import org.springframework.beans.BeanUtils;
@@ -19,7 +20,10 @@ import javax.annotation.Resource;
 
 @Service("proxyIpManager")
 @Slf4j
+@Data
 public class ProxyIpManagerImpl implements ProxyIpManager {
+
+	private boolean isDel = false;
 
 	private Map<String, ProxyIp> map = new ConcurrentHashMap<>();
 
@@ -62,17 +66,42 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		return proxyIpRepository.findByIpAndPort(ip, port);
 	}
 
+
 	@Override
 	public ProxyIp selectRandomIP() {
+		return getProxy(false);
+	}
+
+	@Override
+	public ProxyIp selectCheckRandomIP() {
+		return getProxy(true);
+	}
+
+
+	private ProxyIp getProxy(boolean isDel){
 		List<ProxyIp> list = selectAll();
 		if(ComUtil.isEmpty(list)){
+			synProxy(); //废弃IP重存
 			return null;
 		}
 		Collections.shuffle(list);
-		return list.get(0);
+		for (ProxyIp proxyIp : list){
+			if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
+				return proxyIp;
+			}
+			try {
+				if (isDel){
+					deleteByPrimaryKey(proxyIp.getId());
+				}
+			}catch (Exception e){}
+		}
+		return null;
 	}
 
 	private synchronized void synProxy(){
+		if (map.size()<=0){
+			return;
+		}
 		List<ProxyIp> list = new ArrayList<>();
 		log.info("---------废弃IP重新利用----开始-----"+ DateUtil.formatAsDatetime(new Date()));
 		ProxyIp proxyIp;
@@ -84,23 +113,7 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		proxyIpRepository.saveAll(list);
 		log.info(list.size()+"---------废弃IP重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
 	}
-	@Override
-	public ProxyIp selectCheckRandomIP() {
-		ProxyIp proxyIp = selectRandomIP();
-		if (ComUtil.isEmpty(proxyIp)){
-			if (map.size()>0){
-				synProxy();
-			}
-			return null;
-		}
-		if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
-			return proxyIp;
-		}
-		try {
-			deleteByPrimaryKey(proxyIp.getId());
-		}catch (Exception e){}
-		return selectCheckRandomIP();
-	}
+
 
 
 	@Override
