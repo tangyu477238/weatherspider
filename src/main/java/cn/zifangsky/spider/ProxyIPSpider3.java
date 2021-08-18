@@ -43,11 +43,6 @@ public class ProxyIPSpider3 implements PageProcessor {
 
 			} 
 		}
-		page.putField("result", result);
-			Thread.sleep(3000);
-		page.addTargetRequest("https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-2");
-			Thread.sleep(3000);
-		page.addTargetRequest("https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-3");
 
 		} catch (Exception e){
 

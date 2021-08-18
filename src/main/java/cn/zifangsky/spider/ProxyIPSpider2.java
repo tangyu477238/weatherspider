@@ -44,11 +44,6 @@ public class ProxyIPSpider2 implements PageProcessor {
 				result.add(proxyIp);
 			}
 		}
-		page.putField("result", result);
-			Thread.sleep(3000);
-		page.addTargetRequest("http://www.89ip.cn/index_2.html");
-			Thread.sleep(3000);
-		page.addTargetRequest("http://www.89ip.cn/index_3.html");
 	}catch (Exception e){}
 	}
 

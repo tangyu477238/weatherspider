@@ -43,10 +43,6 @@ public class ProxyIPSpider5 implements PageProcessor {
 				}
 			}
 			page.putField("result", result);
-			Thread.sleep(3000);
-			page.addTargetRequest("http://www.xiladaili.com/gaoni/2/");
-			Thread.sleep(3000);
-			page.addTargetRequest("http://www.xiladaili.com/gaoni/3/");
 		}catch (Exception e){}
 	}
 
