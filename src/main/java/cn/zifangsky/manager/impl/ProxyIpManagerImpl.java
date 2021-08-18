@@ -115,9 +115,20 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	}
 
 
+	@Override
+	public void addProxyAll(List<ProxyIp> list) {
+//		List<ProxyIp> proxyIpList = new ArrayList<>();
+//		ProxyIp proxyIp;
+//		for (ProxyIp proxyIpBO : list) {
+//			proxyIp = new ProxyIp();
+//			BeanUtils.copyProperties(proxyIpBO, proxyIp);
+//			proxyIpList.add(proxyIp);
+//		}
+		proxyIpRepository.saveAll(list);
+	}
 
 	@Override
-	public void addPropx(ProxyIpBO proxyIpBO) {
+	public void addProxy(ProxyIpBO proxyIpBO) {
 		try {
 			if (map.containsKey(proxyIpBO.getIp()+proxyIpBO.getPort())){
 				if (map.size()>200000){

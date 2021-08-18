@@ -32,5 +32,7 @@ public interface ProxyIpManager {
 
     ProxyIp selectRandomIP();
 
-    void addPropx(ProxyIpBO proxyIpBO);
+    void addProxy(ProxyIpBO proxyIpBO);
+
+    void addProxyAll(List<ProxyIp> list);
 }

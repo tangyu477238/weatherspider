@@ -42,8 +42,8 @@ public class TestSpider{
     @Test
 	public void testCheckProxyIp(){
         ProxyIpBO proxyIpBO = new ProxyIpBO();
-        proxyIpBO.setIp("178.134.208.126");
-        proxyIpBO.setPort(50824);
+        proxyIpBO.setIp("182.84.144.104");
+        proxyIpBO.setPort(3256);
 
         checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort());
 
@@ -57,7 +57,8 @@ public class TestSpider{
      */
     @Test
     public void crawlProxyIp1(){
-        crawlManager.proxyIPCrawl(true);
+
+        crawlManager.proxyIPCrawl();
     }
 
 

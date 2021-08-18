@@ -80,7 +80,7 @@ public class CheckIPReceiver {
 		}
 		@Override
 		public void run(){
-			proxyIpManager.addPropx(proxyIpBO);
+			proxyIpManager.addProxy(proxyIpBO);
 		}
 	}
 }
