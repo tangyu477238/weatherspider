@@ -147,6 +147,7 @@
 
     <!-- 屏蔽kafka debug -->
     <logger name="org.apache.kafka.clients" level="ERROR" />
+    <logger name="org.apache.kafka.common.utils.AppInfoParser" level="ERROR" />
     <logger name="org.springframework.kafka.listener.KafkaMessageListenerContainer" level="ERROR" />
     <logger name="org.hibernate.loader.Loader" level="ERROR" />
     <logger name="org.hibernate.engine.internal.TwoPhaseLoad" level="ERROR" />
