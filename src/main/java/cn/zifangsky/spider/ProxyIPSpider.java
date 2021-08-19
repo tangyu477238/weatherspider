@@ -3,6 +3,7 @@ package cn.zifangsky.spider;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.model.ProxyIp;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -25,9 +26,12 @@ public class ProxyIPSpider implements PageProcessor {
 		try {
 			List<String> ipList = page.getHtml().xpath("//table[@class='layui-table']/tbody/tr").all();
 			List<ProxyIp> result = new ArrayList<>();
-			if(ipList != null && ipList.size() > 0){
-	//			ipList.remove(0);  //移除表头
-				for(String tmp : ipList){
+			if (ComUtil.isEmpty(ipList)){
+				return;
+			}
+	//		ipList.remove(0);  //移除表头
+			for(String tmp : ipList){
+				try {
 					Html html = Html.create(tmp);
 					ProxyIp proxyIp = new ProxyIp();
 					String[] data = html.xpath("//body/text()").toString().trim().split("\\s+");
@@ -38,10 +42,16 @@ public class ProxyIPSpider implements PageProcessor {
 					proxyIp.setType(data[3]);
 					proxyIp.setOther("ip.jiangxianli.com");
 					result.add(proxyIp);
+				} catch (Exception e){
+
 				}
 			}
+			if (ComUtil.isEmpty(result)){
+				return;
+			}
 			page.putField("result", result);
-		}catch (Exception e){
+
+		} catch (Exception e){
 
 		}
 	}

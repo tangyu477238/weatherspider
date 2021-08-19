@@ -127,7 +127,7 @@ public class KafkaConfig {
         containerFactory.setConsumerFactory(consumerFactory());
         containerFactory.setConcurrency(4);
         containerFactory.setBatchListener(true); //批量消费
-        containerFactory.getContainerProperties().setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);
+//        containerFactory.getContainerProperties().setAckMode(AbstractMessageListenerContainer.AckMode.MANUAL_IMMEDIATE);
 
         return containerFactory;
     }

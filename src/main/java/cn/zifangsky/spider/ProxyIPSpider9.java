@@ -1,5 +1,6 @@
 package cn.zifangsky.spider;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.model.ProxyIp;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -21,27 +22,36 @@ public class ProxyIPSpider9 implements PageProcessor {
 
 	@Override
 	public void process(Page page) {
+
 		try {
-
-
-		List<String> ipList = page.getHtml().xpath("//table[@class='table table-bordered table-striped']/tbody/tr").all();
-		List<ProxyIp> result = new ArrayList<>();
-	
-		if(ipList != null && ipList.size() > 0){
+			List<String> ipList = page.getHtml().xpath("//table[@class='table table-bordered table-striped']/tbody/tr").all();
+			List<ProxyIp> result = new ArrayList<>();
+			if (ComUtil.isEmpty(ipList)){
+				return;
+			}
 			for(String tmp : ipList){
-				Html html = Html.create(tmp);
-				ProxyIp proxyIp = new ProxyIp();
-				String[] data = html.xpath("//body/text()").toString().trim().split("\\s+");
-				proxyIp.setIp(data[0]);
-				proxyIp.setPort(Integer.valueOf(data[1]));
-				proxyIp.setAddr(data[4]);
-				proxyIp.setType(data[3]);
-				proxyIp.setOther("www.kuaidaili.com");
-				result.add(proxyIp);
-			} 
+				try {
+					Html html = Html.create(tmp);
+					ProxyIp proxyIp = new ProxyIp();
+					String[] data = html.xpath("//body/text()").toString().trim().split("\\s+");
+					proxyIp.setIp(data[0]);
+					proxyIp.setPort(Integer.valueOf(data[1]));
+					proxyIp.setAddr(data[4]);
+					proxyIp.setType(data[3]);
+					proxyIp.setOther("www.kuaidaili.com");
+					result.add(proxyIp);
+				} catch (Exception e) {
+
+				}
+			}
+			if (ComUtil.isEmpty(result)){
+				return;
+			}
+			page.putField("result", result);
+		} catch (Exception e) {
+
 		}
-		page.putField("result", result);
-		}catch (Exception e){}
+
 	}
 
 }

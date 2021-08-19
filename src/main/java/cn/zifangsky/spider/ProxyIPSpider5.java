@@ -1,5 +1,6 @@
 package cn.zifangsky.spider;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.model.ProxyIp;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
@@ -27,9 +28,11 @@ public class ProxyIPSpider5 implements PageProcessor {
 		try {
 			List<String> ipList = page.getHtml().xpath("//table[@class='fl-table']/tbody/tr").all();
 			List<ProxyIp> result = new ArrayList<>();
-
-			if (ipList != null && ipList.size() > 0) {
-				for (String tmp : ipList) {
+			if (ComUtil.isEmpty(ipList)){
+				return;
+			}
+			for (String tmp : ipList) {
+				try {
 					Html html = Html.create(tmp);
 					ProxyIp proxyIp = new ProxyIp();
 					String[] data = html.xpath("//body/text()").toString().trim().split("\\s+");
@@ -40,10 +43,17 @@ public class ProxyIPSpider5 implements PageProcessor {
 					proxyIp.setType(data[6]);
 					proxyIp.setOther("www.xiladaili.com");
 					result.add(proxyIp);
+				} catch (Exception e) {
+
 				}
 			}
+			if (ComUtil.isEmpty(result)){
+				return;
+			}
 			page.putField("result", result);
-		}catch (Exception e){}
+		}catch (Exception e){
+
+		}
 	}
 
 }

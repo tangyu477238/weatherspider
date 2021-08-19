@@ -71,6 +71,7 @@ public class GupiaoKlineReceiver {
 
 	private void saveGupiaoKline(BaseGupiaoKline gupiaoKline){
 		try {
+			Thread.sleep(300);
 			Runnable run = new GupiaoKlineRunnable(gupiaoKline);
 			ExecutorProcessPool.getInstance().executeByCustomThread(run);
 		}catch (Exception e){log.debug(e.toString());}

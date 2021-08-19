@@ -55,6 +55,8 @@ public class CrawlManagerImpl implements CrawlManager {
 	 */
 	private void runSpider(PageProcessor pageProcessor, String url, boolean proxyFlag) {
 		try {
+			Thread.sleep(3000);
+			log.info("---------开始----------"+url);
 			Spider spider = OOSpider.create(pageProcessor)
 					.addUrl(url).addPipeline(proxyIPPipeline);
 			if (proxyFlag){
@@ -65,6 +67,7 @@ public class CrawlManagerImpl implements CrawlManager {
 				spider.setDownloader(httpClientDownloader);
 			}
 			spider.thread(1).run();
+			log.info("---------已执行----------"+url);
 		} catch (Exception e) {
 			log.debug(e.toString());
 		}
@@ -73,38 +76,43 @@ public class CrawlManagerImpl implements CrawlManager {
 
 	@Override
 	public void proxyIPCrawl(boolean proxyFlag) {
-
-		runSpider(new ProxyIPSpider9(),"https://www.kuaidaili.com/free/inha/1/", proxyFlag);
-		runSpider(new ProxyIPSpider9(),"https://www.kuaidaili.com/free/intr/1/", proxyFlag);
-
-		runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=1", proxyFlag);
-		runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=2", proxyFlag);
-		runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=3", proxyFlag);
-		runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=4", proxyFlag);
+		try {
 
 
-		runSpider(new ProxyIPSpider3(),"https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1", proxyFlag);
+			runSpider(new ProxyIPSpider9(),"https://www.kuaidaili.com/free/inha/1/", proxyFlag);
+			runSpider(new ProxyIPSpider9(),"https://www.kuaidaili.com/free/intr/1/", proxyFlag);
 
-		runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_1.html", proxyFlag);
-		runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_2.html", proxyFlag);
-		runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_3.html", proxyFlag);
-		runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_4.html", proxyFlag);
-		runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_5.html", proxyFlag);
-
-//		runSpider(new ProxyIPSpider4(),"http://www.66ip.cn/1.html", proxyFlag);
+			runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=1", proxyFlag);
+			runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=2", proxyFlag);
+			runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=3", proxyFlag);
+			runSpider(new ProxyIPSpider(),"https://ip.jiangxianli.com/?page=4", proxyFlag);
 
 
-		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/", proxyFlag);
-		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/putong/", proxyFlag);
-		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/gaoni/", proxyFlag);
-		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/https/", proxyFlag);
-		runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/http/", proxyFlag);
+			runSpider(new ProxyIPSpider3(),"https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1", proxyFlag);
 
-		runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=1&page=1", proxyFlag);
-		runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=2&page=1", proxyFlag);
-		runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=3&page=1", proxyFlag);
-		runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=4&page=1", proxyFlag);
-		runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=5&page=1", proxyFlag);
+			runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_1.html", proxyFlag);
+			runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_2.html", proxyFlag);
+			runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_3.html", proxyFlag);
+			runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_4.html", proxyFlag);
+			runSpider(new ProxyIPSpider2(),"http://www.89ip.cn/index_5.html", proxyFlag);
+
+	//		runSpider(new ProxyIPSpider4(),"http://www.66ip.cn/1.html", proxyFlag);
+
+
+			runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/", proxyFlag);
+			runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/putong/", proxyFlag);
+			runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/gaoni/", proxyFlag);
+			runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/https/", proxyFlag);
+			runSpider(new ProxyIPSpider5(),"http://www.xiladaili.com/http/", proxyFlag);
+
+			runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=1&page=1", proxyFlag);
+			runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=2&page=1", proxyFlag);
+			runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=3&page=1", proxyFlag);
+			runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=4&page=1", proxyFlag);
+			runSpider(new ProxyIPSpider6(),"http://www.ip3366.net/?stype=5&page=1", proxyFlag);
+		} catch (Exception e){
+
+		}
 	}
 
 	@Override
