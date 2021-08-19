@@ -36,16 +36,14 @@ public class ProxyIPSpider4 implements PageProcessor {
 				try {
 					String strs [] = tmp.split("\n");
 					String strs0 [] = strs[1].split(">");
+					String strs03 = strs0[3].replace("</a","");
 					String strs1 = strs[2].replace("<td>","").replace("</td>","");
-					Html html = Html.create(tmp);
-					String str = html.xpath("//body/a[1]").toString().trim();
 					ProxyIp proxyIp = new ProxyIp();
-					String[] data = str.split("\\s+");
-					proxyIp.setIp(data[0]);
-					proxyIp.setPort(Integer.valueOf(data[1]));
-					proxyIp.setAddr(data[2]);
-					proxyIp.setType(data[3]);
-					proxyIp.setOther("www.66ip.cn");
+					proxyIp.setIp(strs03.trim());
+					proxyIp.setPort(Integer.valueOf(strs1.trim()));
+					proxyIp.setAddr("");
+					proxyIp.setType("");
+					proxyIp.setOther("ip.ihuan.me");
 					result.add(proxyIp);
 				} catch (Exception e) {
 
