@@ -17,7 +17,7 @@ public class ProxyIPSpider4 implements PageProcessor {
 	@Override
 	public Site getSite() {
 		Site site = Site.me().setTimeOut(4000).setRetryTimes(3)
-				.setSleepTime(1000).setCharset("gb2312").addHeader("Accept-Encoding", "/")
+				.setSleepTime(1000).setCharset("UTF-8").addHeader("Accept-Encoding", "/")
 				.setUserAgent(UserAgentUtils.radomUserAgent());
 		
 		return site;
@@ -26,17 +26,21 @@ public class ProxyIPSpider4 implements PageProcessor {
 	@Override
 	public void process(Page page) {
 		try {
-			List<String> ipList = page.getHtml().xpath("//div[@class='container']/div/div/table/tbody/tr").all();
+			List<String> ipList = page.getHtml().xpath("//table[@class='table table-hover table-bordered']/tbody/tr").all();
 			List<ProxyIp> result = new ArrayList<>();
 			if (ComUtil.isEmpty(ipList)){
 				return;
 			}
-			ipList.remove(0); //移除表头
+//			ipList.remove(0); //移除表头
 			for (String tmp : ipList) {
 				try {
+					String strs [] = tmp.split("\n");
+					String strs0 [] = strs[1].split(">");
+					String strs1 = strs[2].replace("<td>","").replace("</td>","");
 					Html html = Html.create(tmp);
+					String str = html.xpath("//body/a[1]").toString().trim();
 					ProxyIp proxyIp = new ProxyIp();
-					String[] data = html.xpath("//body/text()").toString().trim().split("\\s+");
+					String[] data = str.split("\\s+");
 					proxyIp.setIp(data[0]);
 					proxyIp.setPort(Integer.valueOf(data[1]));
 					proxyIp.setAddr(data[2]);
