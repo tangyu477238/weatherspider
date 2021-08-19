@@ -9,9 +9,9 @@
 
     <!-- name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义后，可以使“${}”来使用变量。 -->
     <!-- <property name="log.path" value="F:/logs" />-->
-    <springProperty scope="context" name="log.path" source="logging.path" default="/home/logs/"/>
-    <springProperty scope="context" name="log.file"  source="logging.file" default="/home/logs/"/>
-    <springProperty scope="context" name="log.level" source="logging.level" default="/home/logs/"/>
+    <springProperty scope="context" name="log.path" source="log.path" default="/home/logs/"/>
+    <springProperty scope="context" name="log.file"  source="log.file" default="/home/logs/"/>
+    <springProperty scope="context" name="log.level" source="log.level" default="/home/logs/"/>
     <contextName>logback</contextName>
 
     <!-- 日志格式和颜色渲染 -->
