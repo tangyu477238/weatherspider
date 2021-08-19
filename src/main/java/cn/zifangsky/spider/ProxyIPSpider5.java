@@ -16,7 +16,7 @@ public class ProxyIPSpider5 implements PageProcessor {
 
 	@Override
 	public Site getSite() {
-		Site site = Site.me().setTimeOut(6000).setRetryTimes(3)
+		Site site = Site.me().setTimeOut(4000).setRetryTimes(3)
 				.setSleepTime(1000).setCharset("UTF-8").addHeader("Accept-Encoding", "/")
 				.setUserAgent(UserAgentUtils.radomUserAgent());
 		

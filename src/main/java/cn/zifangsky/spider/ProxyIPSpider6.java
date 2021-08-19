@@ -16,7 +16,7 @@ public class ProxyIPSpider6 implements PageProcessor {
 
 	@Override
 	public Site getSite() {
-		Site site = Site.me().setTimeOut(6000).setRetryTimes(3)
+		Site site = Site.me().setTimeOut(4000).setRetryTimes(3)
 				.setSleepTime(1000).setCharset("gb2312").addHeader("Accept-Encoding", "gzip, deflate").addHeader("Host","www.ip3366.net")
 				.addHeader("Cookie","Hm_lvt_c4dd741ab3585e047d56cf99ebbbe102=1606984745; Hm_lpvt_c4dd741ab3585e047d56cf99ebbbe102=1607677129")
 				.setUserAgent(UserAgentUtils.radomUserAgent());
