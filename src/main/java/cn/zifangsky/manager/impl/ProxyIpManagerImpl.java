@@ -66,11 +66,12 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
 			return false;
 		}
+
 		ProxyIp proxy = new ProxyIp();
 		BeanUtils.copyProperties(proxyIpBO, proxy);
 		proxy.setUpdateTime(new Date());
 		proxyIpRepository.save(proxy);
-
+		log.info("---收录成功---"+proxyIpBO.getIp() +":"+ proxyIpBO.getPort());
 		return true;
 	}
 
