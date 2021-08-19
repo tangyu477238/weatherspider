@@ -59,13 +59,12 @@ public class CrawlManagerImpl implements CrawlManager {
 	@Override
 	public void proxyIPCrawl(boolean proxyFlag) {
 		try {
-			proxyFlag = false;
 			List<String> list = new ArrayList<>();
 			for (ProxyUrlEnum proxyUrlEnum : ProxyUrlEnum.values()) {
 				list.add(proxyUrlEnum.getCode());
 			}
 			Collections.shuffle(list);
-			String url = "https://ip.ihuan.me/";
+			String url = list.get(0);
 			PageProcessor  pageProcessor = (PageProcessor) Class.forName(ProxyUrlEnum.getProxyUrl(url)).newInstance();
 			Spider spider = OOSpider.create(pageProcessor)
 					.addUrl(url).addPipeline(proxyIPPipeline);
