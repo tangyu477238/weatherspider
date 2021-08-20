@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class GupiaoPipeline implements Pipeline {
 
-	@Resource(name="gupiaoRepository")
+	@Resource
 	private GupiaoRepository gupiaoRepository;
 
 

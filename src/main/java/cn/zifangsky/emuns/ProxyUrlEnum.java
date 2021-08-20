@@ -23,6 +23,8 @@ public enum ProxyUrlEnum {
     PROXY_7(3,"https://list.proxylistplus.com/Fresh-HTTP-Proxy-List-1","cn.zifangsky.spider.ProxyIPSpider3"),
 
     PROXY_71(3,"https://ip.ihuan.me/","cn.zifangsky.spider.ProxyIPSpider4"),
+    PROXY_72(3,"https://ip.ihuan.me/","cn.zifangsky.spider.ProxyIPSpider4"),
+    PROXY_73(3,"https://ip.ihuan.me/","cn.zifangsky.spider.ProxyIPSpider4"),
 
     PROXY_13(3,"http://www.xiladaili.com/","cn.zifangsky.spider.ProxyIPSpider5"),
     PROXY_14(3,"http://www.xiladaili.com/putong/","cn.zifangsky.spider.ProxyIPSpider5"),
