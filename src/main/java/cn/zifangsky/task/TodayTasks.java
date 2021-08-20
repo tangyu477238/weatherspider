@@ -4,6 +4,8 @@ import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.Gupiao;
+import cn.zifangsky.model.GupiaoCanUse;
+import cn.zifangsky.repository.GupiaoCanUseRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,6 +42,9 @@ public class TodayTasks {
 
     @Resource
     private GupiaoManagerImpl gupiaoManager;
+
+    @Resource
+    private GupiaoCanUseRepository gupiaoCanUseRepository;
 
 
 
@@ -79,10 +84,27 @@ public class TodayTasks {
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.TodayRunnable(5);
+            Runnable run = new TodayTasks.TodayBuyRunnable(5);
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
+
+    public class TodayBuyRunnable implements Runnable{
+        private Integer period;
+        public TodayBuyRunnable(Integer period){
+            this.period = period;
+        }
+        @Override
+        public void run(){
+            List<GupiaoCanUse> list = gupiaoCanUseRepository.listSyns();
+            Collections.shuffle(list);
+            for (GupiaoCanUse canUse : list){
+                dongfangManager.getKline(canUse.getSymbol(),period,true,true);
+            }
+        }
+    }
+
+
 
     /***
      * 30m
