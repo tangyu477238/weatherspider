@@ -1,6 +1,9 @@
 package cn.zifangsky.task;
 
+import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.CrawlManager;
+import cn.zifangsky.model.Gupiao;
+import cn.zifangsky.mq.consumer.GupiaoCodeKlineReceiver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -42,9 +45,29 @@ public class ProxyIPTasks {
     public void crawlProxyIpTask1(){
         if ("0".equals(proxyOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
-        crawlManager.proxyIPCrawl();
+        log.info(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
+        try {
+            Runnable run = new ProxyIPTasks.RunnableImpl(true);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
     }
+
+
+    public class RunnableImpl implements Runnable{
+        private boolean isProxy;
+        public RunnableImpl(boolean isProxy){
+            this.isProxy = isProxy;
+        }
+        @Override
+        public void run(){
+            if (isProxy){
+                crawlManager.proxyIPCrawl();
+                return;
+            }
+            crawlManager.getIPCrawl();
+        }
+    }
+
 
     /**
      * 代理IP定时获取任务2
