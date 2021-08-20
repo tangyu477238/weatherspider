@@ -47,15 +47,15 @@ public class ProxyIPTasks {
         Date current = new Date();
         log.info(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new ProxyIPTasks.RunnableImpl(true);
+            Runnable run = new ProxyIPTasks.ProxyRunnable(true);
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
 
 
-    public class RunnableImpl implements Runnable{
+    public class ProxyRunnable implements Runnable{
         private boolean isProxy;
-        public RunnableImpl(boolean isProxy){
+        public ProxyRunnable(boolean isProxy){
             this.isProxy = isProxy;
         }
         @Override

@@ -1,10 +1,9 @@
 package cn.zifangsky.task;
 
+import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.DongfangManager;
-import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.Gupiao;
-import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,6 +13,7 @@ import javax.annotation.Resource;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -78,10 +78,10 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),5,true,true);
-        }
+        try {
+            Runnable run = new TodayTasks.TodayRunnable(5);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
     }
 
     /***
@@ -92,10 +92,10 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),30,true,true);
-        }
+        try {
+            Runnable run = new TodayTasks.TodayRunnable(30);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
     }
 
     /***
@@ -106,14 +106,28 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),101,true,true);
-        }
+        try {
+            Runnable run = new TodayTasks.TodayRunnable(101);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
 
     }
 
 
+    public class TodayRunnable implements Runnable{
+        private Integer period;
+        public TodayRunnable(Integer period){
+            this.period = period;
+        }
+        @Override
+        public void run(){
+            List<Gupiao> list = gupiaoManager.listKzz();
+            Collections.shuffle(list);
+            for (Gupiao gupiao : list){
+                dongfangManager.getKline(gupiao.getSymbol(),period,true,true);
+            }
+        }
+    }
 
 
 
@@ -142,8 +156,10 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
-        gupiaoManager.setPeriod(101);
-        gupiaoManager.sysnKzzKlineAll();
+        try {
+            Runnable run = new TodayTasks.ToAllRunnable(101);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
 
     }
 
@@ -155,8 +171,10 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("kzzBy5m，Date：{0}",FORMAT.format(current)));
-        gupiaoManager.setPeriod(5);
-        gupiaoManager.sysnKzzKlineAll();
+        try {
+            Runnable run = new TodayTasks.ToAllRunnable(5);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
     }
 
     /***
@@ -167,8 +185,23 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("kzzBy30m，Date：{0}",FORMAT.format(current)));
-        gupiaoManager.setPeriod(30);
-        gupiaoManager.sysnKzzKlineAll();
+        try {
+            Runnable run = new TodayTasks.ToAllRunnable(30);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
     }
 
+
+
+    public class ToAllRunnable implements Runnable{
+        private Integer period;
+        public ToAllRunnable(Integer period){
+            this.period = period;
+        }
+        @Override
+        public void run(){
+            gupiaoManager.setPeriod(period);
+            gupiaoManager.sysnKzzKlineAll();
+        }
+    }
 }
