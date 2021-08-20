@@ -35,6 +35,10 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public List<ProxyIp> selectAll() {
+		List<ProxyIp> list = proxyIpRepository.listCanUse();
+		if (!ComUtil.isEmpty(list)){
+			return list;
+		}
 		return proxyIpRepository.findAll();
 	}
 
@@ -114,6 +118,8 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		Collections.shuffle(list);
 		for (ProxyIp proxyIp : list){
 			if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
+				proxyIp.setUpdateTime(new Date());
+				proxyIpRepository.save(proxyIp);
 				return proxyIp;
 			}
 			try {
