@@ -1,6 +1,7 @@
 package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.DateTimeUtil;
+import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.HttpClientManager;
@@ -29,6 +30,9 @@ public class DongfangManagerImpl implements DongfangManager {
     @Resource
     private GupiaoPipeline gupiaoPipeline;
 
+    @Resource
+    private GupiaoRepository gupiaoRepository;
+
 
 
     /****
@@ -55,6 +59,20 @@ public class DongfangManagerImpl implements DongfangManager {
                 .run();
     }
 
+    private String getBizdate(Integer period){
+        int num = 500;
+        if (period== KlineEnum.K_5M.getId()){
+            num = Double.valueOf(Math.ceil(500/48)).intValue();
+        } else if (period== KlineEnum.K_30M.getId()){
+            num = Double.valueOf(Math.ceil(500/8)).intValue();
+        } else if (period== KlineEnum.K_1D.getId()){
+            num = 500;
+        } else if (period== KlineEnum.K_1W.getId()){
+            num = 500*5;
+        }
+        return gupiaoRepository.getBizDate(num).replace("-","");
+    }
+
     /******
      * 根据股票编码获取数据
      * @param bondId 股票编码
@@ -63,7 +81,7 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
-        String beg = "20190601";
+        String beg = getBizdate(period);
         if (isToday){
             beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
         }

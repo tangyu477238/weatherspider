@@ -2,6 +2,7 @@ package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
+import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.*;
 import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
@@ -47,37 +48,37 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
 
 
-    /***
-     * 股票k线数据存储
-     * @param gupiaoKline
-     */
-    @Override
-    public void saveKline(BaseGupiaoKline gupiaoKline) {
-        try {
-            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate());
-            if (ComUtil.isEmpty(kline)){
-                saveKlines(gupiaoKline);
-                return;
-            }
-            if (gupiaoKline.getBizDate().startsWith(DateTimeUtil.getBeforeDay(0))){ //如果是当天，请覆盖
-                gupiaoKline.setId(kline.getId());
-                BeanUtils.copyProperties(gupiaoKline, kline);
-                saveKlines(gupiaoKline);
-            }
-        } catch (Exception e){
-            log.debug(e.getMessage());
-        }
-    }
+//    /***
+//     * 股票k线数据存储
+//     * @param gupiaoKline
+//     */
+//    @Override
+//    public void saveKline(BaseGupiaoKline gupiaoKline) {
+//        try {
+//            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate());
+//            if (ComUtil.isEmpty(kline)){
+//                saveKlines(gupiaoKline);
+//                return;
+//            }
+//            if (gupiaoKline.getBizDate().startsWith(DateTimeUtil.getBeforeDay(0))){ //如果是当天，请覆盖
+//                gupiaoKline.setId(kline.getId());
+//                BeanUtils.copyProperties(gupiaoKline, kline);
+//                saveKlines(gupiaoKline);
+//            }
+//        } catch (Exception e){
+//            log.debug(e.getMessage());
+//        }
+//    }
 
-    public void saveKlines(BaseGupiaoKline gupiaoKline){
-        if (gupiaoKline.getPeriod().equals("5m")){
-            gupiaoKline5mRepository.save((GupiaoKline5m)gupiaoKline);
-            return ;
-        } else if (gupiaoKline.getPeriod().equals("day")){
-            gupiaoKlineRepository.save((GupiaoKline)gupiaoKline);
-        }
-
-    }
+//    public void saveKlines(BaseGupiaoKline gupiaoKline){
+//        if (gupiaoKline.getPeriod().equals("5m")){
+//            gupiaoKline5mRepository.save((GupiaoKline5m)gupiaoKline);
+//            return ;
+//        } else if (gupiaoKline.getPeriod().equals("day")){
+//            gupiaoKlineRepository.save((GupiaoKline)gupiaoKline);
+//        }
+//
+//    }
 
 
     private List getAddGupiaoKline(List<BaseGupiaoKline> list){
@@ -121,7 +122,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
         if (ComUtil.isEmpty(listBase)){
             return;
         }
-        if (listBase.get(0).getPeriod()==5){
+        if (listBase.get(0).getPeriod()==KlineEnum.K_5M.getId()){
             GupiaoKline5m gupiaoKline5m;
             List<GupiaoKline5m> list = new ArrayList<>();
             for (BaseGupiaoKline kline : listBase){
@@ -130,7 +131,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
                 list.add(gupiaoKline5m);
             }
             gupiaoKline5mRepository.saveAll(list); //保存新增数据
-        } else if (listBase.get(0).getPeriod()==30){
+        } else if (listBase.get(0).getPeriod()==KlineEnum.K_30M.getId()){
             GupiaoKline30m gupiaoKline30m;
             List<GupiaoKline30m> list = new ArrayList<>();
             for (BaseGupiaoKline kline : listBase){
@@ -139,7 +140,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
                 list.add(gupiaoKline30m);
             }
             gupiaoKline30mRepository.saveAll(list); //保存新增数据
-        } else if (listBase.get(0).getPeriod()==101){
+        } else if (listBase.get(0).getPeriod()==KlineEnum.K_1D.getId()){
             GupiaoKline gupiaoKline;
             List<GupiaoKline> list = new ArrayList<>();
             for (BaseGupiaoKline kline : listBase){
@@ -154,11 +155,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
     @Override
     public GupiaoKline getGupiaoKline(String bondId, String bizDate) {
-        if (period==5){
+        if (period== KlineEnum.K_5M.getId()){
             return gupiaoKlineRepository.getKline5m(bondId, period, bizDate);
-        } else if (period==30){
+        } else if (period==KlineEnum.K_30M.getId()){
             return gupiaoKlineRepository.getKline30m(bondId, period, bizDate);
-        } else if (period==101){
+        } else if (period==KlineEnum.K_1D.getId()){
             return gupiaoKlineRepository.getKline(bondId, period, bizDate);
         }
         return null;
@@ -195,11 +196,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public boolean getKlineMaxBizdate(String bondId) {
         Integer sl = 0;
-        if (period==5){
+        if (period==KlineEnum.K_5M.getId()){
             sl = gupiaoKlineRepository.getKline5mMaxBizdate(bondId, period);
-        } else if (period==30){
+        } else if (period==KlineEnum.K_30M.getId()){
             sl = gupiaoKlineRepository.getKline30mMaxBizdate(bondId, period);
-        } else if (period==101){
+        } else if (period==KlineEnum.K_1D.getId()){
             sl = gupiaoKlineRepository.getKlineMaxBizdate(bondId, period);
         }
         if (sl==0){

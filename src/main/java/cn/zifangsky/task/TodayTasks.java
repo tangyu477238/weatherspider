@@ -6,6 +6,7 @@ import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.GupiaoCanUse;
 import cn.zifangsky.repository.GupiaoCanUseRepository;
+import cn.zifangsky.repository.GupiaoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -46,7 +47,8 @@ public class TodayTasks {
     @Resource
     private GupiaoCanUseRepository gupiaoCanUseRepository;
 
-
+    @Resource
+    private GupiaoRepository gupiaoRepository;
 
 
     /***
@@ -165,6 +167,7 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("gupiaoByAll，Date：{0}",FORMAT.format(current)));
+        gupiaoRepository.delKzzAll();
         dongfangManager.listKzzData();
     }
 

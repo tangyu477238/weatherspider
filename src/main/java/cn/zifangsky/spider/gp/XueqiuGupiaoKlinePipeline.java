@@ -3,7 +3,6 @@ package cn.zifangsky.spider.gp;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.XueqiuManager;
 import cn.zifangsky.model.GupiaoKline;
-import cn.zifangsky.mq.producer.GupiaoKlineSender;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
@@ -24,8 +23,8 @@ import java.util.Map;
 @Component("xueqiuGupiaoKlinePipeline")
 public class XueqiuGupiaoKlinePipeline implements Pipeline {
 
-	@Resource(name="gupiaoKlineSender")
-	private GupiaoKlineSender gupiaoKlineSender;
+//	@Resource(name="gupiaoKlineSender")
+//	private GupiaoKlineSender gupiaoKlineSender;
 
 	@Resource
 	private XueqiuManager xueqiuManager;
@@ -65,7 +64,7 @@ public class XueqiuGupiaoKlinePipeline implements Pipeline {
 			kzz1.setAmount(jsonArray1.getString(9));
 
 			//检测任务添加到队列中
-			gupiaoKlineSender.send(kzz1);
+//			gupiaoKlineSender.send(kzz1);
 
 		}
 

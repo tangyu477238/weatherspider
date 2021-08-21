@@ -2,12 +2,8 @@ package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.StringUtil;
-import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.BaseGupiaoKline;
-import cn.zifangsky.model.GupiaoKline;
-import cn.zifangsky.model.GupiaoKline5m;
-import cn.zifangsky.mq.producer.GupiaoKlineSender;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +14,6 @@ import us.codecraft.webmagic.pipeline.Pipeline;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
