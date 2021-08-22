@@ -4,6 +4,7 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.manager.DongfangManager;
+import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.repository.GupiaoKlineRepository;
 import cn.zifangsky.repository.GupiaoRepository;
@@ -33,6 +34,8 @@ public class DongfangManagerImpl implements DongfangManager {
     @Resource
     private GupiaoRepository gupiaoRepository;
 
+    @Resource
+    private GupiaoManagerImpl gupiaoManager;
 
 
     /****
@@ -81,6 +84,12 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
+
+        gupiaoManager.setPeriod(period);
+        if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId)){ //已存在,且非当天同步，则不在进行
+            return;
+        }
+
         String beg = getBizdate(period);
         if (isToday){
             beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
