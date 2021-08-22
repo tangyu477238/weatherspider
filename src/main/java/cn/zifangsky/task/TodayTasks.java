@@ -103,10 +103,10 @@ public class TodayTasks {
         }
         @Override
         public void run(){
-            List<GupiaoCanUse> list = gupiaoCanUseRepository.listSyns();
+            List<String> list = gupiaoCanUseRepository.listSyns();
             Collections.shuffle(list);
-            for (GupiaoCanUse canUse : list){
-                dongfangManager.getKline(canUse.getSymbol(),period,true,true);
+            for (String symbol : list){
+                dongfangManager.getKline(symbol ,period,true,true);
             }
         }
     }

@@ -28,6 +28,8 @@ public class CanUseTask {
 
     /***
      * 1分钟同步一次
+     * 把上级
+     * 出现信号的记录存储起来
      */
     @Scheduled(cron = "${task.today.canUse}")
     public void todayCanUse(){
