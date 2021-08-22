@@ -119,7 +119,7 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		for (ProxyIp proxyIp : list){
 			if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
 				proxyIp.setUpdateTime(new Date());
-				proxyIpRepository.save(proxyIp);
+				try { proxyIpRepository.save(proxyIp);}catch (Exception e){}
 				return proxyIp;
 			}
 			try {

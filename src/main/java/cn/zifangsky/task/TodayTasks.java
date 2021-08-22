@@ -1,6 +1,7 @@
 package cn.zifangsky.task;
 
 import cn.zifangsky.common.ExecutorProcessPool;
+import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.Gupiao;
@@ -86,11 +87,15 @@ public class TodayTasks {
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.TodayBuyRunnable(5);
+            Runnable run = new TodayTasks.TodayBuyRunnable(KlineEnum.K_5M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
 
+
+    /***
+     * 上级出现信号后再同步数
+     */
     public class TodayBuyRunnable implements Runnable{
         private Integer period;
         public TodayBuyRunnable(Integer period){
@@ -117,10 +122,11 @@ public class TodayTasks {
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.TodayRunnable(30);
+            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_30M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
+
 
     /***
      * day
@@ -131,13 +137,16 @@ public class TodayTasks {
         Date current = new Date();
         log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.TodayRunnable(101);
+            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_1D.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
 
     }
 
-
+    /***
+     * 仅仅同步数据
+     * 当天数据同步线程
+     */
     public class TodayRunnable implements Runnable{
         private Integer period;
         public TodayRunnable(Integer period){
@@ -152,6 +161,11 @@ public class TodayTasks {
             }
         }
     }
+
+
+
+
+
 
 
 
@@ -182,7 +196,7 @@ public class TodayTasks {
         Date current = new Date();
         log.info(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.ToAllRunnable(101);
+            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_1D.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
 
@@ -197,7 +211,7 @@ public class TodayTasks {
         Date current = new Date();
         log.info(MessageFormat.format("kzzBy5m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.ToAllRunnable(5);
+            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_5M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
@@ -211,13 +225,15 @@ public class TodayTasks {
         Date current = new Date();
         log.info(MessageFormat.format("kzzBy30m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.ToAllRunnable(30);
+            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_30M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
 
 
-
+    /**
+     * 全量数据同步线程
+     */
     public class ToAllRunnable implements Runnable{
         private Integer period;
         public ToAllRunnable(Integer period){
