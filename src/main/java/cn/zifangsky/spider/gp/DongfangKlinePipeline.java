@@ -75,7 +75,6 @@ public class DongfangKlinePipeline implements Pipeline {
 				kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
 				list.add(kzz1);
 			}
-			gupiaoManager.setPeriod(period);
 			gupiaoManager.saveKlineAll(list);
 		} catch (Exception e){
 			log.info(e.toString());

@@ -85,8 +85,7 @@ public class DongfangManagerImpl implements DongfangManager {
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
 
-        gupiaoManager.setPeriod(period);
-        if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId)){ //已存在,且非当天同步，则不在进行
+        if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //已存在,且非当天同步，则不在进行
             return;
         }
 

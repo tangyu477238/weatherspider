@@ -1,6 +1,7 @@
 package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.config.KafkaConsole;
+import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.manager.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -46,8 +47,7 @@ public class DongfangManagerImplTest  {
 
     @Test
     public void getKline() {
-        gupiaoManager.setPeriod(30);
-        gupiaoManager.sysnKzzKlineAll();
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_30M.getId());
     }
 
 

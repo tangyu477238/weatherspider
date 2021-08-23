@@ -24,13 +24,8 @@ import java.util.List;
 @Data
 public class GupiaoManagerImpl implements GupiaoManager {
 
-    private Integer period;
-
     @Resource
     private GupiaoRepository gupiaoRepository;
-
-//    @Resource
-//    private GupiaoSender gupiaoSender;
 
     @Resource
     private GupiaoCodeKlineSender gupiaoCodeKlineSender; //获取k线列表
@@ -84,7 +79,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     private List getAddGupiaoKline(List<BaseGupiaoKline> list){
         List<BaseGupiaoKline> addList = new ArrayList<>(); //新增数据
         for (BaseGupiaoKline gupiaoKline : list){
-            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate());
+            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate(), gupiaoKline.getPeriod());
             if (ComUtil.isEmpty(kline)){
                 addList.add(gupiaoKline);
                 continue;
@@ -97,7 +92,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     private List<BaseGupiaoKline> getTodayGupiaoKline(List<BaseGupiaoKline> list){
         List<BaseGupiaoKline> todayList = new ArrayList<>(); //当天数据
         for (BaseGupiaoKline gupiaoKline : list){
-            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate());
+            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate(), gupiaoKline.getPeriod());
             if (ComUtil.isEmpty(kline)){
                 continue;
             }
@@ -154,7 +149,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     }
 
     @Override
-    public GupiaoKline getGupiaoKline(String bondId, String bizDate) {
+    public GupiaoKline getGupiaoKline(String bondId, String bizDate, Integer period) {
         if (period== KlineEnum.K_5M.getId()){
             return gupiaoKlineRepository.getKline5m(bondId, period, bizDate);
         } else if (period==KlineEnum.K_30M.getId()){
@@ -194,7 +189,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     }
 
     @Override
-    public boolean getKlineMaxBizdate(String bondId) {
+    public boolean getKlineMaxBizdate(String bondId, Integer period) {
         Integer sl = 0;
         if (period==KlineEnum.K_5M.getId()){
             sl = gupiaoKlineRepository.getKline5mMaxBizdate(bondId, period);
@@ -210,11 +205,10 @@ public class GupiaoManagerImpl implements GupiaoManager {
     }
 
     @Override
-    public void sysnKzzKlineAll() {
+    public void sysnKzzKlineAll(Integer period) {
         List<Gupiao> list = listKzz();
         for (Gupiao gupiao : list){
-            gupiao.setPeriod(period);
-            if (getKlineMaxBizdate(gupiao.getSymbol())){
+            if (getKlineMaxBizdate(gupiao.getSymbol(), period)){
                 continue;
             }
             gupiaoCodeKlineSender.send(gupiao);
