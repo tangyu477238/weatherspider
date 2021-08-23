@@ -11,37 +11,41 @@ import javax.annotation.Resource;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class CczqTasksTest {
+public class TodayTasksTest {
+
     @Resource
-    private CczqTasks cczqTasks;
-
+    private TodayTasks todayTasks;
 
 
     @Test
-    public void zaopanCheck() throws Exception{
+    public void gupiaoByAll() throws Exception{
 
-        cczqTasks.zaopanCheck();
+        todayTasks.gupiaoByAll();
+
+    }
+
+
+    @Test
+    public void todayByDay() throws Exception{
+
+        todayTasks.todayByDay();
+
+    }
+
+
+    @Test
+    public void kzzBy30m() throws Exception{
+
+        todayTasks.kzzBy30m();
 
     }
 
     @Test
-    public void zaopan() throws Exception{
+    public void kzzBy5m() throws Exception{
 
-        cczqTasks.zaopan();
-
-    }
-
-    @Test
-    public void wanpan() throws Exception{
-
-        cczqTasks.wanpan();
+        todayTasks.kzzBy5m();
 
     }
 
-    @Test
-    public void xintiao() throws Exception{
 
-        cczqTasks.xintiao();
-
-    }
 }

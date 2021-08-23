@@ -76,7 +76,7 @@ public class TodayTasks {
 
 
 
-    ///////////////////////////////////////K线同步//////////////////////////////////////////////
+    /////////////////////////////////当天//////K线同步//////////////////////////////////////////////
 
     /***
      * 5m
@@ -85,7 +85,7 @@ public class TodayTasks {
     public void todayKzzBy5m(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
+        log.warn(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
         try {
             Runnable run = new TodayTasks.TodayBuyRunnable(KlineEnum.K_5M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
@@ -120,7 +120,7 @@ public class TodayTasks {
     public void todayKzzBy30m(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
+        log.warn(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
         try {
             Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_30M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
@@ -135,7 +135,7 @@ public class TodayTasks {
     public void todayKzzByDay(){
         if ("0".equals(klineOff)) return;
         Date current = new Date();
-        log.debug(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
+        log.warn(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
         try {
             Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_1D.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
