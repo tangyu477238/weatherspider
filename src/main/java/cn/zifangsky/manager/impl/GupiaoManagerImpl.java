@@ -208,7 +208,8 @@ public class GupiaoManagerImpl implements GupiaoManager {
     public void sysnKzzKlineAll(Integer period) {
         List<Gupiao> list = listKzz();
         for (Gupiao gupiao : list){
-            if (getKlineMaxBizdate(gupiao.getSymbol(), period)){
+            gupiao.setPeriod(period);
+            if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
                 continue;
             }
             gupiaoCodeKlineSender.send(gupiao);

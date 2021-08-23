@@ -125,22 +125,22 @@ public class DongfangManagerImpl implements DongfangManager {
 
     @Override
     public void getKlineDay(String bondId) {
-        getKline(bondId, 101);
+        getKline(bondId, KlineEnum.K_1D.getId());
     }
 
     @Override
     public void getKline5M(String bondId) {
-        getKline(bondId, 5);
+        getKline(bondId, KlineEnum.K_5M.getId());
     }
 
 
     @Override
     public void getToDayKline(String bondId) {
-        getKline(bondId, 101, true, true);
+        getKline(bondId, KlineEnum.K_1D.getId(), true, true);
     }
 
     @Override
     public void getToDayKline5M(String bondId) {
-        getKline(bondId, 5, true, true);
+        getKline(bondId, KlineEnum.K_5M.getId(), true, true);
     }
 }
