@@ -24,5 +24,6 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
     @Query(value = "delete from  gupiao  where symbol like '11%' or  symbol like '12%'  ",nativeQuery = true)
     int delKzzAll();
 
-
+    @Query(value = " select * from v_buylist_5m ", nativeQuery = true)
+    List<Map<String, Object>> listBuy();
 }

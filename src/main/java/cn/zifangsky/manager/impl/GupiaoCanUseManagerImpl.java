@@ -45,4 +45,12 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 		}
 		addCanUse(canUseList);
 	}
+
+	@Override
+	public void listBuy() {
+		List<Map<String,Object>> list = gupiaoCanUseRepository.listBuy();
+		for (Map<String,Object> map : list){
+
+		}
+	}
 }

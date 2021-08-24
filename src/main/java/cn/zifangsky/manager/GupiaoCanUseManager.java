@@ -10,4 +10,6 @@ public interface GupiaoCanUseManager  {
 
     void addCanUse();
 
+    void listBuy();
+
 }
