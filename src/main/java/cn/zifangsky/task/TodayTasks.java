@@ -78,89 +78,89 @@ public class TodayTasks {
 
     /////////////////////////////////当天//////K线同步//////////////////////////////////////////////
 
-//    /***
-//     * 5m
-//     */
-//    @Scheduled(cron = "${task.today.kzz.5m}")
-//    public void todayKzzBy5m(){
-//        if ("0".equals(klineOff)) return;
-//        Date current = new Date();
-//        log.warn(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
-//        try {
-//            Runnable run = new TodayTasks.TodayBuyRunnable(KlineEnum.K_5M.getId());
-//            ExecutorProcessPool.getInstance().executeByCustomThread(run);
-//        }catch (Exception e){log.debug(e.toString());}
-//    }
-//
-//
-//    /***
-//     * 上级出现信号后再同步数
-//     */
-//    public class TodayBuyRunnable implements Runnable{
-//        private Integer period;
-//        public TodayBuyRunnable(Integer period){
-//            this.period = period;
-//        }
-//        @Override
-//        public void run(){
-//            List<String> list = gupiaoCanUseRepository.listSyns();
-//            Collections.shuffle(list);
-//            for (String symbol : list){
-//                dongfangManager.getKline(symbol ,period,true,true);
-//            }
-//        }
-//    }
-//
-//
-//
-//    /***
-//     * 30m
-//     */
-//    @Scheduled(cron = "${task.today.kzz.30m}")
-//    public void todayKzzBy30m(){
-//        if ("0".equals(klineOff)) return;
-//        Date current = new Date();
-//        log.warn(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
-//        try {
-//            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_30M.getId());
-//            ExecutorProcessPool.getInstance().executeByCustomThread(run);
-//        }catch (Exception e){log.debug(e.toString());}
-//    }
-//
-//
-//    /***
-//     * day
-//     */
-//    @Scheduled(cron = "${task.today.kzz.day}")
-//    public void todayKzzByDay(){
-//        if ("0".equals(klineOff)) return;
-//        Date current = new Date();
-//        log.warn(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
-//        try {
-//            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_1D.getId());
-//            ExecutorProcessPool.getInstance().executeByCustomThread(run);
-//        }catch (Exception e){log.debug(e.toString());}
-//
-//    }
-//
-//    /***
-//     * 仅仅同步数据
-//     * 当天数据同步线程
-//     */
-//    public class TodayRunnable implements Runnable{
-//        private Integer period;
-//        public TodayRunnable(Integer period){
-//            this.period = period;
-//        }
-//        @Override
-//        public void run(){
-//            List<Gupiao> list = gupiaoManager.listKzz();
-//            Collections.shuffle(list);
-//            for (Gupiao gupiao : list){
-//                dongfangManager.getKline(gupiao.getSymbol(),period,true,true);
-//            }
-//        }
-//    }
+    /***
+     * 5m
+     */
+    @Scheduled(cron = "${task.today.kzz.5m}")
+    public void todayKzzBy5m(){
+        if ("0".equals(klineOff)) return;
+        Date current = new Date();
+        log.warn(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
+        try {
+            Runnable run = new TodayTasks.TodayBuyRunnable(KlineEnum.K_5M.getId());
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
+    }
+
+
+    /***
+     * 上级出现信号后再同步数
+     */
+    public class TodayBuyRunnable implements Runnable{
+        private Integer period;
+        public TodayBuyRunnable(Integer period){
+            this.period = period;
+        }
+        @Override
+        public void run(){
+            List<String> list = gupiaoCanUseRepository.listSyns();
+            Collections.shuffle(list);
+            for (String symbol : list){
+                dongfangManager.getKline(symbol ,period,true,true);
+            }
+        }
+    }
+
+
+
+    /***
+     * 30m
+     */
+    @Scheduled(cron = "${task.today.kzz.30m}")
+    public void todayKzzBy30m(){
+        if ("0".equals(klineOff)) return;
+        Date current = new Date();
+        log.warn(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
+        try {
+            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_30M.getId());
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
+    }
+
+
+    /***
+     * day
+     */
+    @Scheduled(cron = "${task.today.kzz.day}")
+    public void todayKzzByDay(){
+        if ("0".equals(klineOff)) return;
+        Date current = new Date();
+        log.warn(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
+        try {
+            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_1D.getId());
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+        }catch (Exception e){log.debug(e.toString());}
+
+    }
+
+    /***
+     * 仅仅同步数据
+     * 当天数据同步线程
+     */
+    public class TodayRunnable implements Runnable{
+        private Integer period;
+        public TodayRunnable(Integer period){
+            this.period = period;
+        }
+        @Override
+        public void run(){
+            List<Gupiao> list = gupiaoManager.listKzz();
+            Collections.shuffle(list);
+            for (Gupiao gupiao : list){
+                dongfangManager.getKline(gupiao.getSymbol(),period,true,true);
+            }
+        }
+    }
 
 
 
