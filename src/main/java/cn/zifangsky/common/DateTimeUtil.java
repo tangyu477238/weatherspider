@@ -1833,10 +1833,13 @@ public class DateTimeUtil {
         }
     }
 
-    private static String getPeriodDate(double period){
+    public static String getPeriodDate(double period){
         Double minute = Math.floor(DateTimeUtil.getMinutesOfHour(new Date())/period) * period;
         String minuteStr = String.valueOf(minute.intValue());
-        if (minute<9){
+        if (period == 5 && minute<9){
+            minuteStr = "0"+minuteStr;
+        }
+        if (period == 30 && minute<30){
             minuteStr = "0"+minuteStr;
         }
         return DateTimeUtil.formatDateTimetoString(new Date(),"yyyy-MM-dd HH:"+minuteStr);
@@ -1854,7 +1857,7 @@ public class DateTimeUtil {
 //        System.out.println(getDaysOfTwoDate(getMonthOfLastDayDate(0),new Date()));
 //        System.out.println(getDaysOfTwoDate(getMonthOfLastDayDate(0), DateTimeUtil.addDays(new Date(),-1)));
 
-        System.out.println(getPeriodDate(5));
+//        System.out.println(getPeriodDate(5));
     }
 
 }

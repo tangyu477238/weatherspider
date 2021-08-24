@@ -2,6 +2,7 @@ package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
+import cn.zifangsky.common.StringUtil;
 import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.*;
@@ -12,6 +13,7 @@ import cn.zifangsky.repository.GupiaoKlineRepository;
 import cn.zifangsky.repository.GupiaoRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +100,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
             }
             if (gupiaoKline.getBizDate().startsWith(DateTimeUtil.getBeforeDay(0))){ //如果是当天，请覆盖
                 gupiaoKline.setId(kline.getId());
-                todayList.add(gupiaoKline);
+                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(list.get(0).getPeriod()));
+                if (gupiaoKline.getBizDate().compareTo(biz_date) <= 0){ //控制
+                    todayList.add(gupiaoKline);
+                }
+
             }
         }
         return todayList;
@@ -123,7 +129,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
             for (BaseGupiaoKline kline : listBase){
                 gupiaoKline5m = new GupiaoKline5m();
                 BeanUtils.copyProperties(kline, gupiaoKline5m);
-                list.add(gupiaoKline5m);
+                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(listBase.get(0).getPeriod()));
+                if (gupiaoKline5m.getBizDate().compareTo(biz_date) <= 0){ //控制
+                    list.add(gupiaoKline5m);
+                }
+
             }
             gupiaoKline5mRepository.saveAll(list); //保存新增数据
         } else if (listBase.get(0).getPeriod()==KlineEnum.K_30M.getId()){
@@ -132,7 +142,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
             for (BaseGupiaoKline kline : listBase){
                 gupiaoKline30m = new GupiaoKline30m();
                 BeanUtils.copyProperties(kline, gupiaoKline30m);
-                list.add(gupiaoKline30m);
+
+                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(listBase.get(0).getPeriod()));
+                if (gupiaoKline30m.getBizDate().compareTo(biz_date) <= 0){ //控制
+                    list.add(gupiaoKline30m);
+                }
             }
             gupiaoKline30mRepository.saveAll(list); //保存新增数据
         } else if (listBase.get(0).getPeriod()==KlineEnum.K_1D.getId()){
