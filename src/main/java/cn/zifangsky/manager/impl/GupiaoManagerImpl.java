@@ -100,11 +100,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
             }
             if (gupiaoKline.getBizDate().startsWith(DateTimeUtil.getBeforeDay(0))){ //如果是当天，请覆盖
                 gupiaoKline.setId(kline.getId());
-                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(list.get(0).getPeriod()));
-                if (gupiaoKline.getBizDate().compareTo(biz_date) <= 0){ //控制
-                    todayList.add(gupiaoKline);
-                }
-
+                todayList.add(gupiaoKline);
             }
         }
         return todayList;
