@@ -49,7 +49,7 @@ public class LoginManager implements ILogin{
      * @throws Exception
      */
     public int getCurrentAmount(String stock_code) throws Exception{
-        return  JSONUtil.parseObj(queryStockEnablelNum ( stock_code)).getJSONObject("data").getInt("current_amount");
+        return  JSONUtil.parseObj(queryStockEnablelNum(stock_code)).getJSONObject("data").getInt("current_amount");
     }
 
 
@@ -167,7 +167,7 @@ public class LoginManager implements ILogin{
      * @return
      * @throws Exception
      */
-    public String queryStockEnablelNum (String stock_code) throws Exception{
+    public String queryStockEnablelNum(String stock_code) throws Exception{
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryStockEnablelNum?stock_code="+stock_code
                 +"&"+getAccountInfo() +getImeiInfo()+stockAccount(stock_code);

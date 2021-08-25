@@ -38,17 +38,7 @@ public class CanUseTask {
         gupiaoCanUseManager.addCanUse();
     }
 
-    /***
-     * 1分钟同步一次
-     *
-     * 查数据
-     */
-    @Scheduled(cron = "${task.today.canUse}")
-    public void todayBuy(){
-        if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("开始执行todayCanUse，Date：{0}",  DateTimeUtil.formatDateTimetoString(new Date())));
-        gupiaoCanUseManager.listBuy();
-    }
+
 
 
 }

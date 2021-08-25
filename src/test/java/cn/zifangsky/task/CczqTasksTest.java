@@ -41,7 +41,7 @@ public class CczqTasksTest {
     @Test
     public void xintiao() throws Exception{
 
-        cczqTasks.xintiao();
+//        cczqTasks.xintiao();
 
     }
 }

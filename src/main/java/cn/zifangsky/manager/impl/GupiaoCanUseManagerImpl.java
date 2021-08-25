@@ -1,5 +1,6 @@
 package cn.zifangsky.manager.impl;
 
+import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.GupiaoCanUseManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.model.GupiaoCanUse;
@@ -22,6 +23,8 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 	@Resource
 	private GupiaoCanUseRepository gupiaoCanUseRepository;
 
+	@Resource
+	private LoginManager loginManager;
 
 
 	@Override
@@ -48,9 +51,26 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 
 	@Override
 	public void listBuy() {
-		List<Map<String,Object>> list = gupiaoCanUseRepository.listBuy();
-		for (Map<String,Object> map : list){
-
+		try {
+			List<Map<String,Object>> list = gupiaoCanUseRepository.listBuy();
+			for (Map<String,Object> map : list){
+				String stock_code = map.get("symbol").toString();
+				log.info(stock_code);
+				int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
+				if(currentNum>0){
+					continue;
+				}
+				Double lossPrice = Double.valueOf(map.get("lossPrice").toString()); //止损
+				Double newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
+				if (newPrice>lossPrice){
+					String original_price = String.valueOf(newPrice+0.01); //获取触发价格
+					int buyNum = 10;
+					loginManager.hungBuy(stock_code, stock_code ,original_price , ""+newPrice, buyNum);
+					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, buyNum);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
