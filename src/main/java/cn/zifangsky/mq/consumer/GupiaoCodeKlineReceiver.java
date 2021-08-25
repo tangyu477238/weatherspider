@@ -82,7 +82,12 @@ public class GupiaoCodeKlineReceiver {
 		}
 		@Override
 		public void run(){
-			dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
+			if (gupiao.getFollowers()==1){
+				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
+			} else {
+				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
+			}
+
 		}
 	}
 

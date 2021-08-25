@@ -7,14 +7,11 @@ import java.util.List;
 
 public interface GupiaoManager {
 
-//	void saveKline(BaseGupiaoKline gupiaoKline);
+
 	void saveKlineAll(List<BaseGupiaoKline> list);
 
 	BaseGupiaoKline getGupiaoKline(String bondId, String bizDate, Integer period);
 
-//	void saveGupiao(Gupiao gupiao);
-
-//	void updateAllGupiaoKline();
 
 	List<Gupiao> listKzz();
 
@@ -24,4 +21,7 @@ public interface GupiaoManager {
 
 	void sysnKzzKlineAll(Integer period);
 
+	List<Gupiao> listBeforeTime(Integer period);
+
+	Gupiao listBeforeTime(String symbol, Integer period);
 }

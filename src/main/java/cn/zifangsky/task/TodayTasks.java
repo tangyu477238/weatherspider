@@ -6,6 +6,7 @@ import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.GupiaoCanUse;
+import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
 import cn.zifangsky.repository.GupiaoCanUseRepository;
 import cn.zifangsky.repository.GupiaoRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,9 @@ public class TodayTasks {
 
     @Resource
     private GupiaoRepository gupiaoRepository;
+
+    @Resource
+    private GupiaoCodeKlineSender gupiaoCodeKlineSender;
 
 
     /***
@@ -154,10 +158,13 @@ public class TodayTasks {
         }
         @Override
         public void run(){
-            List<Gupiao> list = gupiaoRepository.listBeforeTime(period);
+            List<Gupiao> list = gupiaoManager.listBeforeTime(period);
             Collections.shuffle(list);
             for (Gupiao gupiao : list){
-                dongfangManager.getKline(gupiao.getSymbol(),period,true,true);
+                gupiao.setPeriod(period);
+                gupiao.setFollowers(1); //当天
+                gupiaoCodeKlineSender.send(gupiao);
+//                dongfangManager.getKline(gupiao.getSymbol(),period,true,true);
             }
         }
     }

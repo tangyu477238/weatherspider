@@ -225,4 +225,20 @@ public class GupiaoManagerImpl implements GupiaoManager {
             gupiaoCodeKlineSender.send(gupiao);
         }
     }
+
+    @Override
+    public List<Gupiao> listBeforeTime(Integer period) {
+        if (period==KlineEnum.K_30M.getId()){
+            return gupiaoRepository.listBeforeTime30m(period);
+        }
+        return null;
+    }
+
+    @Override
+    public Gupiao listBeforeTime(String symbol, Integer period) {
+        if (period==KlineEnum.K_30M.getId()){
+            return gupiaoRepository.listBeforeTime30m(symbol, period);
+        }
+        return null;
+    }
 }

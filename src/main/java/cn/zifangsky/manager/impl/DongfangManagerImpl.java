@@ -1,5 +1,6 @@
 package cn.zifangsky.manager.impl;
 
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.login.StockUtil;
@@ -86,6 +87,10 @@ public class DongfangManagerImpl implements DongfangManager {
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
 
         if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //已存在,且非当天同步，则不在进行
+            return;
+        }
+
+        if (isToday && !ComUtil.isEmpty(gupiaoManager.listBeforeTime(bondId, period))){ //已存在,且非当天同步，则不在进行
             return;
         }
 
