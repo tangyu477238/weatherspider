@@ -17,6 +17,12 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
     List<Gupiao> getSymbolTop();
 
 
+    @Query(value = "select s.* from gupiao s " +
+            " inner join v_before_30m_time b on 1= 1" +
+            " left join gupiao_kline_30m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
+            " where k.symbol is null", nativeQuery = true)
+    List<Gupiao> listBeforeTime(Integer period);
+
     @Modifying
     @Transactional
     @Query(value = "delete from  gupiao  where symbol like '11%' or  symbol like '12%'  ",nativeQuery = true)

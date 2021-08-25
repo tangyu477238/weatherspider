@@ -154,7 +154,7 @@ public class TodayTasks {
         }
         @Override
         public void run(){
-            List<Gupiao> list = gupiaoManager.listKzz();
+            List<Gupiao> list = gupiaoRepository.listBeforeTime(period);
             Collections.shuffle(list);
             for (Gupiao gupiao : list){
                 dongfangManager.getKline(gupiao.getSymbol(),period,true,true);
