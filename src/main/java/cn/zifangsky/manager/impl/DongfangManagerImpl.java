@@ -5,11 +5,14 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.manager.DongfangManager;
-import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.manager.HttpClientManager;
-import cn.zifangsky.repository.GupiaoKlineRepository;
+import cn.zifangsky.manager.ProxyIpManager;
+import cn.zifangsky.model.ProxyIp;
 import cn.zifangsky.repository.GupiaoRepository;
-import cn.zifangsky.spider.gp.*;
+import cn.zifangsky.spider.gp.DongfangKlinePipeline;
+import cn.zifangsky.spider.gp.DongfangKlineSpider;
+import cn.zifangsky.spider.gp.DongfangSpider;
+import cn.zifangsky.spider.gp.GupiaoPipeline;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.Spider;
@@ -37,6 +40,8 @@ public class DongfangManagerImpl implements DongfangManager {
 
     @Resource
     private GupiaoManagerImpl gupiaoManager;
+    @Resource
+    private ProxyIpManager proxyIpManager;
 
 
     /****
@@ -106,11 +111,13 @@ public class DongfangManagerImpl implements DongfangManager {
         Spider spider = OOSpider.create(new DongfangKlineSpider())
                 .addPipeline(dongfangKlinePipeline).addUrl(url.toString());
         if (isProxy){
-            HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader();
+            ProxyIp proxyIp = proxyIpManager.selectRandomIP();
+            HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader(proxyIp);
             if (httpClientDownloader==null){
                 return;
             }
             spider.setDownloader(httpClientDownloader);
+            url.append("&ip="+proxyIp.getIp()+"&port="+proxyIp.getPort());
         }
         log.info(url.toString());
         spider.thread(1).run();

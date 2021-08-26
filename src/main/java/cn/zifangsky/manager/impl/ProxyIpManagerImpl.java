@@ -4,7 +4,9 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.zifangsky.common.ComUtil;
+import cn.zifangsky.model.ProxyIpData;
 import cn.zifangsky.model.bo.ProxyIpBO;
+import cn.zifangsky.repository.ProxyIpDataRepository;
 import cn.zifangsky.repository.ProxyIpRepository;
 import cn.zifangsky.spider.CheckIPUtils;
 import lombok.Data;
@@ -26,7 +28,8 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	private boolean isDel = false;
 
 	private Map<String, ProxyIp> map = new ConcurrentHashMap<>();
-
+	@Resource
+	private ProxyIpDataRepository proxyIpDataRepository;
 	@Resource
 	private ProxyIpRepository proxyIpRepository;
 
@@ -37,9 +40,10 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	public List<ProxyIp> selectAll() {
 		List<ProxyIp> list = proxyIpRepository.listCanUse();
 		if (!ComUtil.isEmpty(list)){
+			Collections.shuffle(list);
 			return list;
 		}
-		return proxyIpRepository.findAll();
+		return proxyIpRepository.findAll(); //未验证ip
 	}
 
 	@Override
@@ -80,6 +84,13 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	}
 
 	@Override
+	public boolean update(ProxyIp proxyIp) {
+		proxyIp.setUpdateTime(new Date());
+		proxyIpRepository.save(proxyIp);
+		return true;
+	}
+
+	@Override
 	public boolean update(ProxyIpBO proxyIpBO) {
 		log.debug("检查有效性");
 		if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
@@ -87,9 +98,7 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		}
 		ProxyIp px = new ProxyIp();
 		BeanUtils.copyProperties(proxyIpBO, px);
-		px.setUpdateTime(new Date());
-		proxyIpRepository.save(px);
-		return true;
+		return update(px);
 	}
 
 	@Override
@@ -100,7 +109,11 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public ProxyIp selectRandomIP() {
-		return getProxy(false);
+		List<ProxyIp> list = selectAll();
+		if (!ComUtil.isEmpty(list)){
+			return selectAll().get(0);
+		}
+		return null;
 	}
 
 	@Override
@@ -111,11 +124,9 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	private ProxyIp getProxy(boolean isDel){
 		List<ProxyIp> list = selectAll();
-		if(ComUtil.isEmpty(list)){
+		if (ComUtil.isEmpty(list)){
 			synProxy(); //废弃IP重存
-			return null;
 		}
-		Collections.shuffle(list);
 		for (ProxyIp proxyIp : list){
 			if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
 				proxyIp.setUpdateTime(new Date());
@@ -136,14 +147,23 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 			return;
 		}
 		List<ProxyIp> list = new ArrayList<>();
+		List<ProxyIpData> listData = new ArrayList<>();
 		log.info("---------废弃IP重新利用----开始-----"+ DateUtil.formatAsDatetime(new Date()));
 		ProxyIp proxyIp;
+		ProxyIpData proxyIpData;
 		for (ProxyIp proxyIp1 : map.values()) {
 			proxyIp = new ProxyIp();
 			BeanUtils.copyProperties(proxyIp1, proxyIp);
 			list.add(proxyIp);
+
+			proxyIpData = proxyIpDataRepository.findByIpAndPort(proxyIp1.getIp(), proxyIp1.getPort());
+			if (ComUtil.isEmpty(proxyIpData)){
+				BeanUtils.copyProperties(proxyIp1, proxyIpData);
+				listData.add(proxyIpData);
+			}
 		}
 		proxyIpRepository.saveAll(list);
+		proxyIpDataRepository.saveAll(listData);
 		log.info(list.size()+"---------废弃重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
 	}
 

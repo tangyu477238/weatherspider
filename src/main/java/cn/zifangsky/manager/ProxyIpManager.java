@@ -13,6 +13,8 @@ public interface ProxyIpManager {
 
     boolean update(ProxyIpBO proxyIpBO);
 
+    boolean update(ProxyIp proxyIp);
+
 
     /**
      * 根据IP和端口查询

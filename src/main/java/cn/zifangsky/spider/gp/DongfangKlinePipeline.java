@@ -2,8 +2,10 @@ package cn.zifangsky.spider.gp;
 
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.StringUtil;
+import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.BaseGupiaoKline;
+import cn.zifangsky.model.ProxyIp;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +30,8 @@ public class DongfangKlinePipeline implements Pipeline {
 
 	@Resource
 	private GupiaoManagerImpl gupiaoManager;
-
+	@Resource
+	private ProxyIpManager proxyIpManager;
 
 	/**
 	 * 保存数据
@@ -45,6 +48,8 @@ public class DongfangKlinePipeline implements Pipeline {
 			String url = resultItems.getRequest().getUrl();
 			Map<String, String> map = StringUtil.urlSplit(url);
 			String symbol = object.getString("code");
+			String ip = object.getString("ip");
+			String port = object.getString("port");
 			Integer period = Integer.parseInt(map.get("klt"));
 			JSONArray jsonArray = object.getJSONArray("klines");
 			log.debug(jsonArray.toJSONString());
@@ -76,6 +81,9 @@ public class DongfangKlinePipeline implements Pipeline {
 				list.add(kzz1);
 			}
 			gupiaoManager.saveKlineAll(list);
+			ProxyIp proxyIp = proxyIpManager.selectByIPPort(ip, Integer.parseInt(port));
+			proxyIp.setUsed(1);
+			proxyIpManager.update(proxyIp);
 		} catch (Exception e){
 			log.info(e.toString());
 		}

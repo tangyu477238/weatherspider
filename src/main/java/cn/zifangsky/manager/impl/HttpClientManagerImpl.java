@@ -29,17 +29,19 @@ public class HttpClientManagerImpl implements HttpClientManager {
 
 
 	private HttpClientDownloader getHttpClient(boolean isCheck) {
-		ProxyIp proxyIp ;
 		if (isCheck){
-			proxyIp = proxyIpManager.selectCheckRandomIP();
-		} else {
-			proxyIp = proxyIpManager.selectRandomIP();
+			return getHttpClientDownloader(proxyIpManager.selectCheckRandomIP());
 		}
+		return getHttpClientDownloader(proxyIpManager.selectRandomIP());
+	}
+
+	@Override
+	public HttpClientDownloader getHttpClientDownloader(ProxyIp proxyIp) {
 		if (ComUtil.isEmpty(proxyIp)){
 			return null;
 		}
 		HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
-		httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy(proxyIp.getIp(),proxyIp.getPort())));
+		httpClientDownloader.setProxyProvider(SimpleProxyProvider.from(new Proxy(proxyIp.getIp(), proxyIp.getPort())));
 		return httpClientDownloader;
 	}
 }
