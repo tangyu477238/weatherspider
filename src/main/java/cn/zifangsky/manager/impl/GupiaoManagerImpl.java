@@ -2,7 +2,6 @@ package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
-import cn.zifangsky.common.StringUtil;
 import cn.zifangsky.emuns.KlineEnum;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.*;
@@ -13,7 +12,6 @@ import cn.zifangsky.repository.GupiaoKlineRepository;
 import cn.zifangsky.repository.GupiaoRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -217,16 +215,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public void sysnKzzKlineAll(Integer period) {
         List<Gupiao> list = listKzz();
-        int i = 0 ;
         for (Gupiao gupiao : list){
-            gupiao.setSymbol("0000"+(i++));
-            if (i==15){
-                return;
-            }
             gupiao.setPeriod(period);
-//            if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
-//                continue;
-//            }
+            if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
+                continue;
+            }
             gupiaoCodeKlineSender.send(gupiao);
         }
     }

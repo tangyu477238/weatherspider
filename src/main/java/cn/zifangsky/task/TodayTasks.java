@@ -91,29 +91,34 @@ public class TodayTasks {
         Date current = new Date();
         log.warn(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.TodayBuyRunnable(KlineEnum.K_5M.getId());
-            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+            List<String> list = gupiaoCanUseRepository.listSyns();
+            Collections.shuffle(list);
+            for (String symbol : list){
+                dongfangManager.getKline(symbol , KlineEnum.K_5M.getId(),true,true);
+            }
+//            Runnable run = new TodayTasks.TodayBuyRunnable(KlineEnum.K_5M.getId());
+//            ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
 
 
-    /***
-     * 上级出现信号后再同步数
-     */
-    public class TodayBuyRunnable implements Runnable{
-        private Integer period;
-        public TodayBuyRunnable(Integer period){
-            this.period = period;
-        }
-        @Override
-        public void run(){
-            List<String> list = gupiaoCanUseRepository.listSyns();
-            Collections.shuffle(list);
-            for (String symbol : list){
-                dongfangManager.getKline(symbol ,period,true,true);
-            }
-        }
-    }
+//    /***
+//     * 上级出现信号后再同步数
+//     */
+//    public class TodayBuyRunnable implements Runnable{
+//        private Integer period;
+//        public TodayBuyRunnable(Integer period){
+//            this.period = period;
+//        }
+//        @Override
+//        public void run(){
+//            List<String> list = gupiaoCanUseRepository.listSyns();
+//            Collections.shuffle(list);
+//            for (String symbol : list){
+//                dongfangManager.getKline(symbol ,period,true,true);
+//            }
+//        }
+//    }
 
 
 
@@ -164,7 +169,6 @@ public class TodayTasks {
                 gupiao.setPeriod(period);
                 gupiao.setFollowers(1); //当天
                 gupiaoCodeKlineSender.send(gupiao);
-//                dongfangManager.getKline(gupiao.getSymbol(),period,true,true);
             }
         }
     }
@@ -181,7 +185,7 @@ public class TodayTasks {
     /////////////////////////////////一天一次///////////全量数据同步/////////////////////////////////////////
 
     /***
-     * 全量可转债
+     * 全量 名称列表
      */
     @Scheduled(cron = "${task.every.gupiao.all}")
     public void gupiaoByAll(){
@@ -195,7 +199,7 @@ public class TodayTasks {
 
 
     /***
-     * 日k线
+     * 全量 日k线
      */
     @Scheduled(cron = "${task.every.kzz.day}")
     public void kzzByDay(){
@@ -203,14 +207,13 @@ public class TodayTasks {
         Date current = new Date();
         log.info(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_1D.getId());
-            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+            gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1D.getId());
         }catch (Exception e){log.debug(e.toString());}
 
     }
 
     /***
-     * 5分k线
+     * 全量 5分k线
      */
     @Scheduled(cron = "${task.every.kzz.5m}")
     public void kzzBy5m(){
@@ -218,13 +221,12 @@ public class TodayTasks {
         Date current = new Date();
         log.info(MessageFormat.format("kzzBy5m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_5M.getId());
-            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+            gupiaoManager.sysnKzzKlineAll(KlineEnum.K_5M.getId());
         }catch (Exception e){log.debug(e.toString());}
     }
 
     /***
-     * 30分k线
+     * 全量 30分k线
      */
     @Scheduled(cron = "${task.every.kzz.30m}")
     public void kzzBy30m(){
@@ -232,8 +234,9 @@ public class TodayTasks {
         Date current = new Date();
         log.info(MessageFormat.format("kzzBy30m，Date：{0}",FORMAT.format(current)));
         try {
-            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_30M.getId());
-            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+//            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_30M.getId());
+//            ExecutorProcessPool.getInstance().executeByCustomThread(run);
+            gupiaoManager.sysnKzzKlineAll(KlineEnum.K_30M.getId());
         }catch (Exception e){log.debug(e.toString());}
     }
 
