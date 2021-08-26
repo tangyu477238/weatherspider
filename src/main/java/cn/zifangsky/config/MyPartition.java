@@ -9,7 +9,7 @@ import java.util.Map;
 @Slf4j
 public class MyPartition implements Partitioner {
     // 分区数
-    private static final Integer PARTITION_NUM = 6;
+    private static final Integer PARTITION_NUM = 45;
 
     @Override
     public int partition(String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {

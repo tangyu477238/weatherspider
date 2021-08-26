@@ -217,11 +217,16 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public void sysnKzzKlineAll(Integer period) {
         List<Gupiao> list = listKzz();
+        int i = 0 ;
         for (Gupiao gupiao : list){
-            gupiao.setPeriod(period);
-            if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
-                continue;
+            gupiao.setSymbol("0000"+(i++));
+            if (i==15){
+                return;
             }
+            gupiao.setPeriod(period);
+//            if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
+//                continue;
+//            }
             gupiaoCodeKlineSender.send(gupiao);
         }
     }
