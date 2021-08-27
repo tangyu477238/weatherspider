@@ -1,7 +1,7 @@
 package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
-import cn.zifangsky.emuns.ProxyUrlEnum;
+import cn.zifangsky.enums.ProxyUrlEnum;
 import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.spider.*;

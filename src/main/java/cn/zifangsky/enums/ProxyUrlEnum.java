@@ -1,7 +1,5 @@
-package cn.zifangsky.emuns;
+package cn.zifangsky.enums;
 
-
-import cn.zifangsky.common.ComUtil;
 
 public enum ProxyUrlEnum {
 

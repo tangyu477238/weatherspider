@@ -69,22 +69,29 @@ public class CheckIPUtils {
 	 */
 	public  boolean checkValidIP(String ip, Integer port){
 		try{
-			List<ProxyUrl> list = proxyUrlRepository.findAll();
-			Collections.shuffle(list);
-			for (int i = 0 ; i<list.size() ; i++){
-				URL url = new URL(list.get(i).getUrl());
-				if (i==5){
-					return false;
-				}
-				if (checkValidIP(ip, port, url)){
-					return  true;
-				}
-			}
+//			List<ProxyUrl> list = proxyUrlRepository.findAll();
+//			Collections.shuffle(list);
+//			for (int i = 0 ; i<list.size() ; i++){
+//				URL url = new URL(list.get(i).getUrl());
+//				if (i==5){
+//					return false;
+//				}
+//				if (checkValidIP(ip, port, url)){
+//					return  true;
+//				}
+//			}
+			String url = "http://"+System.currentTimeMillis()
+					+".push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627" +
+					"&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61" +
+					"&ut=7eea3edcaed734bea9cbfc24409ed989&klt=30&fqt=1&secid=0.000001&beg=20210827&end=20210827&_=1618930055730";
+			return checkValidIP(ip, port, new URL(url));
 		} catch (Exception e) {
 			log.debug(e.toString());
 		}
 		return false;
 	}
+
+
 
 
 }

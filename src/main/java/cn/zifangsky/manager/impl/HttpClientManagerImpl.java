@@ -19,21 +19,14 @@ public class HttpClientManagerImpl implements HttpClientManager {
 
 	@Override
 	public  HttpClientDownloader getHttpClientDownloader(){
-		return getHttpClient(false);
+		return getHttpClientDownloader(proxyIpManager.selectRandomIP());
 	}
 
 	@Override
 	public HttpClientDownloader getCheckHttpClientDownloader() {
-		return getHttpClient(true);
+		return getHttpClientDownloader(proxyIpManager.selectCheckRandomIP());
 	}
 
-
-	private HttpClientDownloader getHttpClient(boolean isCheck) {
-		if (isCheck){
-			return getHttpClientDownloader(proxyIpManager.selectCheckRandomIP());
-		}
-		return getHttpClientDownloader(proxyIpManager.selectRandomIP());
-	}
 
 	@Override
 	public HttpClientDownloader getHttpClientDownloader(ProxyIp proxyIp) {

@@ -2,7 +2,7 @@ package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
-import cn.zifangsky.emuns.KlineEnum;
+import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.*;
 import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;

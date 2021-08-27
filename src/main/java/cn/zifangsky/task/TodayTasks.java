@@ -1,11 +1,10 @@
 package cn.zifangsky.task;
 
 import cn.zifangsky.common.ExecutorProcessPool;
-import cn.zifangsky.emuns.KlineEnum;
+import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
 import cn.zifangsky.model.Gupiao;
-import cn.zifangsky.model.GupiaoCanUse;
 import cn.zifangsky.mq.producer.GupiaoCodeKlineSender;
 import cn.zifangsky.repository.GupiaoCanUseRepository;
 import cn.zifangsky.repository.GupiaoRepository;

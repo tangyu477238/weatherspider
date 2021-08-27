@@ -1,4 +1,4 @@
-package cn.zifangsky.emuns;
+package cn.zifangsky.enums;
 
 
 public enum KlineEnum {

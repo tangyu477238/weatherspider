@@ -1,7 +1,7 @@
 package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.config.KafkaConsole;
-import cn.zifangsky.emuns.KlineEnum;
+import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.manager.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

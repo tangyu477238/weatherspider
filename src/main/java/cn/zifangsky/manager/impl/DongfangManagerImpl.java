@@ -2,12 +2,12 @@ package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
-import cn.zifangsky.emuns.KlineEnum;
+import cn.zifangsky.enums.DongfangEnum;
+import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.model.ProxyIp;
 import cn.zifangsky.repository.GupiaoRepository;
 import cn.zifangsky.spider.gp.DongfangKlinePipeline;
 import cn.zifangsky.spider.gp.DongfangKlineSpider;
@@ -29,7 +29,7 @@ public class DongfangManagerImpl implements DongfangManager {
     @Resource(name="httpClientManager")
     private HttpClientManager httpClientManager;
 
-    @Resource(name="dongfangKlinePipeline")
+    @Resource
     private DongfangKlinePipeline dongfangKlinePipeline;
 
     @Resource
@@ -82,6 +82,25 @@ public class DongfangManagerImpl implements DongfangManager {
         return gupiaoRepository.getBizDate(num).replace("-","");
     }
 
+    /***
+     * 获取 url
+     * @param bondId
+     * @param period
+     * @param isToday
+     * @return
+     */
+    private String getUrl(String bondId, Integer period,boolean isToday){
+        String beg = getBizdate(period);
+        if (isToday){
+            beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
+        }
+        int exchange_type =  StockUtil.isShenshi(bondId)  ? 0 : 1; //深/沪
+        StringBuffer url = new StringBuffer("http://"+System.currentTimeMillis() + DongfangEnum.KLINE.getUrl())
+                .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
+        log.info(url.toString());
+        return url.toString();
+    }
+
     /******
      * 根据股票编码获取数据
      * @param bondId 股票编码
@@ -90,7 +109,7 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
-
+        log.info(bondId+"--------开始进入------------------------"+DateTimeUtil.formatTimetoString(new Date()));
         if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //已存在,且非当天同步，则不在进行
             return;
         }
@@ -99,28 +118,17 @@ public class DongfangManagerImpl implements DongfangManager {
             return;
         }
 
-        String beg = getBizdate(period);
-        if (isToday){
-            beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
-        }
-        int exchange_type =  StockUtil.isShenshi(bondId)  ? 0 : 1; //深/沪
-        StringBuffer url = new StringBuffer("http://"+System.currentTimeMillis()+".push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6")
-                .append("&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989")
-                .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
-        Spider spider = OOSpider.create(new DongfangKlineSpider())
-                .addPipeline(dongfangKlinePipeline);
+        Spider spider = OOSpider.create(new DongfangKlineSpider()).addPipeline(dongfangKlinePipeline);
         if (isProxy){
-            ProxyIp proxyIp = proxyIpManager.selectRandomIP();
-            HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader(proxyIp);
+            HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader();
             if (httpClientDownloader==null){
                 return;
             }
             spider.setDownloader(httpClientDownloader);
-            url.append("&ip="+proxyIp.getIp()+"&port="+proxyIp.getPort());
         }
-        spider.addUrl(url.toString());
-        log.info(url.toString());
+        spider.addUrl(getUrl(bondId, period, isToday));
         spider.thread(1).run();
+        log.info(bondId+"--------完成退出------------------------"+DateTimeUtil.formatTimetoString(new Date()));
     }
 
 
