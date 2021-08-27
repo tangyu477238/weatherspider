@@ -107,9 +107,8 @@ public class DongfangManagerImpl implements DongfangManager {
         StringBuffer url = new StringBuffer("http://"+System.currentTimeMillis()+".push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery112403780605306048155_1618930055627&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6")
                 .append("&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&ut=7eea3edcaed734bea9cbfc24409ed989")
                 .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
-        log.debug(url.toString());
         Spider spider = OOSpider.create(new DongfangKlineSpider())
-                .addPipeline(dongfangKlinePipeline).addUrl(url.toString());
+                .addPipeline(dongfangKlinePipeline);
         if (isProxy){
             ProxyIp proxyIp = proxyIpManager.selectRandomIP();
             HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader(proxyIp);
@@ -119,6 +118,7 @@ public class DongfangManagerImpl implements DongfangManager {
             spider.setDownloader(httpClientDownloader);
             url.append("&ip="+proxyIp.getIp()+"&port="+proxyIp.getPort());
         }
+        spider.addUrl(url.toString());
         log.info(url.toString());
         spider.thread(1).run();
     }

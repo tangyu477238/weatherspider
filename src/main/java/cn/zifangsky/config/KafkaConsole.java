@@ -47,6 +47,13 @@ public class KafkaConsole {
         adminClient.createPartitions(newPartitions);
     }
 
+    /**
+     * deleteTopics
+     * @param topicName  主题名称
+     */
+    public void del(String topicName){
+        adminClient.deleteTopics(Arrays.asList(topicName));
+    }
 
 
 

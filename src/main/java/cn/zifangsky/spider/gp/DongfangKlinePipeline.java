@@ -48,8 +48,8 @@ public class DongfangKlinePipeline implements Pipeline {
 			String url = resultItems.getRequest().getUrl();
 			Map<String, String> map = StringUtil.urlSplit(url);
 			String symbol = object.getString("code");
-			String ip = object.getString("ip");
-			String port = object.getString("port");
+			String ip = map.get("ip");
+			String port = map.get("port");
 			Integer period = Integer.parseInt(map.get("klt"));
 			JSONArray jsonArray = object.getJSONArray("klines");
 			log.debug(jsonArray.toJSONString());

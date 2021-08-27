@@ -16,36 +16,36 @@ public class TodayTasksTest {
     @Resource
     private TodayTasks todayTasks;
 
-
-    @Test
-    public void gupiaoByAll() throws Exception{
-
-        todayTasks.gupiaoByAll();
-
-    }
-
-
-    @Test
-    public void todayByDay() throws Exception{
-
-        todayTasks.todayByDay();
-
-    }
-
-
-    @Test
-    public void kzzBy30m() throws Exception{
-
-        todayTasks.kzzBy30m();
-
-    }
-
-    @Test
-    public void kzzBy5m() throws Exception{
-
-        todayTasks.kzzBy5m();
-
-    }
+//
+//    @Test
+//    public void gupiaoByAll() throws Exception{
+//
+//        todayTasks.gupiaoByAll();
+//
+//    }
+//
+//
+//    @Test
+//    public void todayByDay() throws Exception{
+//
+//        todayTasks.todayByDay();
+//
+//    }
+//
+//
+//    @Test
+//    public void kzzBy30m() throws Exception{
+//
+//        todayTasks.kzzBy30m();
+//
+//    }
+//
+//    @Test
+//    public void kzzBy5m() throws Exception{
+//
+//        todayTasks.kzzBy5m();
+//
+//    }
 
 
 }
