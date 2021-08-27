@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 import java.util.Random;
 
 @Slf4j
-@Component("gupiaoSender")
+@Component
 public class GupiaoSender {
 
     @Autowired

@@ -29,7 +29,7 @@ public class CheckIPSender {
         log.debug(MessageFormat.format("开始向Kafka推送数据，topicName：{0}，代理IP：{1}",topicName, proxyIpBO));
 
         try {
-            String p = String.valueOf(new Random().nextInt(100) + 1);
+            String p = String.valueOf(new Random().nextInt(200) + 1);
             ProducerRecord producerRecord = new ProducerRecord<String, Object>(topicName, p , proxyIpBO);
             kafkaTemplate.send(producerRecord);
             log.debug("推送数据成功！");

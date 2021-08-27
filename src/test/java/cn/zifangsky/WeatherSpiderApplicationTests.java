@@ -42,10 +42,10 @@ public class WeatherSpiderApplicationTests {
 
 		kafkaConsole.edit("topic-proxyIp",45);
 
-		kafkaConsole.edit("topic-gupiao",45);
-		kafkaConsole.edit("topic-gupiaoGainian",45);
-		kafkaConsole.edit("topic-gupiaoCodeKline",45);
-		kafkaConsole.edit("topic-gupiaoKline",45);
+//		kafkaConsole.edit("topic-gupiao",45);
+//		kafkaConsole.edit("topic-gupiaoGainian",45);
+		kafkaConsole.edit("topic-gupiaoCodeKline",200);
+//		kafkaConsole.edit("topic-gupiaoKline",45);
 
 
 	}
