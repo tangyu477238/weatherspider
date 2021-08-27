@@ -1,6 +1,7 @@
 package cn.zifangsky.spider;
 
 import cn.zifangsky.common.ComUtil;
+import cn.zifangsky.common.UserAgentUtils;
 import cn.zifangsky.model.ProxyIp;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;

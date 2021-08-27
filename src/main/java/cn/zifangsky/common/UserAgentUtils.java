@@ -1,4 +1,4 @@
-package cn.zifangsky.spider;
+package cn.zifangsky.common;
 
 import java.util.ArrayList;
 import java.util.List;

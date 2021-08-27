@@ -1,12 +1,10 @@
 package cn.zifangsky.spider.gp;
 
-import cn.zifangsky.model.ProxyIp;
-import cn.zifangsky.spider.UserAgentUtils;
+import cn.zifangsky.common.UserAgentUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Html;
-import us.codecraft.webmagic.selector.Json;
 
 import java.util.ArrayList;
 import java.util.HashSet;

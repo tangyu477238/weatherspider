@@ -1,18 +1,14 @@
 package cn.zifangsky.spider.gp;
 
-import cn.zifangsky.spider.HttpClientUtil;
-import cn.zifangsky.spider.UserAgentUtils;
+import cn.zifangsky.common.HttpClientUtil;
+import cn.zifangsky.common.UserAgentUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import us.codecraft.webmagic.Page;
-import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.model.HttpRequestBody;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Json;
-import us.codecraft.webmagic.utils.HttpConstant;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 

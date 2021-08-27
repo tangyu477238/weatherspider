@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import cn.zifangsky.common.UserAgentUtils;
 import cn.zifangsky.model.WeatherWeather;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;

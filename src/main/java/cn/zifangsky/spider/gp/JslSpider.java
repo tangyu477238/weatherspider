@@ -1,6 +1,6 @@
 package cn.zifangsky.spider.gp;
 
-import cn.zifangsky.spider.UserAgentUtils;
+import cn.zifangsky.common.UserAgentUtils;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;

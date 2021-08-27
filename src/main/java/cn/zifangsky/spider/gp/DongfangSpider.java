@@ -1,9 +1,8 @@
 package cn.zifangsky.spider.gp;
 
-import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.login.StockUtil;
 import cn.zifangsky.model.Gupiao;
-import cn.zifangsky.spider.UserAgentUtils;
+import cn.zifangsky.common.UserAgentUtils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;

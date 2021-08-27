@@ -1,4 +1,4 @@
-package cn.zifangsky.spider;
+package cn.zifangsky.common;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;

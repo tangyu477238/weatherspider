@@ -1,16 +1,14 @@
 package cn.zifangsky.spider;
 
 import cn.zifangsky.common.ComUtil;
+import cn.zifangsky.common.UserAgentUtils;
 import cn.zifangsky.model.ProxyIp;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Html;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ProxyIPSpider4 implements PageProcessor {
 

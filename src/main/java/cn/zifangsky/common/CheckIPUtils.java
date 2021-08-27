@@ -1,4 +1,4 @@
-package cn.zifangsky.spider;
+package cn.zifangsky.common;
 
 import cn.zifangsky.model.ProxyUrl;
 import cn.zifangsky.repository.ProxyUrlRepository;
@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
 import java.text.MessageFormat;
 import java.util.Collections;
@@ -30,11 +32,20 @@ public class CheckIPUtils {
 			connection.setReadTimeout(4000);
 			connection.setConnectTimeout(4000);
 			connection.setRequestMethod("GET");
+			String msg = "";
 			if(connection.getResponseCode() == 200){
+				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String line;
+				while ((line = reader.readLine()) != null) { // 循环从流中读取
+					msg += line + "\n";
+				}
+				reader.close(); // 关闭流
+			}
+
+			if (msg.startsWith("jQuery")){
 				log.info(MessageFormat.format("============代理IP[{0} {1}]可用=====================", ip,port));
 				return true;
 			}
-
 		} catch (java.net.NoRouteToHostException e) {
 			return true;
 		} catch (ConnectException e) {

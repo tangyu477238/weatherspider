@@ -1,20 +1,7 @@
 package cn.zifangsky.mq.consumer;
 
-import cn.zifangsky.common.ExecutorProcessPool;
-import cn.zifangsky.manager.GupiaoManager;
-import cn.zifangsky.model.BaseGupiaoKline;
-import cn.zifangsky.model.GupiaoKline;
-import cn.zifangsky.model.ProxyIp;
-import cn.zifangsky.model.bo.ProxyIpBO;
-import cn.zifangsky.spider.CheckIPUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.text.MessageFormat;
 
 @Component("gupiaoKlineReceiver")
 @Slf4j

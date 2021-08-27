@@ -8,7 +8,7 @@ import cn.zifangsky.model.ProxyIpData;
 import cn.zifangsky.model.bo.ProxyIpBO;
 import cn.zifangsky.repository.ProxyIpDataRepository;
 import cn.zifangsky.repository.ProxyIpRepository;
-import cn.zifangsky.spider.CheckIPUtils;
+import cn.zifangsky.common.CheckIPUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;

@@ -3,7 +3,7 @@ package cn.zifangsky.test.spider;
 import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.bo.ProxyIpBO;
-import cn.zifangsky.spider.CheckIPUtils;
+import cn.zifangsky.common.CheckIPUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
