@@ -1,5 +1,6 @@
 package cn.zifangsky.task;
 
+import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.manager.DongfangManager;
@@ -14,9 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.text.Format;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +31,7 @@ import java.util.List;
 @Slf4j
 public class TodayTasks {
 
-    private final Format FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
 
     @Value("${mq.kline.off}")
@@ -61,8 +60,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.schedule}")
     public void todayByFen(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
 //        dongfangManager.getToDayKline5M("399006");
     }
 
@@ -72,8 +70,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.schedule}")
     public void todayByDay(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",FORMAT.format(current)));
+        log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}", DateTimeUtil.formatTimetoString(new Date())));
 //        dongfangManager.getKline("000002");
     }
 
@@ -87,8 +84,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.kzz.5m}")
     public void todayKzzBy5m(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.warn(MessageFormat.format("todayKzzBy5m，Date：{0}",FORMAT.format(current)));
+        log.warn(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             List<String> list = gupiaoCanUseRepository.listSyns();
             Collections.shuffle(list);
@@ -127,8 +123,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.kzz.30m}")
     public void todayKzzBy30m(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.warn(MessageFormat.format("todayKzzBy30m，Date：{0}",FORMAT.format(current)));
+        log.warn(MessageFormat.format("todayKzzBy30m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_30M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
@@ -142,8 +137,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.kzz.day}")
     public void todayKzzByDay(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.warn(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
+        log.warn(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_1D.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
@@ -189,8 +183,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.every.gupiao.all}")
     public void gupiaoByAll(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.info(MessageFormat.format("gupiaoByAll，Date：{0}",FORMAT.format(current)));
+        log.info(MessageFormat.format("gupiaoByAll，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         gupiaoRepository.delKzzAll();
         dongfangManager.listKzzData();
     }
@@ -203,8 +196,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.every.kzz.day}")
     public void kzzByDay(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.info(MessageFormat.format("todayKzzByDay，Date：{0}",FORMAT.format(current)));
+        log.info(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1D.getId());
         }catch (Exception e){log.debug(e.toString());}
@@ -217,8 +209,8 @@ public class TodayTasks {
     @Scheduled(cron = "${task.every.kzz.5m}")
     public void kzzBy5m(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.info(MessageFormat.format("kzzBy5m，Date：{0}",FORMAT.format(current)));
+        
+        log.info(MessageFormat.format("kzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             gupiaoManager.sysnKzzKlineAll(KlineEnum.K_5M.getId());
         }catch (Exception e){log.debug(e.toString());}
@@ -230,8 +222,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.every.kzz.30m}")
     public void kzzBy30m(){
         if ("0".equals(klineOff)) return;
-        Date current = new Date();
-        log.info(MessageFormat.format("kzzBy30m，Date：{0}",FORMAT.format(current)));
+        log.info(MessageFormat.format("kzzBy30m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
 //            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_30M.getId());
 //            ExecutorProcessPool.getInstance().executeByCustomThread(run);
