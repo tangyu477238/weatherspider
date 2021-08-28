@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.DateUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Service;
 
 import cn.zifangsky.manager.ProxyIpManager;
@@ -80,6 +81,18 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		proxy.setUpdateTime(new Date());
 		proxyIpRepository.save(proxy);
 		log.info("---收录成功---"+proxyIpBO.getIp() +":"+ proxyIpBO.getPort());
+
+		try {
+			ProxyIpData proxyIpData = proxyIpDataRepository.findByIpAndPort(proxyIpBO.getIp(), proxyIpBO.getPort());
+			if (ComUtil.isEmpty(proxyIpData)){
+				proxyIpData = new ProxyIpData();
+				BeanUtils.copyProperties(proxy, proxyIpData);
+				proxyIpData.setId(null);
+				proxyIpDataRepository.save(proxyIpData);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return true;
 	}
 
@@ -147,23 +160,14 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 			return;
 		}
 		List<ProxyIp> list = new ArrayList<>();
-		List<ProxyIpData> listData = new ArrayList<>();
 		log.info("---------废弃IP重新利用----开始-----"+ DateUtil.formatAsDatetime(new Date()));
 		ProxyIp proxyIp;
-		ProxyIpData proxyIpData;
 		for (ProxyIp proxyIp1 : map.values()) {
 			proxyIp = new ProxyIp();
 			BeanUtils.copyProperties(proxyIp1, proxyIp);
 			list.add(proxyIp);
-
-			proxyIpData = proxyIpDataRepository.findByIpAndPort(proxyIp1.getIp(), proxyIp1.getPort());
-			if (ComUtil.isEmpty(proxyIpData)){
-				BeanUtils.copyProperties(proxyIp1, proxyIpData);
-				listData.add(proxyIpData);
-			}
 		}
 		proxyIpRepository.saveAll(list);
-		proxyIpDataRepository.saveAll(listData);
 		log.info(list.size()+"---------废弃重新利用----结束---"+ DateUtil.formatAsDatetime(new Date()));
 	}
 
