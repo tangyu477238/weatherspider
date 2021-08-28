@@ -29,10 +29,10 @@ public class ProxyIpController {
      * @since 1.0.0
      * @return java.util.List<cn.zifangsky.model.ProxyIp>
      */
-    @RequestMapping(value = "/selectAll",produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-    public List<ProxyIp> selectAll(){
-        return proxyIpManager.selectAll();
-    }
+//    @RequestMapping(value = "/selectAll",produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
+//    public List<ProxyIp> selectAll(){
+//        return proxyIpManager.selectAll();
+//    }
 
     /**
      * 从数据库中随机返回一个可用的代理IP

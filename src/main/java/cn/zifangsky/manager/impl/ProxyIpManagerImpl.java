@@ -38,13 +38,22 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	private CheckIPUtils checkIPUtils;
 
 	@Override
-	public List<ProxyIp> selectAll() {
+	public List<ProxyIp> selectAll() { //未验证ip
+		List<ProxyIp> list = proxyIpRepository.listProxy();
+		if (ComUtil.isEmpty(list)){
+			synProxy(); //废弃IP重存
+		}
+		return list;
+	}
+
+	@Override
+	public List<ProxyIp> selectCanUseALL() {
 		List<ProxyIp> list = proxyIpRepository.listCanUse();
 		if (!ComUtil.isEmpty(list)){
 			Collections.shuffle(list);
 			return list;
 		}
-		return proxyIpRepository.findAll(); //未验证ip
+		return selectAll();
 	}
 
 	@Override
@@ -81,19 +90,23 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		proxy.setUpdateTime(new Date());
 		proxyIpRepository.save(proxy);
 		log.info("---收录成功---"+proxyIpBO.getIp() +":"+ proxyIpBO.getPort());
+		addProxyData(proxyIpBO); //记录ip
 
+		return true;
+	}
+
+	private void addProxyData(ProxyIpBO proxyIpBO){
 		try {
 			ProxyIpData proxyIpData = proxyIpDataRepository.findByIpAndPort(proxyIpBO.getIp(), proxyIpBO.getPort());
 			if (ComUtil.isEmpty(proxyIpData)){
 				proxyIpData = new ProxyIpData();
-				BeanUtils.copyProperties(proxy, proxyIpData);
+				BeanUtils.copyProperties(proxyIpBO, proxyIpData);
 				proxyIpData.setId(null);
 				proxyIpDataRepository.save(proxyIpData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return true;
 	}
 
 	@Override
@@ -122,24 +135,16 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public ProxyIp selectRandomIP() {
-		List<ProxyIp> list = selectAll();
+		List<ProxyIp> list = selectCanUseALL();
 		if (!ComUtil.isEmpty(list)){
-			return selectAll().get(0);
+			return list.get(new Random().nextInt(list.size()));
 		}
 		return null;
 	}
 
 	@Override
 	public ProxyIp selectCheckRandomIP() {
-		return getProxy(true);
-	}
-
-
-	private ProxyIp getProxy(boolean isDel){
-		List<ProxyIp> list = selectAll();
-		if (ComUtil.isEmpty(list)){
-			synProxy(); //废弃IP重存
-		}
+		List<ProxyIp> list = selectCanUseALL();
 		for (ProxyIp proxyIp : list){
 			if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
 				proxyIp.setUpdateTime(new Date());
@@ -154,6 +159,8 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		}
 		return null;
 	}
+
+
 
 	private synchronized void synProxy(){
 		if (map.size()<=0){

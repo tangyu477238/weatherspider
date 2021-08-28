@@ -28,7 +28,8 @@ public interface ProxyIpManager {
      * @return
      */
     List<ProxyIp> selectAll();
-    
+
+    List<ProxyIp> selectCanUseALL();
 	/**
 	 * 从代理IP池的前10条数据中任意返回一条给用户
 	 * @return
