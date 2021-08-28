@@ -193,7 +193,18 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
     @Override
     public List<Gupiao> listKzz() {
-        return gupiaoRepository.getSymbolTop();
+        return listKzzKline(null);
+    }
+
+    public List<Gupiao> listKzzKline(Integer period) {
+        if (period==KlineEnum.K_5M.getId()){
+            return gupiaoRepository.listkzz5M();
+        } else if (period==KlineEnum.K_30M.getId()){
+            return gupiaoRepository.listkzz30M();
+        } else if (period==KlineEnum.K_1D.getId()){
+            return null;
+        }
+        return gupiaoRepository.listkzz();
     }
 
     @Override
@@ -214,7 +225,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
     @Override
     public void sysnKzzKlineAll(Integer period) {
-        List<Gupiao> list = listKzz();
+        List<Gupiao> list = listKzzKline(period);
         for (Gupiao gupiao : list){
             gupiao.setPeriod(period);
             if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
@@ -223,6 +234,8 @@ public class GupiaoManagerImpl implements GupiaoManager {
             gupiaoCodeKlineSender.send(gupiao);
         }
     }
+
+
 
     @Override
     public List<Gupiao> listBeforeTime(Integer period) {

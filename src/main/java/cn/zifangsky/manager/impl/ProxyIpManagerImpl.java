@@ -26,7 +26,7 @@ import javax.annotation.Resource;
 @Data
 public class ProxyIpManagerImpl implements ProxyIpManager {
 
-	private boolean isDel = false;
+//	private boolean isDel = false;
 
 	private Map<String, ProxyIp> map = new ConcurrentHashMap<>();
 	@Resource
@@ -39,7 +39,8 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public List<ProxyIp> selectAll() { //未验证ip
-		List<ProxyIp> list = proxyIpRepository.listProxy();
+		Integer randNum = new Random().nextInt(10000);
+		List<ProxyIp> list = proxyIpRepository.listProxy(randNum);
 		if (ComUtil.isEmpty(list)){
 			synProxy(); //废弃IP重存
 		}
@@ -48,10 +49,9 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public List<ProxyIp> selectCanUseALL() {
-		Integer randNum = new Random().nextInt(200);
+		Integer randNum = new Random().nextInt(100);
 		List<ProxyIp> list = proxyIpRepository.listCanUse(randNum);
 		if (!ComUtil.isEmpty(list)){
-			Collections.shuffle(list);
 			return list;
 		}
 		return selectAll();
@@ -146,17 +146,17 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 	@Override
 	public ProxyIp selectCheckRandomIP() {
 		List<ProxyIp> list = selectCanUseALL();
+//		Collections.shuffle(list);
 		for (ProxyIp proxyIp : list){
 			if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
 				proxyIp.setUpdateTime(new Date());
 				try { proxyIpRepository.save(proxyIp);}catch (Exception e){}
 				return proxyIp;
 			}
-			try {
-				if (isDel){
-					deleteByPrimaryKey(proxyIp.getId());
-				}
-			}catch (Exception e){}
+			proxyIp.setUpdateTime(null);
+			try { proxyIpRepository.save(proxyIp);}catch (Exception e){}
+
+//			try {deleteByPrimaryKey(proxyIp.getId());}catch (Exception e){} //删除IP
 		}
 		return null;
 	}

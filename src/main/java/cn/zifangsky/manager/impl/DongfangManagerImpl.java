@@ -95,8 +95,13 @@ public class DongfangManagerImpl implements DongfangManager {
             beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
         }
         int exchange_type =  StockUtil.isShenshi(bondId)  ? 0 : 1; //深/沪
-        StringBuffer url = new StringBuffer("http://"+System.currentTimeMillis() + DongfangEnum.KLINE.getUrl())
-                .append("&klt="+period+"&fqt=1&secid="+exchange_type+"."+bondId+"&beg="+beg+"&end=20500000&_=1618930055730");
+        StringBuffer url = new StringBuffer("http://");
+        url.append(System.currentTimeMillis())
+                .append(DongfangEnum.KLINE.getUrl())
+                .append("&klt=").append(period)
+                .append("&fqt=1&secid=").append(exchange_type).append(".").append(bondId)
+                .append("&beg=").append(beg)
+                .append("&end=20500000&_=1618930055730");
         log.info(url.toString());
         return url.toString();
     }
@@ -109,7 +114,7 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
-        log.info(bondId+"--------开始进入------------------------"+DateTimeUtil.formatTimetoString(new Date()));
+        log.debug(bondId+"--------开始进入------------------------"+DateTimeUtil.formatTimetoString(new Date()));
         if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //已存在,且非当天同步，则不在进行
             return;
         }
@@ -118,17 +123,18 @@ public class DongfangManagerImpl implements DongfangManager {
             return;
         }
 
-        Spider spider = OOSpider.create(new DongfangKlineSpider()).addPipeline(dongfangKlinePipeline);
+        Spider spider = OOSpider.create(new DongfangKlineSpider()) //添加请求解析
+                .addPipeline(dongfangKlinePipeline); //数据处理
         if (isProxy){
-            HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader();
+            HttpClientDownloader httpClientDownloader = httpClientManager.getHttpClientDownloader(); //获取代理
             if (httpClientDownloader==null){
                 return;
             }
             spider.setDownloader(httpClientDownloader);
         }
-        spider.addUrl(getUrl(bondId, period, isToday));
+        spider.addUrl(getUrl(bondId, period, isToday)); //添加URL
         spider.thread(1).run();
-        log.info(bondId+"--------完成退出------------------------"+DateTimeUtil.formatTimetoString(new Date()));
+        log.debug(bondId+"--------完成退出------------------------"+DateTimeUtil.formatTimetoString(new Date()));
     }
 
 

@@ -14,7 +14,21 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
     Gupiao findBySymbol(String bondId);
 
     @Query(value = "select * from gupiao where symbol like '11%' or  symbol like '12%' ", nativeQuery = true)
-    List<Gupiao> getSymbolTop();
+    List<Gupiao> listkzz();
+
+    @Query(value = "select g.* from gupiao g" +
+            " inner join v_syn_max_bizdate v on 1 = 1" +
+            " LEFT JOIN gupiao_kline_30m k on k.symbol = g.symbol and v.biz_date = LEFT(k.biz_date,10)" +
+            " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null LIMIT 0, 30", nativeQuery = true)
+    List<Gupiao> listkzz30M();
+
+    @Query(value = "select g.* from gupiao g" +
+            " inner join v_syn_max_bizdate v on 1 = 1" +
+            " LEFT JOIN gupiao_kline_5m k on k.symbol = g.symbol and v.biz_date = LEFT(k.biz_date,10)" +
+            " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null LIMIT 0, 30", nativeQuery = true)
+    List<Gupiao> listkzz5M();
+
+
 
 
     @Query(value = "select s.* from gupiao s " +

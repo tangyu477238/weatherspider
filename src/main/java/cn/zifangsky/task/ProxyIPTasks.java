@@ -1,5 +1,6 @@
 package cn.zifangsky.task;
 
+import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.ProxyIpManager;
@@ -31,7 +32,6 @@ import java.util.List;
 @Slf4j
 public class ProxyIPTasks {
 
-    private final Format FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Resource(name="crawlManager")
     private CrawlManager crawlManager;
@@ -54,8 +54,8 @@ public class ProxyIPTasks {
     @Scheduled(cron = "${task.crawlProxyIp_1.schedule}")
     public void crawlProxyIpTask1(){
         if ("0".equals(proxyOff)) return;
-        Date current = new Date();
-        log.info(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
+        
+        log.info(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             Runnable run = new ProxyIPTasks.ProxyRunnable(true);
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
@@ -88,8 +88,8 @@ public class ProxyIPTasks {
     @Scheduled(cron = "${task.crawlProxyIp_2.schedule}")
     public void crawlProxyIpTask2(){
         if ("0".equals(proxyOff)) return;
-        Date current = new Date();
-        log.debug(MessageFormat.format("开始执行代理IP定时获取任务2，Date：{0}",FORMAT.format(current)));
+        
+        log.debug(MessageFormat.format("开始执行代理IP定时获取任务2，Date：{0}", DateTimeUtil.formatTimetoString(new Date())));
         crawlManager.getIPCrawl();
     }
 
@@ -103,8 +103,9 @@ public class ProxyIPTasks {
      */
     @Scheduled(cron = "${task.checkProxyIp.schedule}")
     public void checkProxyIpTask(){
-        Date current = new Date();
-        log.info(MessageFormat.format("开始执行代理IP定时检测任务，Date：{0}",FORMAT.format(current)));
+        if ("0".equals(proxyOff)) return;
+        
+        log.info(MessageFormat.format("开始执行代理IP定时检测任务，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
 
         //1 查询数据库中所有代理IP
         List<ProxyIp> list = proxyIpManager.selectAll();

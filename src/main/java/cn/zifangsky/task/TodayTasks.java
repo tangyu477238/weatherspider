@@ -84,7 +84,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.kzz.5m}")
     public void todayKzzBy5m(){
         if ("0".equals(klineOff)) return;
-        log.warn(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             List<String> list = gupiaoCanUseRepository.listSyns();
             Collections.shuffle(list);
@@ -123,7 +123,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.kzz.30m}")
     public void todayKzzBy30m(){
         if ("0".equals(klineOff)) return;
-        log.warn(MessageFormat.format("todayKzzBy30m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
         try {
             Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_30M.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
@@ -137,7 +137,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.today.kzz.day}")
     public void todayKzzByDay(){
         if ("0".equals(klineOff)) return;
-        log.warn(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        log.info(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_1D.getId());
             ExecutorProcessPool.getInstance().executeByCustomThread(run);
@@ -222,7 +222,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.every.kzz.30m}")
     public void kzzBy30m(){
         if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("kzzBy30m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        log.info(MessageFormat.format("----------------kzzBy30m，Date：{0}---------------------",DateTimeUtil.formatTimetoString(new Date())));
         try {
 //            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_30M.getId());
 //            ExecutorProcessPool.getInstance().executeByCustomThread(run);

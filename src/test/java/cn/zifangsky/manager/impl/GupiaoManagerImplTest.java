@@ -27,14 +27,14 @@ public class GupiaoManagerImplTest   {
 //    public void updateAllGupiaoKline(){
 //        gupiaoManager.updateAllGupiaoKline();
 //    }
-    @Test
-    public void listKzz(){
-        List<Gupiao> list = gupiaoManager.listKzz();
-        for (Gupiao gupiao : list){
-            dongfangManager.getKline(gupiao.getSymbol(),5,false);
-        }
-
-    }
+//    @Test
+//    public void listKzz(){
+//        List<Gupiao> list = gupiaoManager.listKzz();
+//        for (Gupiao gupiao : list){
+//            dongfangManager.getKline(gupiao.getSymbol(),5,false);
+//        }
+//
+//    }
 
 
 }
