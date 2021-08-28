@@ -104,7 +104,7 @@ public class ProxyIPTasks {
     @Scheduled(cron = "${task.checkProxyIp.schedule}")
     public void checkProxyIpTask(){
         Date current = new Date();
-        log.debug(MessageFormat.format("开始执行代理IP定时检测任务，Date：{0}",FORMAT.format(current)));
+        log.info(MessageFormat.format("开始执行代理IP定时检测任务，Date：{0}",FORMAT.format(current)));
 
         //1 查询数据库中所有代理IP
         List<ProxyIp> list = proxyIpManager.selectAll();
