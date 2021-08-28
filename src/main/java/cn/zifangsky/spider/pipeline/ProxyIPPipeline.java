@@ -1,4 +1,4 @@
-package cn.zifangsky.spider;
+package cn.zifangsky.spider.pipeline;
 
 import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.ProxyIp;

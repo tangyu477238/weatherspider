@@ -26,7 +26,7 @@ public class GupiaoCodeKlineReceiver {
 	 */
 	@KafkaListener(id = "gpcodeklineidx", topicPartitions = { @TopicPartition(topic = ("${mq.topicName.gupiaoCodeKline}"),
 			partitions = { "0","1","2","3","4","5","6","7","8","9",
-					"10","11","12","13","14"}) }, containerFactory = "batchContainerFactory")
+					"10","11","12","13","14","15","16","17","18","19"}) }, containerFactory = "batchContainerFactory")
 	public void handle0(Gupiao gupiao) {
 		if ("0".equals(klineOff)) return;
 		log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));

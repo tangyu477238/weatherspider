@@ -1,4 +1,4 @@
-package cn.zifangsky.spider.gp;
+package cn.zifangsky.spider.pipeline;
 
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.repository.GupiaoRepository;

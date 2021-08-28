@@ -1,4 +1,4 @@
-package cn.zifangsky.spider.gp;
+package cn.zifangsky.spider.pipeline;
 
 import cn.hutool.core.date.DateTime;
 import cn.zifangsky.model.JslKzz;

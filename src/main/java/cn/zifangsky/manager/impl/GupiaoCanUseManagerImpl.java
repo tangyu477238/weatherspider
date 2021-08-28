@@ -2,11 +2,8 @@ package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.GupiaoCanUseManager;
-import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.model.GupiaoCanUse;
 import cn.zifangsky.repository.GupiaoCanUseRepository;
-import cn.zifangsky.spider.ProxyIPPipeline;
-import cn.zifangsky.spider.gp.JslPipeline;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -57,7 +57,8 @@ public class ProxyIPTasks {
         Date current = new Date();
         log.info(MessageFormat.format("开始执行代理IP定时获取任务1，Date：{0}",FORMAT.format(current)));
         try {
-            crawlManager.proxyIPCrawl();
+            Runnable run = new ProxyIPTasks.ProxyRunnable(true);
+            ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
 

@@ -4,6 +4,7 @@ import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.manager.HttpClientManager;
 import cn.zifangsky.manager.XinlangManager;
 import cn.zifangsky.spider.gp.*;
+import cn.zifangsky.spider.pipeline.XinlangGainianPipeline;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;

@@ -2,7 +2,7 @@ package cn.zifangsky.manager.impl;
 
 import cn.zifangsky.manager.BizOrderManager;
 import cn.zifangsky.manager.HttpClientManager;
-import cn.zifangsky.spider.gp.BizOrderPipeline;
+import cn.zifangsky.spider.pipeline.BizOrderPipeline;
 import cn.zifangsky.spider.gp.BizOrderSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

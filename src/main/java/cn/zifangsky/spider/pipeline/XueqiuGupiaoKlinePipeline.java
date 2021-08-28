@@ -1,4 +1,4 @@
-package cn.zifangsky.spider.gp;
+package cn.zifangsky.spider.pipeline;
 
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.manager.XueqiuManager;

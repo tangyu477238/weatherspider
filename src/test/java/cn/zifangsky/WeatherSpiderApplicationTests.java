@@ -40,11 +40,11 @@ public class WeatherSpiderApplicationTests {
 	@Test
 	public void contextLoads() {
 
-		kafkaConsole.edit("topic-proxyIp",45);
+		kafkaConsole.edit("topic-proxyIp",20);
 
 //		kafkaConsole.edit("topic-gupiao",45);
 //		kafkaConsole.edit("topic-gupiaoGainian",45);
-		kafkaConsole.edit("topic-gupiaoCodeKline",200);
+		kafkaConsole.edit("topic-gupiaoCodeKline",20);
 //		kafkaConsole.edit("topic-gupiaoKline",45);
 
 
