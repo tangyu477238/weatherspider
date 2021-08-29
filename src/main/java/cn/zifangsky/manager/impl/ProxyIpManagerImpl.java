@@ -91,7 +91,7 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		}
 		updateProxy(proxyIp);
 		log.debug("---收录成功---"+proxyIp.getIp() +":"+ proxyIp.getPort());
-//		addProxyData(proxyIp); //记录ip
+		addProxyData(proxyIp); //记录ip
 	}
 
 	private void addProxyData(ProxyIp proxyIp){
