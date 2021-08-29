@@ -115,11 +115,11 @@ public class DongfangManagerImpl implements DongfangManager {
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
         log.debug(bondId+"--------开始进入------------------------"+DateTimeUtil.formatTimetoString(new Date()));
-        if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //已存在,且非当天同步，则不在进行
+        if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //非当天运行,且最新一天有数据，则不进行
             return;
         }
 
-        if (isToday && !ComUtil.isEmpty(gupiaoManager.listBeforeTime(bondId, period))){ //已存在,且非当天同步，则不在进行
+        if (isToday && !ComUtil.isEmpty(gupiaoManager.listBeforeTime(bondId, period))){ //当天运行,且前一个时间段已同步，则不进行
             return;
         }
 
@@ -141,7 +141,7 @@ public class DongfangManagerImpl implements DongfangManager {
 
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy) {
-        getKline(bondId, period, true, false);
+        getKline(bondId, period, isProxy, false);
     }
 
     @Override

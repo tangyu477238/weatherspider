@@ -30,10 +30,6 @@ public class GupiaoCodeKlineReceiver {
 	public void handle0(Gupiao gupiao) {
 		if ("0".equals(klineOff)) return;
 		log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));
-		getKlineData(gupiao);
-	}
-
-	private void getKlineData(Gupiao gupiao){
 		try {
 			if (gupiao.getFollowers()==1){
 				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
@@ -42,6 +38,7 @@ public class GupiaoCodeKlineReceiver {
 			}
 		}catch (Exception e){log.debug(e.toString());}
 	}
+
 
 
 //	private void getKlineData(Gupiao gupiao){
