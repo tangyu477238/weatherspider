@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	private Map<String, ProxyIp> map = new ConcurrentHashMap<>();
+
 	@Resource
 	private ProxyIpDataRepository proxyIpDataRepository;
 	@Resource
