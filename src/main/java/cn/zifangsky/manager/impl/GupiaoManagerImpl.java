@@ -202,7 +202,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
         } else if (period==KlineEnum.K_30M.getId()){
             return gupiaoRepository.listkzz30M();
         } else if (period==KlineEnum.K_1D.getId()){
-            return null;
+            return gupiaoRepository.listkzz1Day();
         }
         return gupiaoRepository.listkzz();
     }

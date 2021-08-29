@@ -4,10 +4,8 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.CrawlManager;
 import cn.zifangsky.manager.ProxyIpManager;
-import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.ProxyIp;
 import cn.zifangsky.model.bo.ProxyIpBO;
-import cn.zifangsky.mq.consumer.GupiaoCodeKlineReceiver;
 import cn.zifangsky.mq.producer.CheckIPSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.text.Format;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 

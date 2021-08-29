@@ -11,12 +11,13 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 
-@Component("checkIPReceiver")
+
 @Slf4j
+@Component
 public class CheckIPReceiver {
 
 	@Value("${mq.proxyIp.off}")
-	private String consumerOff;
+	private String proxyIpOff;
 
 	@Resource(name = "proxyIpManager")
 	private ProxyIpManager proxyIpManager;
@@ -36,7 +37,7 @@ public class CheckIPReceiver {
 			partitions = { "0","1","2","3","4","5","6","7","8","9",
 					"10","11","12","13","14","15","16","17","18","19"}) }, containerFactory = "batchContainerFactory")
 	public void handle0(ProxyIpBO proxyIpBO) {
-		if ("0".equals(consumerOff)) return;
+		if ("0".equals(proxyIpOff)) return;
 		log.info(MessageFormat.format("接收到消息，代理IP:{0}", proxyIpBO));
 		try {
 			proxyIpManager.addProxy(proxyIpBO);
