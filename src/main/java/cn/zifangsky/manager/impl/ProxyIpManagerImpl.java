@@ -21,12 +21,10 @@ import cn.zifangsky.model.ProxyIp;
 
 import javax.annotation.Resource;
 
-@Service("proxyIpManager")
-@Slf4j
-@Data
-public class ProxyIpManagerImpl implements ProxyIpManager {
 
-//	private boolean isDel = false;
+@Slf4j
+@Service("proxyIpManager")
+public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	private Map<String, ProxyIp> map = new ConcurrentHashMap<>();
 	@Resource
@@ -59,73 +57,76 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public int deleteByPrimaryKey(Long id) {
-//		ProxyIp proxyIp = proxyIpRepository.getOne(id);
-//		proxyIp.setUsed(proxyIp.getUsed()+1);
-//		if (proxyIp.getUsed()>100){
-			proxyIpRepository.deleteById(id);
-//		} else {
-//			proxyIpRepository.save(proxyIp);
-//		}
+		proxyIpRepository.deleteById(id);
 		return 1;
 	}
 
 	@Override
-	public boolean insert(ProxyIpBO proxyIpBO) {
-		// 0 查询该IP是否 验证过
-		if (map.containsKey(proxyIpBO.getIp()+proxyIpBO.getPort())){
-			return false;
+	public void deleteByProxy(ProxyIp proxyIp) {
+		try {
+			proxyIp.setUpdateTime(null);
+			proxyIpRepository.save(proxyIp);
+		} catch (Exception e) {
+			log.info(e.toString());
 		}
-		map.put(proxyIpBO.getIp()+proxyIpBO.getPort(), proxyIpBO); //存进集合
-
-		// 1 查询该IP 是否已存在
-		ProxyIp oldIP = selectByIPPort(proxyIpBO.getIp(), proxyIpBO.getPort());
-		if (!ComUtil.isEmpty(oldIP)) {
-			return false;
-		}
-		if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-			return false;
-		}
-
-		ProxyIp proxy = new ProxyIp();
-		BeanUtils.copyProperties(proxyIpBO, proxy);
-		proxy.setUpdateTime(new Date());
-		proxyIpRepository.save(proxy);
-		log.info("---收录成功---"+proxyIpBO.getIp() +":"+ proxyIpBO.getPort());
-		addProxyData(proxyIpBO); //记录ip
-
-		return true;
 	}
 
-	private void addProxyData(ProxyIpBO proxyIpBO){
+	@Override
+	public void insertCheckProxy(ProxyIp proxyIp) {
+		// 0 查询该IP是否 验证过
+		StringBuffer stringBuffer = new StringBuffer(proxyIp.getIp());
+		stringBuffer.append(proxyIp.getPort());
+		if (map.containsKey(stringBuffer.toString())){
+			return ;
+		}
+		map.put(stringBuffer.toString(), proxyIp); //存进集合
+
+		// 1 查询该IP 是否已存在
+		ProxyIp oldIP = selectByIPPort(proxyIp.getIp(), proxyIp.getPort());
+		if (!ComUtil.isEmpty(oldIP)) {
+			return ;
+		}
+		if (!checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
+			return ;
+		}
+		updateProxy(proxyIp);
+		log.debug("---收录成功---"+proxyIp.getIp() +":"+ proxyIp.getPort());
+//		addProxyData(proxyIp); //记录ip
+	}
+
+	private void addProxyData(ProxyIp proxyIp){
 		try {
-			ProxyIpData proxyIpData = proxyIpDataRepository.findByIpAndPort(proxyIpBO.getIp(), proxyIpBO.getPort());
+			ProxyIpData proxyIpData = proxyIpDataRepository.findByIpAndPort(proxyIp.getIp(), proxyIp.getPort());
 			if (ComUtil.isEmpty(proxyIpData)){
 				proxyIpData = new ProxyIpData();
-				BeanUtils.copyProperties(proxyIpBO, proxyIpData);
+				BeanUtils.copyProperties(proxyIp, proxyIpData);
 				proxyIpData.setId(null);
 				proxyIpDataRepository.save(proxyIpData);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.debug(e.toString());
 		}
 	}
 
 	@Override
-	public boolean update(ProxyIp proxyIp) {
-		proxyIp.setUpdateTime(new Date());
-		proxyIpRepository.save(proxyIp);
-		return true;
+	public ProxyIp updateProxy(ProxyIp proxyIp) {
+		try {
+			proxyIp.setUpdateTime(new Date());
+			return proxyIpRepository.save(proxyIp);
+		} catch (Exception e) {
+			log.info(e.toString());
+		}
+		return proxyIp;
 	}
 
 	@Override
-	public boolean update(ProxyIpBO proxyIpBO) {
+	public ProxyIp updateCheckProxy(ProxyIp proxyIp) {
 		log.debug("检查有效性");
-		if (!checkIPUtils.checkValidIP(proxyIpBO.getIp(), proxyIpBO.getPort())) {
-			deleteByPrimaryKey(proxyIpBO.getId()); // 不能使用则删除
+		if (!checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
+			deleteByProxy(proxyIp); // 不能使用则删除
+			return null;
 		}
-		ProxyIp px = new ProxyIp();
-		BeanUtils.copyProperties(proxyIpBO, px);
-		return update(px);
+		return updateProxy(proxyIp);
 	}
 
 	@Override
@@ -148,15 +149,9 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 		List<ProxyIp> list = selectCanUseALL();
 //		Collections.shuffle(list);
 		for (ProxyIp proxyIp : list){
-			if (checkIPUtils.checkValidIP(proxyIp.getIp(), proxyIp.getPort())) {
-				proxyIp.setUpdateTime(new Date());
-				try { proxyIpRepository.save(proxyIp);}catch (Exception e){}
+			if (!ComUtil.isEmpty(updateCheckProxy(proxyIp))) {
 				return proxyIp;
 			}
-			proxyIp.setUpdateTime(null);
-			try { proxyIpRepository.save(proxyIp);}catch (Exception e){}
-
-//			try {deleteByPrimaryKey(proxyIp.getId());}catch (Exception e){} //删除IP
 		}
 		return null;
 	}
@@ -210,14 +205,15 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 			if (map.size()>200000){
 				reMap();
 			}
-
+			ProxyIp proxyIp = new ProxyIp();
+			BeanUtils.copyProperties(proxyIpBO, proxyIp);
 			// 根据该IP是待入库的新IP或者数据库中的旧IP分两种情况判断
 			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.ADD) {
-				insert(proxyIpBO);
+				insertCheckProxy(proxyIp);
 				return;
 			}
 			if (proxyIpBO.getCheckType() == ProxyIpBO.CheckIPType.UPDATE) {
-				update(proxyIpBO);
+				updateCheckProxy(proxyIp);
 				return;
 			}
 		} catch (Exception e) {

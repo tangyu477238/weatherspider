@@ -38,15 +38,11 @@ public class CheckIPReceiver {
 	public void handle0(ProxyIpBO proxyIpBO) {
 		if ("0".equals(consumerOff)) return;
 		log.info(MessageFormat.format("接收到消息，代理IP:{0}", proxyIpBO));
-		runCheckIp(proxyIpBO);
-	}
-
-
-	private void runCheckIp(ProxyIpBO proxyIpBO){
 		try {
 			proxyIpManager.addProxy(proxyIpBO);
 		}catch (Exception e){log.debug(e.toString());}
 	}
+
 
 //	private void runCheckIp(ProxyIpBO proxyIpBO){
 //		try {

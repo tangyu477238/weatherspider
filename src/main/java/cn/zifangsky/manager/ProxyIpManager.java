@@ -9,11 +9,13 @@ public interface ProxyIpManager {
 
     int deleteByPrimaryKey(Long id);
 
-    boolean insert(ProxyIpBO proxyIpBO);
+    void deleteByProxy(ProxyIp proxyIp);
 
-    boolean update(ProxyIpBO proxyIpBO);
+    void insertCheckProxy(ProxyIp proxyIp);
 
-    boolean update(ProxyIp proxyIp);
+    ProxyIp updateCheckProxy(ProxyIp proxyIp);
+
+    ProxyIp updateProxy(ProxyIp proxyIp);
 
 
     /**
