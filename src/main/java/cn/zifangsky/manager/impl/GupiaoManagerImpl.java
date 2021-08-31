@@ -228,9 +228,9 @@ public class GupiaoManagerImpl implements GupiaoManager {
         List<Gupiao> list = listKzzKline(period);
         for (Gupiao gupiao : list){
             gupiao.setPeriod(period);
-//            if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
-//                continue;
-//            }
+            if (getKlineMaxBizdate(gupiao.getSymbol(), gupiao.getPeriod())){
+                continue;
+            }
             gupiaoCodeKlineSender.send(gupiao);
         }
     }

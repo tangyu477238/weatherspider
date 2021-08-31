@@ -64,7 +64,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 						continue;
 					}
 					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
-					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, buyNum);
+					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, currentNum);
 					continue;
 				}
 				if (lossPrice==0){
