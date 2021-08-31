@@ -3,6 +3,7 @@ package cn.zifangsky.login;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -39,7 +40,11 @@ public class LoginManager implements ILogin{
      * @throws Exception
      */
     public int getEnableAmount(String stock_code) throws Exception{
-        return JSONUtil.parseObj(queryStockEnablelNum(stock_code)).getJSONObject("data").getInt("enable_amount");
+        JSONObject info = queryStockEnablelNum(stock_code);
+        if (ComUtil.isEmpty(info)){
+            return 0;
+        }
+        return info.getJSONObject("data").getInt("enable_amount");
     }
 
     /**
@@ -49,7 +54,11 @@ public class LoginManager implements ILogin{
      * @throws Exception
      */
     public int getCurrentAmount(String stock_code) throws Exception{
-        return  JSONUtil.parseObj(queryStockEnablelNum(stock_code)).getJSONObject("data").getInt("current_amount");
+        JSONObject info = queryStockEnablelNum(stock_code);
+        if (ComUtil.isEmpty(info)){
+            return 0;
+        }
+        return  info.getJSONObject("data").getInt("current_amount");
     }
 
 
@@ -167,17 +176,20 @@ public class LoginManager implements ILogin{
      * @return
      * @throws Exception
      */
-    public String queryStockEnablelNum(String stock_code) throws Exception{
+    public JSONObject queryStockEnablelNum(String stock_code) throws Exception{
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryStockEnablelNum?stock_code="+stock_code
                 +"&"+getAccountInfo() +getImeiInfo()+stockAccount(stock_code);
-
         log.debug("");
         log.debug(url);
         log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
         log.debug(httpOrgCreateTestRtn);
-        return httpOrgCreateTestRtn;
+        JSONObject jsonObject = JSONUtil.parseObj(httpOrgCreateTestRtn);
+        if ("100006".equals(jsonObject.getStr("error_no"))){
+            return null;
+        }
+        return jsonObject;
     }
 
     /***

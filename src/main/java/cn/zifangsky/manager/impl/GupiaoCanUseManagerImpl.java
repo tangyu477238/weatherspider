@@ -49,21 +49,31 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 	@Override
 	public void listBuy() {
 		try {
+			Map ymdMap = loginManager.listMyYmd(); //获取条件列表
+
 			List<Map<String,Object>> list = gupiaoCanUseRepository.listBuy();
 			for (Map<String,Object> map : list){
 				String stock_code = map.get("symbol").toString();
 				log.info(stock_code);
 				int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
-				if(currentNum>0){
+				int buyNum = 10; //参考数量
+				Double lossPrice = Double.valueOf(map.get("lossPrice").toString()); //止损
+				double newPrice = 0;
+				if(currentNum>=buyNum){
+					if (ymdMap.containsKey(stock_code+"34")){
+						continue;
+					}
+					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
+					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, buyNum);
 					continue;
 				}
-				Double lossPrice = Double.valueOf(map.get("lossPrice").toString()); //止损
-				Double newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
+				if (lossPrice==0){
+					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
+				}
 				if (newPrice>lossPrice){
 					String original_price = String.valueOf(newPrice+0.01); //获取触发价格
-					int buyNum = 10;
-					loginManager.hungBuy(stock_code, stock_code ,original_price , ""+newPrice, buyNum);
-					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, buyNum);
+//					loginManager.hungBuy(stock_code, stock_code ,original_price , ""+newPrice, buyNum);
+//					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, buyNum);
 				}
 			}
 		} catch (Exception e) {
