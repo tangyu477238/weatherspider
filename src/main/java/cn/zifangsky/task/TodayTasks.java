@@ -1,7 +1,6 @@
 package cn.zifangsky.task;
 
 import cn.zifangsky.common.DateTimeUtil;
-import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.impl.GupiaoManagerImpl;
@@ -91,8 +90,6 @@ public class TodayTasks {
             for (String symbol : list){
                 dongfangManager.getKline(symbol , KlineEnum.K_5M.getId(),true,true);
             }
-//            Runnable run = new TodayTasks.TodayBuyRunnable(KlineEnum.K_5M.getId());
-//            ExecutorProcessPool.getInstance().executeByCustomThread(run);
         }catch (Exception e){log.debug(e.toString());}
     }
 
@@ -124,10 +121,8 @@ public class TodayTasks {
     public void todayKzzBy30m(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-        try {
-            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_30M.getId());
-            ExecutorProcessPool.getInstance().executeByCustomThread(run);
-        }catch (Exception e){log.debug(e.toString());}
+
+        TodayByKline(KlineEnum.K_30M.getId());
     }
 
 
@@ -138,10 +133,9 @@ public class TodayTasks {
     public void todayKzzByDay(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        try {
-            Runnable run = new TodayTasks.TodayRunnable(KlineEnum.K_1D.getId());
-            ExecutorProcessPool.getInstance().executeByCustomThread(run);
-        }catch (Exception e){log.debug(e.toString());}
+
+        TodayByKline(KlineEnum.K_1D.getId());
+
 
     }
 
@@ -149,21 +143,16 @@ public class TodayTasks {
      * 仅仅同步数据
      * 当天数据同步线程
      */
-    public class TodayRunnable implements Runnable{
-        private Integer period;
-        public TodayRunnable(Integer period){
-            this.period = period;
-        }
-        @Override
-        public void run(){
+    public void TodayByKline(Integer period){
+        try {
             List<Gupiao> list = gupiaoManager.listBeforeTime(period);
-            Collections.shuffle(list);
-            for (Gupiao gupiao : list){
+                Collections.shuffle(list);
+                for (Gupiao gupiao : list){
                 gupiao.setPeriod(period);
                 gupiao.setFollowers(1); //当天
                 gupiaoCodeKlineSender.send(gupiao);
             }
-        }
+        }catch (Exception e){log.debug(e.toString());}
     }
 
 
@@ -197,9 +186,8 @@ public class TodayTasks {
     public void kzzByDay(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        try {
-            gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1D.getId());
-        }catch (Exception e){log.debug(e.toString());}
+
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1D.getId());
 
     }
 
@@ -211,9 +199,9 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         
         log.info(MessageFormat.format("kzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        try {
-            gupiaoManager.sysnKzzKlineAll(KlineEnum.K_5M.getId());
-        }catch (Exception e){log.debug(e.toString());}
+
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_5M.getId());
+
     }
 
     /***
@@ -223,25 +211,10 @@ public class TodayTasks {
     public void kzzBy30m(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("----------------kzzBy30m，Date：{0}---------------------",DateTimeUtil.formatTimetoString(new Date())));
-        try {
-//            Runnable run = new TodayTasks.ToAllRunnable(KlineEnum.K_30M.getId());
-//            ExecutorProcessPool.getInstance().executeByCustomThread(run);
-            gupiaoManager.sysnKzzKlineAll(KlineEnum.K_30M.getId());
-        }catch (Exception e){log.debug(e.toString());}
+
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_30M.getId());
+
     }
 
 
-    /**
-     * 全量数据同步线程
-     */
-    public class ToAllRunnable implements Runnable{
-        private Integer period;
-        public ToAllRunnable(Integer period){
-            this.period = period;
-        }
-        @Override
-        public void run(){
-            gupiaoManager.sysnKzzKlineAll(period);
-        }
-    }
 }
