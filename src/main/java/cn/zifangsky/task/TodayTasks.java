@@ -36,6 +36,8 @@ public class TodayTasks {
     @Value("${mq.kline.off}")
     private String klineOff;
 
+    @Value("${mq.kline.today.off}")
+    private String klineTodayOff;
 
     @Resource
     private DongfangManager dongfangManager;
@@ -58,7 +60,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.schedule}")
     public void todayByFen(){
-        if ("0".equals(klineOff)) return;
+        if ("0".equals(klineTodayOff)) return;
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
 //        dongfangManager.getToDayKline5M("399006");
     }
@@ -68,7 +70,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.schedule}")
     public void todayByDay(){
-        if ("0".equals(klineOff)) return;
+        if ("0".equals(klineTodayOff)) return;
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}", DateTimeUtil.formatTimetoString(new Date())));
 //        dongfangManager.getKline("000002");
     }
@@ -82,7 +84,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.kzz.5m}")
     public void todayKzzBy5m(){
-        if ("0".equals(klineOff)) return;
+        if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
             List<String> list = gupiaoCanUseRepository.listSyns();
@@ -119,25 +121,13 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.kzz.30m}")
     public void todayKzzBy30m(){
-        if ("0".equals(klineOff)) return;
+        if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
 
         TodayByKline(KlineEnum.K_30M.getId());
     }
 
 
-    /***
-     * day
-     */
-    @Scheduled(cron = "${task.today.kzz.day}")
-    public void todayKzzByDay(){
-        if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-
-        TodayByKline(KlineEnum.K_1D.getId());
-
-
-    }
 
     /***
      * 仅仅同步数据

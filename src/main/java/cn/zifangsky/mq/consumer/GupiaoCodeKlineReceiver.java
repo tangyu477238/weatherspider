@@ -11,12 +11,15 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.text.MessageFormat;
 
-@Component("gupiaoCodeKlineReceiver")
+@Component
 @Slf4j
 public class GupiaoCodeKlineReceiver {
 
 	@Value("${mq.kline.off}")
 	private String klineOff;
+
+	@Value("${mq.kline.today.off}")
+	private String klineTodayOff;
 
 	@Resource
 	private DongfangManager dongfangManager;
@@ -28,13 +31,15 @@ public class GupiaoCodeKlineReceiver {
 			partitions = { "0","1","2","3","4","5","6","7","8","9",
 					"10","11","12","13","14","15","16","17","18","19"}) }, containerFactory = "batchContainerFactory")
 	public void handle0(Gupiao gupiao) {
-		if ("0".equals(klineOff)) return;
-		log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));
 		try {
-			if (gupiao.getFollowers()==1){
-				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
-			} else {
+			if ("1".equals(klineOff)){
+				log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));
 				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
+				return;
+			}
+			if ("1".equals(klineTodayOff) && gupiao.getFollowers()==1){
+				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
+				return;
 			}
 		}catch (Exception e){log.debug(e.toString());}
 	}
