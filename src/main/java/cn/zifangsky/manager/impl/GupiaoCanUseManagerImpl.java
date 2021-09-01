@@ -50,15 +50,15 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 	public void listBuy() {
 		try {
 			Map ymdMap = loginManager.listMyYmd(); //获取条件列表
-
+			log.info(ymdMap.toString());
 			List<Map<String,Object>> list = gupiaoCanUseRepository.listBuy();
 			for (Map<String,Object> map : list){
 				String stock_code = map.get("symbol").toString();
-				log.info(stock_code);
 				int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
 				int buyNum = 10; //参考数量
 				Double lossPrice = Double.valueOf(map.get("lossPrice").toString()); //止损
-				double newPrice = 0;
+				log.info(stock_code+"---"+lossPrice);
+				Double newPrice = 0.0;
 				if(currentNum>=buyNum){
 					if (ymdMap.containsKey(stock_code+"34")){
 						continue;
@@ -67,17 +67,35 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, currentNum);
 					continue;
 				}
-				if (lossPrice==0){
+
+				if (ymdMap.containsKey(stock_code+"8")){ //已存在订单
+					continue;
+				}
+
+				if (newPrice.intValue()==0){
 					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
 				}
-				if (newPrice>lossPrice){
+				if (newPrice>(lossPrice+0.3) && (getFudu(newPrice, lossPrice)<1.5)){
 					String original_price = String.valueOf(newPrice+0.01); //获取触发价格
-//					loginManager.hungBuy(stock_code, stock_code ,original_price , ""+newPrice, buyNum);
-//					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, buyNum);
+					loginManager.hungBuy(stock_code, stock_code ,original_price , ""+newPrice, buyNum);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	private double getFudu(double newPrice, double lossPrice){
+		double f = (newPrice-lossPrice)/lossPrice*100;
+		return f;
+	}
+
+//	private void sellYmd(Map ymdMap, String stock_code) throws Exception{
+//		if (ymdMap.containsKey(stock_code+"34")){
+//			return;
+//		}
+//		Double newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
+//		loginManager.hungSell(stock_code,stock_code,""+ lossPrice, ""+newPrice, currentNum);
+//		continue;
+//	}
 }
