@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -87,11 +88,17 @@ public class TodayTasks {
         if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         try {
-            List<String> list = gupiaoCanUseRepository.listSyns();
-            Collections.shuffle(list);
-            for (String symbol : list){
-                dongfangManager.getKline(symbol , KlineEnum.K_5M.getId(),true,true);
+            List<String> listM5 = gupiaoCanUseRepository.listSyns();
+            Integer period = KlineEnum.K_5M.getId();
+            Gupiao gupiao;
+            for (String symbol : listM5){
+                gupiao = new Gupiao();
+                gupiao.setSymbol(symbol);
+                gupiao.setPeriod(period);
+                gupiao.setFollowers(1);
+                gupiaoCodeKlineSender.send(gupiao);
             }
+
         }catch (Exception e){log.debug(e.toString());}
     }
 
@@ -123,8 +130,9 @@ public class TodayTasks {
     public void todayKzzBy30m(){
         if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-
-        TodayByKline(KlineEnum.K_30M.getId());
+        Integer period = KlineEnum.K_30M.getId();
+        List<Gupiao> list = gupiaoManager.listBeforeTime(period);
+        TodayByKline(period, list);
     }
 
 
@@ -133,11 +141,9 @@ public class TodayTasks {
      * 仅仅同步数据
      * 当天数据同步线程
      */
-    public void TodayByKline(Integer period){
+    public void TodayByKline(Integer period, List<Gupiao> list){
         try {
-            List<Gupiao> list = gupiaoManager.listBeforeTime(period);
-                Collections.shuffle(list);
-                for (Gupiao gupiao : list){
+            for (Gupiao gupiao : list){
                 gupiao.setPeriod(period);
                 gupiao.setFollowers(1); //当天
                 gupiaoCodeKlineSender.send(gupiao);
