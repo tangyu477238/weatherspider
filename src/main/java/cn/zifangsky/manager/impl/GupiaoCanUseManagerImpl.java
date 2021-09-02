@@ -59,8 +59,8 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				Double lossPrice = Double.valueOf(map.get("lossPrice").toString()); //止损
 				log.info(stock_code+"---"+lossPrice);
 				Double newPrice = 0.0;
-				if(currentNum>=buyNum){
-					if (ymdMap.containsKey(stock_code+"34")){
+				if(currentNum>=buyNum){ //已有数量
+					if (ymdMap.containsKey(stock_code+"34")){  //是否有hungSell订单
 						continue;
 					}
 					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
@@ -68,14 +68,14 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 					continue;
 				}
 
-				if (ymdMap.containsKey(stock_code+"8")){ //已存在订单
+				if (ymdMap.containsKey(stock_code+"8")){ //已存在hungBuy订单
 					continue;
 				}
 
 				if (newPrice.intValue()==0){
 					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
 				}
-				if (newPrice>(lossPrice+0.3) && (getFudu(newPrice, lossPrice)<1.5)){
+				if (getFudu(newPrice, lossPrice)>0.3 && (getFudu(newPrice, lossPrice)<1.5)){
 					String original_price = String.valueOf(newPrice+0.01); //获取触发价格
 					loginManager.hungBuy(stock_code, stock_code ,original_price , ""+newPrice, buyNum);
 				}
