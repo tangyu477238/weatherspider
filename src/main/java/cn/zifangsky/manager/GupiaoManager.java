@@ -6,7 +6,7 @@ import cn.zifangsky.model.Gupiao;
 import java.util.List;
 
 public interface GupiaoManager {
-
+	void updateTime(String bondId);
 
 	void saveKlineAll(List<BaseGupiaoKline> list);
 

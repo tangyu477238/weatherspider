@@ -40,7 +40,12 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Resource
     private GupiaoKline30mRepository gupiaoKline30mRepository; //获取30k线对象
 
-
+    @Override
+    public void updateTime(String bondId) {
+        Gupiao gupiao = gupiaoRepository.findBySymbol(bondId);
+        gupiao.setTotal_shares(System.currentTimeMillis());
+        gupiaoRepository.save(gupiao);
+    }
 
 
 //    /***
@@ -211,11 +216,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
     public boolean getKlineMaxBizdate(String bondId, Integer period) {
         Integer sl = 0;
         if (period==KlineEnum.K_5M.getId()){
-            sl = gupiaoKlineRepository.getKline5mMaxBizdate(bondId, period);
+            sl = gupiaoKlineRepository.getKline5mMaxBizdate(bondId);
         } else if (period==KlineEnum.K_30M.getId()){
-            sl = gupiaoKlineRepository.getKline30mMaxBizdate(bondId, period);
+            sl = gupiaoKlineRepository.getKline30mMaxBizdate(bondId);
         } else if (period==KlineEnum.K_1D.getId()){
-            sl = gupiaoKlineRepository.getKlineMaxBizdate(bondId, period);
+            sl = gupiaoKlineRepository.getKlineMaxBizdate(bondId);
         }
         if (sl==0){
             return false;

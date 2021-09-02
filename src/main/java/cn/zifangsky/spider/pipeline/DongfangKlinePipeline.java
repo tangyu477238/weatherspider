@@ -73,6 +73,7 @@ public class DongfangKlinePipeline implements Pipeline {
 				}
 			}
 			gupiaoManager.saveKlineAll(list);
+			gupiaoManager.updateTime(symbol);
 		} catch (Exception e){
 			log.debug(e.toString());
 		}

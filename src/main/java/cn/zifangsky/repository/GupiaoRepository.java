@@ -40,7 +40,7 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
     @Query(value = "select s.* from gupiao s " +
             " inner join v_before_30m_time b on 1= 1" +
             " left join gupiao_kline_30m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
-            " where k.symbol is null LIMIT 0, 20", nativeQuery = true)
+            " where k.symbol is null order by s.total_shares LIMIT 0, 20", nativeQuery = true)
     List<Gupiao> listBeforeTime30m(Integer period);
 
 
