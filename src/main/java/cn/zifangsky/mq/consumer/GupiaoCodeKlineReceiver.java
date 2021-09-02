@@ -32,7 +32,7 @@ public class GupiaoCodeKlineReceiver {
 					"10","11","12","13","14","15","16","17","18","19"}) }, containerFactory = "batchContainerFactory")
 	public void handle0(Gupiao gupiao) {
 		try {
-			if ("1".equals(klineOff)){
+			if ("1".equals(klineOff) && gupiao.getFollowers()!=1){
 				log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));
 				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
 				return;
