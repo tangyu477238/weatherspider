@@ -69,7 +69,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				}
 
 				if (ymdMap.containsKey(stock_code+"8")){ //已存在hungBuy订单
-					continue;
+					loginManager.delYmd(map,stock_code,"8");
 				}
 
 				if (newPrice.intValue()==0){

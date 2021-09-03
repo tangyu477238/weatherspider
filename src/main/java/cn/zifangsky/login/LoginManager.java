@@ -624,4 +624,19 @@ public class LoginManager implements ILogin{
         return false;
     }
 
+    /***
+     * 删除 元条件单
+     * @param map
+     * @param stock_code
+     * @param strategy_id
+     * @return
+     * @throws Exception
+     */
+    public boolean delYmd(Map map, String stock_code, String strategy_id) throws Exception{
+        if (map.containsKey(stock_code+strategy_id)){
+            String arr[] = map.get(stock_code+strategy_id).toString().split("_");
+            deleteYmd(arr[1]); //删除原条件单
+        }
+        return false;
+    }
 }
