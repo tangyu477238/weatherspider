@@ -60,7 +60,8 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				log.info(stock_code+"---"+lossPrice);
 				Double newPrice = 0.0;
 				if(currentNum>=buyNum){ //已有数量
-					if (ymdMap.containsKey(stock_code+"34")){  //是否有hungSell订单
+
+					if (loginManager.checkAddYmd(map,stock_code,currentNum,"34")){  //是否有hungSell订单
 						continue;
 					}
 					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格

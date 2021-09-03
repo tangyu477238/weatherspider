@@ -16,7 +16,7 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
             " where c.symbol is null", nativeQuery = true)
     List<Map<String, Object>> listCanUseView();
 
-    @Query(value = " select distinct c.symbol from gupiao_can_use c inner join v_syn_max_bizdate v on c.biz_date like CONCAT(v.biz_date,'%') ", nativeQuery = true)
+    @Query(value = " select distinct c.symbol from gupiao_can_use c where c.biz_date>= DATE_FORMAT(ADDDATE(NOW(),-1),'%Y-%m-%d')  ", nativeQuery = true)
     List<String> listSyns();
 
     @Modifying
