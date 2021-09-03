@@ -17,4 +17,12 @@ select
 from gupiao_xinhao s
 where  (s.sj5<s.sj4 and s.sj4<s.sj3 and s.sj3>s.sj2 and s.sj2<s.sj1)  and s.type = 1 and s.period = 30
   and s.biz_date >= DATE_FORMAT(ADDDATE(NOW(),-1),'%Y-%m-%d')
+
+-- 暂时未生效
+union all
+select
+    s.symbol,30 as period,s.biz_date,if(s.price4<s.price2,s.price2,s.price4) as loss_price, 1 as stype
+from gupiao_xinhao s
+where  (s.sj4>s.sj3 and s.sj3<s.sj2 and s.sj2>s.sj1)  and s.type = 1 and s.period = 30
+  and s.biz_date >= DATE_FORMAT(ADDDATE(NOW(),-1),'%Y-%m-%d')
 ;
