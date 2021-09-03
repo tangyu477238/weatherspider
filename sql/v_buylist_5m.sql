@@ -63,6 +63,5 @@ from (
          ) base on s.biz_date>=base.biz_date and base.symbol = s.symbol
          where s.sj7<s.sj6 and s.sj6>s.sj5 and s.sj5>s.sj4 and s.sj4>=s.sj3 and s.sj3>=s.sj2  and s.sj2>=s.sj1 and s.type = 1 and s.period = 5  and base.lossPrice<=s.price6
 
-     ) t
-
+) t
 group by symbol
