@@ -226,6 +226,26 @@ public class LoginManager implements ILogin{
 //
     }
 
+    /**
+     * 清除已没有数量的
+     * 条件单
+     * @throws Exception
+     */
+    public void clearStockYmd() throws Exception{
+        Map<String, String> ymdMap = listMyYmd(); //获取条件列表
+        ymdMap.forEach((k, v) -> {
+            try {
+                String stock_code = k.split("_")[0];
+                int currentNum = getCurrentAmount(stock_code); //当前数量
+                if (currentNum==0){
+                    deleteYmd(v.split("_")[1]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
     /***
      *  监控的计划
      * @return

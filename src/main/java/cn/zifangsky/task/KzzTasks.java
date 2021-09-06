@@ -82,19 +82,7 @@ public class KzzTasks {
         Date current = new Date();
         log.info(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
 //      心跳线程
-        Map<String, String> ymdMap = loginManager.listMyYmd(); //获取条件列表
-        ymdMap.forEach((k, v) -> {
-            try {
-                String stock_code = k.split("_")[0];
-                int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
-                if (currentNum==0){
-                    loginManager.deleteYmd(v.split("_")[1]);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
+        loginManager.clearStockYmd();
 
 
     }
