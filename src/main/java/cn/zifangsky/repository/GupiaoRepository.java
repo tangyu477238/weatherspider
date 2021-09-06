@@ -49,7 +49,15 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
             " inner join v_before_30m_time b on 1= 1" +
             " inner join gupiao_kline_30m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
             " where k.symbol = ?1", nativeQuery = true)
-    Gupiao listBeforeTime30m(String symbol, Integer period);
+    Gupiao getBeforeTime30m(String symbol, Integer period);
+
+
+    @Query(value = "select s.* from gupiao s " +
+            " inner join v_before_5m_time b on 1= 1" +
+            " inner join gupiao_kline_5m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
+            " where k.symbol = ?1", nativeQuery = true)
+    Gupiao getBeforeTime5m(String symbol, Integer period);
+
 
     @Modifying
     @Transactional

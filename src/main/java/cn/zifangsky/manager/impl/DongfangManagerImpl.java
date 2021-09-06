@@ -89,7 +89,7 @@ public class DongfangManagerImpl implements DongfangManager {
      * @param isToday
      * @return
      */
-    private String getUrl(String bondId, Integer period,boolean isToday){
+    private String getUrl(String bondId, Integer period, boolean isToday){
         String beg = getBizdate(period);
         if (isToday){
             beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
@@ -119,7 +119,7 @@ public class DongfangManagerImpl implements DongfangManager {
             return;
         }
 
-        if (isToday && !ComUtil.isEmpty(gupiaoManager.listBeforeTime(bondId, period))){ //当天运行,且前一个时间段已同步，则不进行
+        if (isToday && !ComUtil.isEmpty(gupiaoManager.getBeforeTime(bondId, period))){ //当天运行,且前一个时间段已同步，则不进行
             return;
         }
 

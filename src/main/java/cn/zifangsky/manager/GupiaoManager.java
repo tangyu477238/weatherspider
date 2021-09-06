@@ -23,5 +23,5 @@ public interface GupiaoManager {
 
 	List<Gupiao> listBeforeTime(Integer period);
 
-	Gupiao listBeforeTime(String symbol, Integer period);
+	Gupiao getBeforeTime(String symbol, Integer period);
 }
