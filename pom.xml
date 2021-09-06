@@ -24,7 +24,8 @@
         <!-- 打包时忽略测试代码 -->
         <skipTests>true</skipTests>
         <!-- MyBatis -->
-        <mybatis-spring-boot-starter>1.3.2</mybatis-spring-boot-starter>
+<!--        <mybatis-spring-boot-starter>1.3.2</mybatis-spring-boot-starter>-->
+
         <!-- JUnit单元测试 -->
         <junit>4.12</junit>
         <!-- Apache Commons系列公共库 -->
@@ -42,7 +43,7 @@
         <!-- Apache Curator -->
         <curator>4.0.1</curator>
         <!-- MyBatis Generator -->
-        <org.mybatis.generator>1.3.6</org.mybatis.generator>
+<!--        <org.mybatis.generator>1.3.6</org.mybatis.generator>-->
     </properties>
 
     <dependencies>
@@ -50,11 +51,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis-spring-boot-starter}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.mybatis.spring.boot</groupId>-->
+<!--            <artifactId>mybatis-spring-boot-starter</artifactId>-->
+<!--            <version>${mybatis-spring-boot-starter}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>mysql</groupId>
@@ -211,11 +212,13 @@
         </dependency>
 
         <!-- MyBatis Generator -->
-        <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-maven-plugin</artifactId>
-            <version>${org.mybatis.generator}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.mybatis.generator</groupId>-->
+<!--            <artifactId>mybatis-generator-maven-plugin</artifactId>-->
+<!--            <version>${org.mybatis.generator}</version>-->
+<!--        </dependency>-->
+
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

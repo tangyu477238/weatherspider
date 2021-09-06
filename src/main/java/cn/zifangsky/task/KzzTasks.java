@@ -75,26 +75,30 @@ public class KzzTasks {
 
 
 
+    // 清除任务
+    @Scheduled(cron = "${task.kzz.delAll}")
+    public void deleteAllMyYmd() throws Exception{
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.info(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
+//      心跳线程
+        Map<String, String> ymdMap = loginManager.listMyYmd(); //获取条件列表
+        ymdMap.forEach((k, v) -> {
+            try {
+                String stock_code = k.split("_")[0];
+                int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
+                if (currentNum==0){
+                    loginManager.deleteYmd(v.split("_")[1]);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
 
 
+    }
 
-
-
-
-
-
-
-//    // 清除任务
-//    @Scheduled(cron = "${task.kzz.delAll}")
-//    public void deleteAllMyYmd() throws Exception{
-//        if ("0".equals(consumerOff)) return;
-//        Date current = new Date();
-//        log.debug(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
-////      心跳线程
-//        loginManager.deleteAllMyYmd();
-//    }
-//
 //
 //
 //    @Scheduled(cron = "${task.kzz.risedown}")

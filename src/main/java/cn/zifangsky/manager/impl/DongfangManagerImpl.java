@@ -102,7 +102,7 @@ public class DongfangManagerImpl implements DongfangManager {
                 .append("&fqt=1&secid=").append(exchange_type).append(".").append(bondId)
                 .append("&beg=").append(beg)
                 .append("&end=20500000&_=1618930055730");
-        log.info(url.toString());
+        log.debug(url.toString());
         return url.toString();
     }
 
@@ -114,7 +114,7 @@ public class DongfangManagerImpl implements DongfangManager {
      */
     @Override
     public void getKline(String bondId, Integer period, boolean isProxy, boolean isToday) {
-        log.debug(bondId+"--------开始进入------------------------"+DateTimeUtil.formatTimetoString(new Date()));
+
         if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //非当天运行,且最新一天有数据，则不进行
             return;
         }
@@ -133,8 +133,9 @@ public class DongfangManagerImpl implements DongfangManager {
             spider.setDownloader(httpClientDownloader);
         }
         spider.addUrl(getUrl(bondId, period, isToday)); //添加URL
+        log.info(bondId+"---"+period+"--------开始请求------------------------"+DateTimeUtil.formatTimetoString(new Date()));
         spider.thread(1).run();
-        log.debug(bondId+"--------完成退出------------------------"+DateTimeUtil.formatTimetoString(new Date()));
+        log.debug(bondId+"---"+period+"-------完成退出------------------------"+DateTimeUtil.formatTimetoString(new Date()));
     }
 
 

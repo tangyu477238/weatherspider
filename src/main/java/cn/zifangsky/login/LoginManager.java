@@ -435,8 +435,9 @@ public class LoginManager implements ILogin{
             JSONObject jsonObject = (JSONObject)object;
             JSONObject stock = jsonObject.getJSONObject("ymd_trade");
             JSONObject strategy = jsonObject.getJSONObject("ymd_base");
-            map.put(stock.getStr("stock_code")+strategy.getStr("strategy_id"),
-                    stock.getStr("entrust_amount")+"_"+strategy.getStr("ymd_id"));
+            String key = appendStr(stock.getStr("stock_code"), strategy.getStr("strategy_id"));
+            String value = appendStr(stock.getStr("entrust_amount"), strategy.getStr("ymd_id"));
+            map.put(key, value);
         }
         return map;
     }
@@ -613,9 +614,10 @@ public class LoginManager implements ILogin{
      * @return
      * @throws Exception
      */
-    public boolean checkAddYmd(Map map, String stock_code, Integer enable_amount, String strategy_id) throws Exception{
-        if (map.containsKey(stock_code+strategy_id)){
-            String arr[] = map.get(stock_code+strategy_id).toString().split("_");
+    public boolean checkAddYmd(Map<String, String> map, String stock_code, Integer enable_amount, String strategy_id) throws Exception{
+        String key = appendStr(stock_code, strategy_id);
+        if (map.containsKey(key)){
+            String arr[] = map.get(key).split("_");
             if (arr[0].equals(String.valueOf(enable_amount))){
                 return true;
             }
@@ -632,11 +634,23 @@ public class LoginManager implements ILogin{
      * @return
      * @throws Exception
      */
-    public boolean delYmd(Map map, String stock_code, String strategy_id) throws Exception{
-        if (map.containsKey(stock_code+strategy_id)){
-            String arr[] = map.get(stock_code+strategy_id).toString().split("_");
+    public boolean delYmd(Map<String, String> map, String stock_code, String strategy_id) throws Exception{
+        String key = appendStr(stock_code, strategy_id);
+        if (map.containsKey(key)){
+            String arr[] = map.get(key).split("_");
             deleteYmd(arr[1]); //删除原条件单
         }
-        return false;
+        return true;
+    }
+
+    /**
+     *
+     * @param str1
+     * @param str2
+     * @return
+     */
+    public String appendStr(String str1, String str2){
+        StringBuffer stringBuffer = new StringBuffer(str1);
+        return stringBuffer.append("_").append(str2).toString();
     }
 }
