@@ -52,8 +52,8 @@ public class DongfangSpider implements PageProcessor{
 		log.debug(jsonArray.toJSONString());
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			JSONObject object1 =  JSONObject.parseObject(jsonArray.get(i).toString());
-			long volume = object1.getString("f5").equals("-")?0:object1.getLong("f5");
-			if (volume<=0){ //无成交量
+			long volume = object1.getString("f6").equals("-")?0:object1.getLong("f6");
+			if (volume<=20000000){ //成交额
 				continue;
 			}
 
