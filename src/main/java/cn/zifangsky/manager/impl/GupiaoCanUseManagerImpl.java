@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,32 +54,33 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 			log.info(ymdMap.toString());
 			List<Map<String,Object>> list = gupiaoCanUseRepository.listBuy();
 			for (Map<String,Object> stockMap : list){
+				Thread.sleep(500);
 				String stock_code = stockMap.get("symbol").toString();
 				int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
 				int buyNum = 10; //参考数量
-				Double lossPrice = Double.valueOf(stockMap.get("lossPrice").toString()); //止损
-				log.info(stock_code+"---"+lossPrice);
-				Double newPrice = 0.0;
-
-
+				BigDecimal lossPrice = new BigDecimal(stockMap.get("lossPrice").toString()).subtract(new BigDecimal(0.5)); //止损
+				log.info(stock_code+"-lossPrice--"+lossPrice);
+				BigDecimal newPrice = new BigDecimal(0);
 				if(currentNum>0){ //已有数量/但数量不相等，重新挂一遍
-					if (loginManager.checkAddYmd(ymdMap,stock_code,currentNum,"34")){  //是否有hungSell订单
+					if (loginManager.checkAddYmd(ymdMap,stock_code,currentNum,"34", lossPrice)){  //是否有hungSell订单
 						continue;
 					}
-					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
-					loginManager.hungSell(stock_code,stock_code,""+lossPrice, ""+newPrice, currentNum);
+					newPrice = new BigDecimal(loginManager.getNewPrice(stock_code)); //获取最新价格
+					loginManager.hungSell(stock_code,stock_code,lossPrice.toString(), ""+newPrice, currentNum);
 					continue;
 				}
 
 //				--------------分界线---------------
-
+				Thread.sleep(500);
 				loginManager.delYmd(ymdMap,stock_code,"8"); //已存在hungBuy订单
 				if (newPrice.intValue()==0){
-					newPrice = Double.parseDouble(loginManager.getNewPrice(stock_code)); //获取最新价格
+					newPrice = new BigDecimal(loginManager.getNewPrice(stock_code)); //获取最新价格
 				}
-				if (getFudu(newPrice, lossPrice)>0.3 && (getFudu(newPrice, lossPrice)<1.5) && newPrice < 200){
-					String original_price = String.valueOf(newPrice+0.01); //获取触发价格
-					loginManager.hungBuy(stock_code, stock_code ,original_price , ""+newPrice, buyNum);
+				log.info(stock_code+"-newPrice--"+newPrice);
+				if (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(0.3)) > 0
+						&& (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(1.5))<0) ){
+					String original_price = String.valueOf(newPrice.add(new BigDecimal(0.01))); //获取触发价格
+					loginManager.hungBuy(stock_code, stock_code ,original_price , newPrice.toString(), buyNum);
 				}
 			}
 		} catch (Exception e) {
@@ -86,8 +88,10 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 		}
 	}
 
-	private double getFudu(double newPrice, double lossPrice){
-		double f = (newPrice-lossPrice)/lossPrice*100;
+	private BigDecimal getFudu(BigDecimal newPrice, BigDecimal lossPrice){
+		BigDecimal a = newPrice.subtract(lossPrice);
+		BigDecimal b = a.divide(lossPrice ,3, BigDecimal.ROUND_HALF_UP);
+		BigDecimal f = b.multiply(new BigDecimal(100));
 		return f;
 	}
 

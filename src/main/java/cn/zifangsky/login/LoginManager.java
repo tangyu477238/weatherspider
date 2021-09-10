@@ -455,8 +455,10 @@ public class LoginManager implements ILogin{
             JSONObject jsonObject = (JSONObject)object;
             JSONObject stock = jsonObject.getJSONObject("ymd_trade");
             JSONObject strategy = jsonObject.getJSONObject("ymd_base");
+            JSONObject condition = jsonObject.getJSONObject("ymd_condition");
             String key = appendStr(stock.getStr("stock_code"), strategy.getStr("strategy_id"));
             String value = appendStr(stock.getStr("entrust_amount"), strategy.getStr("ymd_id"));
+            value = appendStr(value, condition.getStr("original_price"));
             map.put(key, value);
         }
         return map;
@@ -564,55 +566,55 @@ public class LoginManager implements ILogin{
 
 
 
-    public void addRisedownSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
-        if (checkAddYmd(map, stock_code, enable_amount,"7")){
-            return;
-        }
-        String risedown_rate = "2.0";
-        double nPrice = Double.parseDouble(newPrice);
-        String original_price = String.valueOf(nPrice+0.001);
-        risedownSell(stock_code, stock_name, original_price, risedown_rate, newPrice, enable_amount); //添加回落单
-    }
-
-    public void addStopProfitAndLoss(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
-        if (checkAddYmd(map, stock_code, enable_amount,"35")){
-            return;
-        }
-
-        String stop_loss_rate = "2.0"; //止
-
-        String stop_profit_rate = "100";
-        String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
-        String stop_loss_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
-        stopProfitAndLoss(stock_code,stock_name,
-                newPrice,stop_profit_rate, stop_profit_price, stop_loss_rate, stop_loss_price, newPrice, enable_amount);
-
-    }
-
-    public void addHungSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
-        if (checkAddYmd(map, stock_code, enable_amount,"34")){
-            return;
-        }
-
-        String stop_loss_rate = "1"; //止
-        String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
-        hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
-    }
-
-
-    public void addYmd(Map map,String stock_code, String stock_name, Integer enable_amount) throws Exception{
-        String newPrice = getNewPrice(stock_code); //获取最新
-        log.debug("-------------taskYmd------"+stock_code+"----"+enable_amount +"--" + newPrice);
-
-        addRisedownSell(map, stock_code, stock_name, enable_amount, newPrice);
-
-        addStopProfitAndLoss(map, stock_code, stock_name, enable_amount, newPrice);
-
-        addHungSell(map, stock_code, stock_name, enable_amount, newPrice);
+//    public void addRisedownSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
+//        if (checkAddYmd(map, stock_code, enable_amount,"7")){
+//            return;
+//        }
+//        String risedown_rate = "2.0";
+//        double nPrice = Double.parseDouble(newPrice);
+//        String original_price = String.valueOf(nPrice+0.001);
+//        risedownSell(stock_code, stock_name, original_price, risedown_rate, newPrice, enable_amount); //添加回落单
+//    }
+//
+//    public void addStopProfitAndLoss(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
+//        if (checkAddYmd(map, stock_code, enable_amount,"35")){
+//            return;
+//        }
+//
+//        String stop_loss_rate = "2.0"; //止
+//
+//        String stop_profit_rate = "100";
+//        String stop_profit_price = getProfitPrice(newPrice, Double.parseDouble(stop_profit_rate));
+//        String stop_loss_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
+//        stopProfitAndLoss(stock_code,stock_name,
+//                newPrice,stop_profit_rate, stop_profit_price, stop_loss_rate, stop_loss_price, newPrice, enable_amount);
+//
+//    }
+//
+//    public void addHungSell(Map map,String stock_code, String stock_name, Integer enable_amount, String newPrice) throws Exception{
+//        if (checkAddYmd(map, stock_code, enable_amount,"34")){
+//            return;
+//        }
+//
+//        String stop_loss_rate = "1"; //止
+//        String original_price = getLossPrice(newPrice, Double.parseDouble(stop_loss_rate));
+//        hungSell(stock_code,stock_name, original_price, newPrice, enable_amount);
+//    }
 
 
-
-    }
+//    public void addYmd(Map map,String stock_code, String stock_name, Integer enable_amount) throws Exception{
+//        String newPrice = getNewPrice(stock_code); //获取最新
+//        log.debug("-------------taskYmd------"+stock_code+"----"+enable_amount +"--" + newPrice);
+//
+//        addRisedownSell(map, stock_code, stock_name, enable_amount, newPrice);
+//
+//        addStopProfitAndLoss(map, stock_code, stock_name, enable_amount, newPrice);
+//
+//        addHungSell(map, stock_code, stock_name, enable_amount, newPrice);
+//
+//
+//
+//    }
 
     public String getLossPrice(String newPrice, double rate) {
         double nPrice = Double.parseDouble(newPrice);
@@ -634,11 +636,12 @@ public class LoginManager implements ILogin{
      * @return
      * @throws Exception
      */
-    public boolean checkAddYmd(Map<String, String> map, String stock_code, Integer enable_amount, String strategy_id) throws Exception{
+    public boolean checkAddYmd(Map<String, String> map, String stock_code, Integer enable_amount, String strategy_id, BigDecimal lossPrice) throws Exception{
         String key = appendStr(stock_code, strategy_id);
         if (map.containsKey(key)){
             String arr[] = map.get(key).split("_");
-            if (arr[0].equals(String.valueOf(enable_amount))){
+            if (arr[0].equals(String.valueOf(enable_amount))
+                    && lossPrice.compareTo(new BigDecimal(arr[2]))==0){
                 return true;
             }
             deleteYmd(arr[1]); //删除原条件单
