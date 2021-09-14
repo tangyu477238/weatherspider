@@ -1,26 +1,17 @@
 package cn.zifangsky.common;
 
-import cn.zifangsky.model.ProxyUrl;
-import cn.zifangsky.repository.ProxyUrlRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Service
 public class CheckIPUtils {
-
-	@Resource
-	private ProxyUrlRepository proxyUrlRepository;
-
     private  boolean checkValidIP(String ip,Integer port, URL url){
 
 		HttpURLConnection connection = null;
@@ -29,8 +20,8 @@ public class CheckIPUtils {
 			InetSocketAddress proxyAddr = new InetSocketAddress(ip, port);
 			Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
 			connection = (HttpURLConnection) url.openConnection(proxy);
-			connection.setReadTimeout(4000);
-			connection.setConnectTimeout(4000);
+			connection.setReadTimeout(2000);
+			connection.setConnectTimeout(2000);
 			connection.setRequestMethod("GET");
 			StringBuffer msg = new StringBuffer();
 			if(connection.getResponseCode() == 200){
