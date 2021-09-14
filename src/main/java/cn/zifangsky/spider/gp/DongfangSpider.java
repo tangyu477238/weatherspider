@@ -49,24 +49,26 @@ public class DongfangSpider implements PageProcessor{
 		JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
 		List<Gupiao> list = new ArrayList();
 		JSONArray jsonArray = object.getJSONArray("diff");
-		log.debug(jsonArray.toJSONString());
 		for (int i = 0; jsonArray!=null && i < jsonArray.size(); i++) {
 			JSONObject object1 =  JSONObject.parseObject(jsonArray.get(i).toString());
-			long volume = object1.getString("f6").equals("-")?0:object1.getLong("f6");
-			if (volume<=20000000){ //成交额
+			long amount = object1.getString("f6").equals("-")?0:object1.getLong("f6");
+			if (amount <= 0){ //成交额
 				continue;
 			}
-
 			Gupiao gupiao = new Gupiao();
 			gupiao.setPercent(object1.getString("f3").equals("-")?0:object1.getDouble("f3"));//涨幅(百分比)
-			gupiao.setVolume(volume);
-			gupiao.setAmount(object1.getString("f6").equals("-")?0:object1.getLong("f6"));
+			gupiao.setVolume(object1.getString("f5").equals("-")?0:object1.getLong("f5"));
+			gupiao.setAmount(amount);
 			gupiao.setPs(object1.getString("f7").equals("-")?0:object1.getDouble("f7"));//振幅(百分比)
 			gupiao.setSymbol(object1.getString("f12"));
 			gupiao.setName(object1.getString("f14"));
 			gupiao.setType(StockUtil.isShenshi(gupiao.getSymbol())  ? 0 : 1); //深/沪
-			list.add(gupiao);
 
+			gupiao.setOpen(object1.getString("f17").equals("-")?0:object1.getDouble("f17"));//
+			gupiao.setClose(object1.getString("f2").equals("-")?0:object1.getDouble("f2"));//
+			gupiao.setHigh(object1.getString("f15").equals("-")?0:object1.getDouble("f15"));//
+			gupiao.setLow(object1.getString("f16").equals("-")?0:object1.getDouble("f16"));//
+			list.add(gupiao);
 
 //			kzz1.setOpen(Double.parseDouble(jsonArray1[1]));
 //			kzz1.setClose(Double.parseDouble(jsonArray1[2]));
