@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class BizOrderSpider implements PageProcessor{
 	
-	private Site site = Site.me().setTimeOut(20000).setRetryTimes(3)
+	private Site site = Site.me().setTimeOut(2000).setRetryTimes(3)
 			.setSleepTime(2000).setCharset("UTF-8");
 	
 	@Override

@@ -19,7 +19,7 @@ import java.util.Set;
 @Slf4j
 public class DongfangSpider implements PageProcessor{
 
-	private Site site = Site.me().setTimeOut(20000).setRetryTimes(3)
+	private Site site = Site.me().setTimeOut(2000).setRetryTimes(3)
 			.setCharset("UTF-8")
 			.setSleepTime(2000);
 	
