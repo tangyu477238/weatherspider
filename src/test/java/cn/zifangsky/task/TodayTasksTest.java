@@ -16,13 +16,13 @@ public class TodayTasksTest {
     @Resource
     private TodayTasks todayTasks;
 
-//
-//    @Test
-//    public void gupiaoByAll() throws Exception{
-//
-//        todayTasks.gupiaoByAll();
-//
-//    }
+
+    @Test
+    public void gupiaoByAll() throws Exception{
+
+        todayTasks.gupiaoByAll();
+
+    }
 //
 //
 //    @Test

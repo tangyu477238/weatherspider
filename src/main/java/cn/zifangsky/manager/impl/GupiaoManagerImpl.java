@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("gupiaoManager")
@@ -82,10 +83,10 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
 
     private List getAddGupiaoKline(List<BaseGupiaoKline> list){
+        String bizDate = getKlineMaxBizDate(list.get(0).getSymbol(), list.get(0).getPeriod());
         List<BaseGupiaoKline> addList = new ArrayList<>(); //新增数据
         for (BaseGupiaoKline gupiaoKline : list){
-            BaseGupiaoKline kline = getGupiaoKline(gupiaoKline.getSymbol(), gupiaoKline.getBizDate(), gupiaoKline.getPeriod());
-            if (ComUtil.isEmpty(kline)){
+            if (gupiaoKline.getBizDate().compareTo(bizDate) > 0){
                 addList.add(gupiaoKline);
                 continue;
             }
@@ -114,8 +115,8 @@ public class GupiaoManagerImpl implements GupiaoManager {
         if (ComUtil.isEmpty(list)){
             return;
         }
-        addGupiaoKlineAll(getAddGupiaoKline(list));  //保存新增数据
-        addGupiaoKlineAll(getTodayGupiaoKline(list));  //覆盖当天数据
+        List lineList = getAddGupiaoKline(list); //获取有用数据
+        addGupiaoKlineAll(lineList);  //保存数据
     }
 
     private void addGupiaoKlineAll(List<BaseGupiaoKline> listBase) {
@@ -123,42 +124,55 @@ public class GupiaoManagerImpl implements GupiaoManager {
             return;
         }
         if (listBase.get(0).getPeriod()==KlineEnum.K_5M.getId()){
-            GupiaoKline5m gupiaoKline5m;
-            List<GupiaoKline5m> list = new ArrayList<>();
-            for (BaseGupiaoKline kline : listBase){
-                gupiaoKline5m = new GupiaoKline5m();
-                BeanUtils.copyProperties(kline, gupiaoKline5m);
-                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(listBase.get(0).getPeriod()));
-                if (gupiaoKline5m.getBizDate().compareTo(biz_date) <= 0){ //控制
-                    list.add(gupiaoKline5m);
-                }
-
-            }
+            List<GupiaoKline5m> list = listBase.stream()
+                    .filter(x -> x.getBizDate().compareTo(DateTimeUtil.getPeriodDate(x.getPeriod())) <= 0)
+                    .map((item) -> {
+                        GupiaoKline5m gupiaoKline5m = new GupiaoKline5m();
+                        BeanUtils.copyProperties(item, gupiaoKline5m);
+                        return gupiaoKline5m;
+                    }).collect(Collectors.toList());
             gupiaoKline5mRepository.saveAll(list); //保存新增数据
         } else if (listBase.get(0).getPeriod()==KlineEnum.K_30M.getId()){
-            GupiaoKline30m gupiaoKline30m;
-            List<GupiaoKline30m> list = new ArrayList<>();
-            for (BaseGupiaoKline kline : listBase){
-                gupiaoKline30m = new GupiaoKline30m();
-                BeanUtils.copyProperties(kline, gupiaoKline30m);
-
-                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(listBase.get(0).getPeriod()));
-                if (gupiaoKline30m.getBizDate().compareTo(biz_date) <= 0){ //控制
-                    list.add(gupiaoKline30m);
-                }
-            }
+//            GupiaoKline30m gupiaoKline30m;
+//            List<GupiaoKline30m> list = new ArrayList<>();
+//            for (BaseGupiaoKline kline : listBase){
+//                gupiaoKline30m = new GupiaoKline30m();
+//                BeanUtils.copyProperties(kline, gupiaoKline30m);
+//
+//                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(listBase.get(0).getPeriod()));
+//                if (gupiaoKline30m.getBizDate().compareTo(biz_date) <= 0){ //控制
+//                    list.add(gupiaoKline30m);
+//                }
+//            }
+            List<GupiaoKline30m> list = listBase.stream()
+                .filter(x -> x.getBizDate().compareTo(DateTimeUtil.getPeriodDate(x.getPeriod())) <= 0)
+                .map((item) -> {
+                    GupiaoKline30m gupiaoKline30m = new GupiaoKline30m();
+                    BeanUtils.copyProperties(item, gupiaoKline30m);
+                    return gupiaoKline30m;
+                }).collect(Collectors.toList());
             gupiaoKline30mRepository.saveAll(list); //保存新增数据
         } else if (listBase.get(0).getPeriod()==KlineEnum.K_1D.getId()){
-            GupiaoKline gupiaoKline;
-            List<GupiaoKline> list = new ArrayList<>();
-            for (BaseGupiaoKline kline : listBase){
-                gupiaoKline = new GupiaoKline();
-                BeanUtils.copyProperties(kline, gupiaoKline);
-                list.add(gupiaoKline);
-            }
+            List<GupiaoKline> list = listBase.stream()
+                .map((item) -> {
+                    GupiaoKline gupiaoKline = new GupiaoKline();
+                    BeanUtils.copyProperties(item, gupiaoKline);
+                    return gupiaoKline;
+                }).collect(Collectors.toList());
             gupiaoKlineRepository.saveAll(list); //保存新增数据
         }
 
+    }
+
+    public String getKlineMaxBizDate(String bondId, Integer period) {
+        if (period== KlineEnum.K_5M.getId()){
+            return gupiaoKlineRepository.getMaxKlineBizDate5m(bondId, period);
+        } else if (period==KlineEnum.K_30M.getId()){
+            return gupiaoKlineRepository.getMaxKlineBizDate30m(bondId, period);
+        } else if (period==KlineEnum.K_1D.getId()){
+            return gupiaoKlineRepository.getMaxKlineBizDate(bondId, period);
+        }
+        return null;
     }
 
     @Override
