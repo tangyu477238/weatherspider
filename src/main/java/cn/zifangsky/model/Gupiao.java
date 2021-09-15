@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -18,10 +19,13 @@ public class Gupiao implements Serializable {
     private String symbol;
     private Integer period;
 
+    private double amount;
+    private double volume;
     private double open;
     private double high;
     private double low;
     private double close;
+
 
     private double net_profit_cagr;
     private double ps;
@@ -43,11 +47,9 @@ public class Gupiao implements Serializable {
     private double total_percent;
     private double percent5m;
     private double income_cagr;
-    private double amount;
     private double chg;
     private long issue_date_ts;
     private int main_net_inflows;
-    private long volume;
     private String volume_ratio;
     private double pb;
     private int followers;

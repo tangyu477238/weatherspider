@@ -82,10 +82,10 @@ public class XueqiuGupiaoKlinePipeline implements Pipeline {
 
 	private String getBizDate(String period, Date Timestamp){
 		if (period.equals("day")){
-			return DateTimeUtil.formatDateTimetoString(Timestamp, DateTimeUtil.FMT_yyyyMMdd);
+			return DateTimeUtil.formatDateStr(Timestamp, DateTimeUtil.FMT_yyyyMMdd);
 		}
 		if (period.indexOf("m")>-1){
-			return DateTimeUtil.formatDateTimetoString(Timestamp, DateTimeUtil.FMT_yyyyMMddHHmm);
+			return DateTimeUtil.formatDateStr(Timestamp, DateTimeUtil.FMT_yyyyMMddHHmm);
 		}
 		return "";
 	}

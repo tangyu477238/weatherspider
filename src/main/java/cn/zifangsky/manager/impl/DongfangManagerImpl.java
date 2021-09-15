@@ -92,7 +92,7 @@ public class DongfangManagerImpl implements DongfangManager {
     private String getUrl(String bondId, Integer period, boolean isToday){
         String beg = getBizdate(period);
         if (isToday){
-            beg = DateTimeUtil.formatDateTimetoString(new Date(),"yyyyMMdd");
+            beg = DateTimeUtil.formatDateStr(new Date(),"yyyyMMdd");
         }
         int exchange_type =  StockUtil.isShenshi(bondId)  ? 0 : 1; //深/沪
         StringBuffer url = new StringBuffer("http://");

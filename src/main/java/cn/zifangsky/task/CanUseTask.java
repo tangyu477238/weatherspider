@@ -34,7 +34,7 @@ public class CanUseTask {
     @Scheduled(cron = "${task.today.canUse}")
     public void todayCanUse(){
         if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("开始执行todayCanUse，Date：{0}",  DateTimeUtil.formatDateTimetoString(new Date())));
+        log.info(MessageFormat.format("开始执行todayCanUse，Date：{0}",  DateTimeUtil.formatDateStr(new Date())));
         gupiaoCanUseManager.addCanUse();
     }
 

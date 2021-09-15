@@ -1,5 +1,6 @@
 package cn.zifangsky.common;
 
+import cn.zifangsky.enums.KlineEnum;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.assertj.core.util.DateUtil;
 
@@ -231,7 +232,7 @@ public class DateTimeUtil {
      *            日期格式
      * @return 如果为null，返回字符串""
      */
-    public static String formatDateTimetoString(Date date, String formatStr) {
+    public static String formatDateStr(Date date, String formatStr) {
         String reStr = "";
         if (date == null || formatStr == null || formatStr.trim().length() < 1) {
             return reStr;
@@ -251,7 +252,7 @@ public class DateTimeUtil {
      */
     public static Date getSystemDate(String fmtstr) {
         try {
-            return parseToDate(formatDateTimetoString(getSystemDate(), fmtstr));
+            return parseToDate(formatDateStr(getSystemDate(), fmtstr));
         } catch (Exception e) {
             e.printStackTrace();
             return getSystemDate();
@@ -270,7 +271,7 @@ public class DateTimeUtil {
      *            日期格式符号要被使用的语言环境
      * @return 如果为null，返回字符串""
      */
-    public static String formatDateTimetoString(Date date, String formatStr, Locale locale) {
+    public static String formatDateStr(Date date, String formatStr, Locale locale) {
         String reStr = "";
         if (date == null || formatStr == null || locale == null || formatStr.trim().length() < 1) {
             return reStr;
@@ -291,10 +292,10 @@ public class DateTimeUtil {
      * @throws Exception
      *             可能抛出的异常
      */
-    public static String formatDateTimetoString(String dateStr, String formatStr) throws Exception {
+    public static String formatDateStr(String dateStr, String formatStr) throws Exception {
         String dStr = "";
         if (dateStr != null && dateStr.trim().length() > 0 && formatStr != null && formatStr.trim().length() > 0) {
-            dStr = formatDateTimetoString(parseToDate(dateStr), formatStr);
+            dStr = formatDateStr(parseToDate(dateStr), formatStr);
         }
         return dStr;
     }
@@ -312,11 +313,11 @@ public class DateTimeUtil {
      * @throws Exception
      *             可能抛出的异常
      */
-    public static String formatDateTimetoString(String dateStr, String formatStr, Locale locale) throws Exception {
+    public static String formatDateStr(String dateStr, String formatStr, Locale locale) throws Exception {
         String dStr = "";
         if (dateStr != null && dateStr.trim().length() > 0 && formatStr != null && formatStr.trim().length() > 0
                 && locale != null) {
-            dStr = formatDateTimetoString(parseToDate(dateStr, locale), formatStr, locale);
+            dStr = formatDateStr(parseToDate(dateStr, locale), formatStr, locale);
         }
         return dStr;
     }
@@ -496,8 +497,8 @@ public class DateTimeUtil {
      * @throws Exception
      *             可能抛出的异常
      */
-    public static String formatDateTimetoString(String dateTimeStr) throws Exception {
-        return formatDateTimetoString(dateTimeStr, FMT_yyyyMMddHHmmss);
+    public static String formatDateStr(String dateTimeStr) throws Exception {
+        return formatDateStr(dateTimeStr, FMT_yyyyMMddHHmmss);
     }
 
     /**
@@ -511,8 +512,8 @@ public class DateTimeUtil {
      * @throws Exception
      *             可能抛出的异常
      */
-    public static String formatDateTimetoString(String dateTimeStr, Locale locale) throws Exception {
-        return formatDateTimetoString(dateTimeStr, FMT_yyyyMMddHHmmss, locale);
+    public static String formatDateStr(String dateTimeStr, Locale locale) throws Exception {
+        return formatDateStr(dateTimeStr, FMT_yyyyMMddHHmmss, locale);
     }
 
     /**
@@ -522,8 +523,8 @@ public class DateTimeUtil {
      *            日期对象
      * @return 如果为null，返回""
      */
-    public static String formatDateTimetoString(Date dateTime) {
-        return formatDateTimetoString(dateTime, FMT_yyyyMMddHHmmss);
+    public static String formatDateStr(Date dateTime) {
+        return formatDateStr(dateTime, FMT_yyyyMMddHHmmss);
     }
 
     /**
@@ -535,8 +536,8 @@ public class DateTimeUtil {
      *            日期格式符号要被使用的语言环境
      * @return 如果为null，返回""
      */
-    public static String formatDateTimetoString(Date dateTime, Locale locale) {
-        return formatDateTimetoString(dateTime, FMT_yyyyMMddHHmmss, locale);
+    public static String formatDateStr(Date dateTime, Locale locale) {
+        return formatDateStr(dateTime, FMT_yyyyMMddHHmmss, locale);
     }
 
     /**
@@ -549,7 +550,7 @@ public class DateTimeUtil {
      *             可能抛出的异常
      */
     public static String formatDatetoString(String dateStr) throws Exception {
-        return formatDateTimetoString(dateStr, FMT_yyyyMMdd);
+        return formatDateStr(dateStr, FMT_yyyyMMdd);
     }
 
     /**
@@ -564,7 +565,7 @@ public class DateTimeUtil {
      *             可能抛出的异常
      */
     public static String formatDatetoString(String dateStr, Locale locale) throws Exception {
-        return formatDateTimetoString(dateStr, FMT_yyyyMMdd, locale);
+        return formatDateStr(dateStr, FMT_yyyyMMdd, locale);
     }
 
     /**
@@ -575,7 +576,7 @@ public class DateTimeUtil {
      * @return 如果为null，返回""
      */
     public static String formatDatetoString(Date d) {
-        return formatDateTimetoString(d, FMT_yyyyMMdd_8);
+        return formatDateStr(d, FMT_yyyyMMdd_8);
     }
 
     /**
@@ -588,7 +589,7 @@ public class DateTimeUtil {
      * @return 如果为null，返回""
      */
     public static String formatDatetoString(Date d, Locale locale) {
-        return formatDateTimetoString(d, FMT_yyyyMMdd, locale);
+        return formatDateStr(d, FMT_yyyyMMdd, locale);
     }
 
     /**
@@ -601,7 +602,7 @@ public class DateTimeUtil {
      *             可能抛出的异常
      */
     public static String formatTimetoString(String dateTimeStr) throws Exception {
-        return formatDateTimetoString(dateTimeStr, FMT_HHmmss);
+        return formatDateStr(dateTimeStr, FMT_HHmmss);
     }
 
     /**
@@ -616,7 +617,7 @@ public class DateTimeUtil {
      *             可能抛出的异常
      */
     public static String formatTimetoString(String dateTimeStr, Locale locale) throws Exception {
-        return formatDateTimetoString(dateTimeStr, FMT_HHmmss, locale);
+        return formatDateStr(dateTimeStr, FMT_HHmmss, locale);
     }
 
     /**
@@ -627,7 +628,7 @@ public class DateTimeUtil {
      * @return 如果为null，返回""
      */
     public static String formatTimetoString(Date dateTimeStr) {
-        return formatDateTimetoString(dateTimeStr, FMT_HHmmss);
+        return formatDateStr(dateTimeStr, FMT_HHmmss);
     }
 
     /**
@@ -640,7 +641,7 @@ public class DateTimeUtil {
      * @return 如果为null，返回""
      */
     public static String formatTimetoString(Date dateTimeStr, Locale locale) {
-        return formatDateTimetoString(dateTimeStr, FMT_HHmmss, locale);
+        return formatDateStr(dateTimeStr, FMT_HHmmss, locale);
     }
 
     /**
@@ -1479,8 +1480,8 @@ public class DateTimeUtil {
      * @return 月份差
      */
     public static int getMonthCount(Date sDate, Date eDate) {
-        String sDateStr = DateTimeUtil.formatDateTimetoString(sDate, "MM");
-        String eDateStr = DateTimeUtil.formatDateTimetoString(eDate, "MM");
+        String sDateStr = DateTimeUtil.formatDateStr(sDate, "MM");
+        String eDateStr = DateTimeUtil.formatDateStr(eDate, "MM");
         int monthCount = Integer.parseInt(eDateStr) - Integer.parseInt(sDateStr) + 1;
         return monthCount;
     }
@@ -1495,8 +1496,8 @@ public class DateTimeUtil {
      * @return 年份差
      */
     public static int getYearCount(Date sDate, Date eDate) {
-        String sDateStr = DateTimeUtil.formatDateTimetoString(sDate, "yyyy");
-        String eDateStr = DateTimeUtil.formatDateTimetoString(eDate, "yyyy");
+        String sDateStr = DateTimeUtil.formatDateStr(sDate, "yyyy");
+        String eDateStr = DateTimeUtil.formatDateStr(eDate, "yyyy");
         return Integer.parseInt(eDateStr) - Integer.parseInt(sDateStr);
     }
 
@@ -1508,9 +1509,9 @@ public class DateTimeUtil {
      * @return 新日期对象
      */
     public static Date getDayNextMonth(Date date) {
-        String yearStr = DateTimeUtil.formatDateTimetoString(date, "yyyy");
-        String monthStr = DateTimeUtil.formatDateTimetoString(date, "MM");
-        String dayStr = DateTimeUtil.formatDateTimetoString(date, "dd");
+        String yearStr = DateTimeUtil.formatDateStr(date, "yyyy");
+        String monthStr = DateTimeUtil.formatDateStr(date, "MM");
+        String dayStr = DateTimeUtil.formatDateStr(date, "dd");
         int year = Integer.parseInt(yearStr);
         int month = Integer.parseInt(monthStr);
         if (month == 12) {
@@ -1833,16 +1834,19 @@ public class DateTimeUtil {
         }
     }
 
-    public static String getPeriodDate(double period){
+    public static String getPeriodDate(Integer period){
+        if (period == KlineEnum.K_1D.getId()){
+            if (DateTimeUtil.getHoursOfDay(new Date()) < 15){
+                return DateTimeUtil.formatDateStr(DateTimeUtil.addDays(new Date(),-1),"yyyy-MM-dd");
+            }
+            return DateTimeUtil.formatDateStr(new Date(),"yyyy-MM-dd");
+        }
         Double minute = Math.floor(DateTimeUtil.getMinutesOfHour(new Date())/period) * period;
         String minuteStr = String.valueOf(minute.intValue());
-        if (period == 5 && minute<9){
-            minuteStr = "0"+minuteStr;
+        if (period == period && minute < 9){
+            minuteStr = "0" + minuteStr;
         }
-        if (period == 30 && minute<30){
-            minuteStr = "0"+minuteStr;
-        }
-        return DateTimeUtil.formatDateTimetoString(new Date(),"yyyy-MM-dd HH:"+minuteStr);
+        return DateTimeUtil.formatDateStr(new Date(),"yyyy-MM-dd HH:"+minuteStr);
     }
     public static void main (String str []){
 //        System.out.println(DateTimeUtil.getMonthOfFistDay(2).substring(5,10));

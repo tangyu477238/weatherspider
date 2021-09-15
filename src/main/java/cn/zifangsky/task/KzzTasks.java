@@ -68,7 +68,7 @@ public class KzzTasks {
     @Scheduled(cron = "${task.kzz.todayBuy}")
     public void todayBuy(){
         if ("0".equals(consumerOff)) return;
-        log.info(MessageFormat.format("开始执行todayBuy，Date：{0}",  DateTimeUtil.formatDateTimetoString(new Date())));
+        log.info(MessageFormat.format("开始执行todayBuy，Date：{0}",  DateTimeUtil.formatDateStr(new Date())));
         gupiaoCanUseManager.listBuy();
     }
 

@@ -34,23 +34,23 @@ public interface GupiaoKlineRepository extends JpaRepository<GupiaoKline,Integer
 
 
 
-    @Query(value = "select max(biz_date) as bizDate from gupiao_kline where symbol=?1 and period =?2 ", nativeQuery = true)
-    String getMaxKlineBizDate(String bondId, Integer period);
+    @Query(value = "select biz_date as bizDate from gupiao_kline where symbol=?1 and period =?2 order by biz_date desc LIMIT 0, 500", nativeQuery = true)
+    List<String> listKlineBizDate(String bondId, Integer period);
 
-    @Query(value = "select max(biz_date) as bizDate from gupiao_kline_5m where symbol=?1 and period =?2 ", nativeQuery = true)
-    String getMaxKlineBizDate5m(String bondId, Integer period);
+    @Query(value = "select biz_date as bizDate from gupiao_kline_5m where symbol=?1 and period =?2 order by biz_date desc LIMIT 0, 500", nativeQuery = true)
+    List<String> listKlineBizDate5m(String bondId, Integer period);
 
-    @Query(value = "select max(biz_date) as bizDate from gupiao_kline_15m where symbol=?1 and period =?2 ", nativeQuery = true)
-    String getMaxKlineBizDate15m(String bondId, Integer period);
+    @Query(value = "select biz_date as bizDate from gupiao_kline_15m where symbol=?1 and period =?2 order by biz_date desc LIMIT 0, 500", nativeQuery = true)
+    List<String> listKlineBizDate15m(String bondId, Integer period);
 
-    @Query(value = "select max(biz_date) as bizDate from gupiao_kline_30m where symbol=?1 and period =?2 ", nativeQuery = true)
-    String getMaxKlineBizDate30m(String bondId, Integer period);
+    @Query(value = "select biz_date as bizDate from gupiao_kline_30m where symbol=?1 and period =?2 order by biz_date desc LIMIT 0, 500", nativeQuery = true)
+    List<String> listKlineBizDate30m(String bondId, Integer period);
 
-    @Query(value = "select max(biz_date) as bizDate from gupiao_kline_60m where symbol=?1 and period =?2", nativeQuery = true)
-    String getMaxKlineBizDate60m(String bondId, Integer period);
+    @Query(value = "select biz_date as bizDate from gupiao_kline_60m where symbol=?1 and period =?2 order by biz_date desc LIMIT 0, 500", nativeQuery = true)
+    List<String> listKlineBizDate60m(String bondId, Integer period);
 
-    @Query(value = "select max(biz_date) as bizDate from gupiao_kline_120m where symbol=?1 and period =?2", nativeQuery = true)
-    String getMaxKlineBizDate120m(String bondId, Integer period);
+    @Query(value = "select biz_date as bizDate from gupiao_kline_120m where symbol=?1 and period =?2 order by biz_date desc LIMIT 0, 500", nativeQuery = true)
+    List<String> listKlineBizDate120m(String bondId, Integer period);
 
 
     @Query(value = "select COUNT(1) as sl " +

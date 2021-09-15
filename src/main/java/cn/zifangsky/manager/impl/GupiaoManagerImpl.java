@@ -83,14 +83,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
 
     private List getAddGupiaoKline(List<BaseGupiaoKline> list){
-        String bizDate = getKlineMaxBizDate(list.get(0).getSymbol(), list.get(0).getPeriod());
-        List<BaseGupiaoKline> addList = new ArrayList<>(); //新增数据
-        for (BaseGupiaoKline gupiaoKline : list){
-            if (gupiaoKline.getBizDate().compareTo(bizDate) > 0){
-                addList.add(gupiaoKline);
-                continue;
-            }
-        }
+        List<String> listDate = listKlineBizDate(list.get(0).getSymbol(), list.get(0).getPeriod());
+        List<BaseGupiaoKline> addList = list.stream()
+                .filter(x -> !listDate.contains(x.getBizDate())
+                        && x.getBizDate().compareTo(DateTimeUtil.getPeriodDate(x.getPeriod())) <= 0)
+                .collect(Collectors.toList());
         return addList;
     }
 
@@ -115,8 +112,8 @@ public class GupiaoManagerImpl implements GupiaoManager {
         if (ComUtil.isEmpty(list)){
             return;
         }
-        List lineList = getAddGupiaoKline(list); //获取有用数据
-        addGupiaoKlineAll(lineList);  //保存数据
+        List klineList = getAddGupiaoKline(list); //获取有用数据
+        addGupiaoKlineAll(klineList);  //保存数据
     }
 
     private void addGupiaoKlineAll(List<BaseGupiaoKline> listBase) {
@@ -125,7 +122,6 @@ public class GupiaoManagerImpl implements GupiaoManager {
         }
         if (listBase.get(0).getPeriod()==KlineEnum.K_5M.getId()){
             List<GupiaoKline5m> list = listBase.stream()
-                    .filter(x -> x.getBizDate().compareTo(DateTimeUtil.getPeriodDate(x.getPeriod())) <= 0)
                     .map((item) -> {
                         GupiaoKline5m gupiaoKline5m = new GupiaoKline5m();
                         BeanUtils.copyProperties(item, gupiaoKline5m);
@@ -145,7 +141,6 @@ public class GupiaoManagerImpl implements GupiaoManager {
 //                }
 //            }
             List<GupiaoKline30m> list = listBase.stream()
-                .filter(x -> x.getBizDate().compareTo(DateTimeUtil.getPeriodDate(x.getPeriod())) <= 0)
                 .map((item) -> {
                     GupiaoKline30m gupiaoKline30m = new GupiaoKline30m();
                     BeanUtils.copyProperties(item, gupiaoKline30m);
@@ -164,13 +159,13 @@ public class GupiaoManagerImpl implements GupiaoManager {
 
     }
 
-    public String getKlineMaxBizDate(String bondId, Integer period) {
+    public List<String> listKlineBizDate(String bondId, Integer period) {
         if (period== KlineEnum.K_5M.getId()){
-            return gupiaoKlineRepository.getMaxKlineBizDate5m(bondId, period);
+            return gupiaoKlineRepository.listKlineBizDate5m(bondId, period);
         } else if (period==KlineEnum.K_30M.getId()){
-            return gupiaoKlineRepository.getMaxKlineBizDate30m(bondId, period);
+            return gupiaoKlineRepository.listKlineBizDate30m(bondId, period);
         } else if (period==KlineEnum.K_1D.getId()){
-            return gupiaoKlineRepository.getMaxKlineBizDate(bondId, period);
+            return gupiaoKlineRepository.listKlineBizDate(bondId, period);
         }
         return null;
     }
