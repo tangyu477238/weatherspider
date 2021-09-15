@@ -29,6 +29,8 @@ public class GupiaoPipeline implements Pipeline {
 	public void process(ResultItems resultItems, Task task) {
 		List<Gupiao> list = resultItems.get("result");
 		gupiaoRepository.saveAll(list);
+		//清除不符合的数据
+		gupiaoRepository.delNotUse();
 
 	}
 

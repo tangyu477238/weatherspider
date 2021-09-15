@@ -64,6 +64,12 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
     @Query(value = "delete from  gupiao  where symbol like '11%' or  symbol like '12%'  ",nativeQuery = true)
     int delKzzAll();
 
+    @Modifying
+    @Transactional
+    @Query(value = "delete from gupiao where (symbol like '11%' or  symbol like '12%') and symbol not in (select * from ( select symbol from gupiao where symbol like '11%' or  symbol like '12%' order by amount desc  LIMIT 0, 60 ) t)  ",nativeQuery = true)
+    int delNotUse();
+
+
 
     @Query(value = "select MIN(biz_date) as biz_date from(" +
             "select * from biz_calendar where holiday = 1 and biz_date < DATE_FORMAT(NOW(),'%Y-%m-%d') ORDER BY biz_date desc LIMIT 0, ?1 ) t ", nativeQuery = true)
