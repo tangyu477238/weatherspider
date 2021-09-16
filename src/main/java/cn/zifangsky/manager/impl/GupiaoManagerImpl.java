@@ -255,7 +255,7 @@ public class GupiaoManagerImpl implements GupiaoManager {
     public List<Gupiao> listBeforeTime(Integer period) {
         if (period==KlineEnum.K_30M.getId()){
             return gupiaoRepository.listBeforeTime30m(period);
-        } else  if (period==KlineEnum.K_30M.getId()){
+        } else  if (period==KlineEnum.K_5M.getId()){
             return gupiaoRepository.listBeforeTime5m(period);
         }
         return null;
