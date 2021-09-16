@@ -78,6 +78,28 @@ public class TodayTasks {
 
     /////////////////////////////////当天//////K线同步//////////////////////////////////////////////
 
+
+//    /***
+//     * 5m(按信号同步)
+//     */
+//    @Scheduled(cron = "${task.today.kzz.5m}")
+//    public void todayKzzBy5m(){
+//        if ("0".equals(klineTodayOff)) return;
+//        log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+//        List<String> listM5 = gupiaoCanUseRepository.listSyns();
+//        Integer period = KlineEnum.K_5M.getId();
+//        Gupiao gupiao;
+//        for (String symbol : listM5){
+//            gupiao = new Gupiao();
+//            gupiao.setSymbol(symbol);
+//            gupiao.setPeriod(period);
+//            gupiao.setFollowers(1);
+//            gupiaoCodeKlineSender.send(gupiao);
+//        }
+//
+//    }
+
+
     /***
      * 5m
      */
@@ -85,39 +107,9 @@ public class TodayTasks {
     public void todayKzzBy5m(){
         if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        try {
-            List<String> listM5 = gupiaoCanUseRepository.listSyns();
-            Integer period = KlineEnum.K_5M.getId();
-            Gupiao gupiao;
-            for (String symbol : listM5){
-                gupiao = new Gupiao();
-                gupiao.setSymbol(symbol);
-                gupiao.setPeriod(period);
-                gupiao.setFollowers(1);
-                gupiaoCodeKlineSender.send(gupiao);
-            }
+        TodayByKline(KlineEnum.K_5M.getId());
 
-        }catch (Exception e){log.debug(e.toString());}
     }
-
-
-//    /***
-//     * 上级出现信号后再同步数
-//     */
-//    public class TodayBuyRunnable implements Runnable{
-//        private Integer period;
-//        public TodayBuyRunnable(Integer period){
-//            this.period = period;
-//        }
-//        @Override
-//        public void run(){
-//            List<String> list = gupiaoCanUseRepository.listSyns();
-//            Collections.shuffle(list);
-//            for (String symbol : list){
-//                dongfangManager.getKline(symbol ,period,true,true);
-//            }
-//        }
-//    }
 
 
 
@@ -128,9 +120,7 @@ public class TodayTasks {
     public void todayKzzBy30m(){
         if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-        Integer period = KlineEnum.K_30M.getId();
-        List<Gupiao> list = gupiaoManager.listBeforeTime(period);
-        TodayByKline(period, list);
+        TodayByKline(KlineEnum.K_30M.getId());
     }
 
 
@@ -139,8 +129,9 @@ public class TodayTasks {
      * 仅仅同步数据
      * 当天数据同步线程
      */
-    public void TodayByKline(Integer period, List<Gupiao> list){
+    public void TodayByKline(Integer period){
         try {
+            List<Gupiao> list = gupiaoManager.listBeforeTime(period);
             for (Gupiao gupiao : list){
                 gupiao.setPeriod(period);
                 gupiao.setFollowers(1); //当天
@@ -180,7 +171,6 @@ public class TodayTasks {
     public void kzzByDay(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-
         gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1D.getId());
 
     }
@@ -205,7 +195,6 @@ public class TodayTasks {
     public void kzzBy30m(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("----------------kzzBy30m，Date：{0}---------------------",DateTimeUtil.formatTimetoString(new Date())));
-
         gupiaoManager.sysnKzzKlineAll(KlineEnum.K_30M.getId());
 
     }

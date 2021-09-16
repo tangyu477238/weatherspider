@@ -1,7 +1,6 @@
 package cn.zifangsky.repository;
 
 import cn.zifangsky.model.Gupiao;
-import cn.zifangsky.model.GupiaoKline5m;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -54,7 +53,7 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
 
     @Query(value = "select s.* from gupiao s " +
             " inner join v_before_5m_time b on 1= 1" +
-            " inner join gupiao_kline_5m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
+            " left join gupiao_kline_5m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
             " where k.symbol is null order by s.total_shares LIMIT 0, 20", nativeQuery = true)
     List<Gupiao> listBeforeTime5m(Integer period);
 
