@@ -133,9 +133,9 @@ public class DongfangManagerImpl implements DongfangManager {
             spider.setDownloader(httpClientDownloader);
         }
         spider.addUrl(getUrl(bondId, period, isToday)); //添加URL
-        log.info(bondId+"---"+period+"--------开始请求------------------------"+DateTimeUtil.formatTimetoString(new Date()));
+//        log.debug(bondId+"---"+period+"--------开始请求------------------------"+DateTimeUtil.formatTimetoString(new Date()));
         spider.thread(1).run();
-        log.debug(bondId+"---"+period+"-------完成退出------------------------"+DateTimeUtil.formatTimetoString(new Date()));
+//        log.debug(bondId+"---"+period+"-------完成退出------------------------"+DateTimeUtil.formatTimetoString(new Date()));
     }
 
 
