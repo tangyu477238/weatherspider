@@ -48,7 +48,7 @@ public class ProxyIpManagerImpl implements ProxyIpManager {
 
 	@Override
 	public List<ProxyIp> selectCanUseALL() {
-		Integer randNum = new Random().nextInt(100);
+		Integer randNum = new Random().nextInt(70);
 		List<ProxyIp> list = proxyIpRepository.listCanUse(randNum);
 		if (!ComUtil.isEmpty(list)){
 			return list;
