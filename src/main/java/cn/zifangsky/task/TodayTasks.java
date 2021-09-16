@@ -80,76 +80,76 @@ public class TodayTasks {
 
     /////////////////////////////////当天//////K线同步//////////////////////////////////////////////
 
+    /***
+     * 5m
+     */
+    @Scheduled(cron = "${task.today.kzz.5m}")
+    public void todayKzzBy5m(){
+        if ("0".equals(klineTodayOff)) return;
+        log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        try {
+            List<String> listM5 = gupiaoCanUseRepository.listSyns();
+            Integer period = KlineEnum.K_5M.getId();
+            Gupiao gupiao;
+            for (String symbol : listM5){
+                gupiao = new Gupiao();
+                gupiao.setSymbol(symbol);
+                gupiao.setPeriod(period);
+                gupiao.setFollowers(1);
+                gupiaoCodeKlineSender.send(gupiao);
+            }
+
+        }catch (Exception e){log.debug(e.toString());}
+    }
+
+
 //    /***
-//     * 5m
+//     * 上级出现信号后再同步数
 //     */
-//    @Scheduled(cron = "${task.today.kzz.5m}")
-//    public void todayKzzBy5m(){
-//        if ("0".equals(klineTodayOff)) return;
-//        log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-//        try {
-//            List<String> listM5 = gupiaoCanUseRepository.listSyns();
-//            Integer period = KlineEnum.K_5M.getId();
-//            Gupiao gupiao;
-//            for (String symbol : listM5){
-//                gupiao = new Gupiao();
-//                gupiao.setSymbol(symbol);
-//                gupiao.setPeriod(period);
-//                gupiao.setFollowers(1);
-//                gupiaoCodeKlineSender.send(gupiao);
+//    public class TodayBuyRunnable implements Runnable{
+//        private Integer period;
+//        public TodayBuyRunnable(Integer period){
+//            this.period = period;
+//        }
+//        @Override
+//        public void run(){
+//            List<String> list = gupiaoCanUseRepository.listSyns();
+//            Collections.shuffle(list);
+//            for (String symbol : list){
+//                dongfangManager.getKline(symbol ,period,true,true);
 //            }
-//
-//        }catch (Exception e){log.debug(e.toString());}
+//        }
 //    }
-//
-//
-////    /***
-////     * 上级出现信号后再同步数
-////     */
-////    public class TodayBuyRunnable implements Runnable{
-////        private Integer period;
-////        public TodayBuyRunnable(Integer period){
-////            this.period = period;
-////        }
-////        @Override
-////        public void run(){
-////            List<String> list = gupiaoCanUseRepository.listSyns();
-////            Collections.shuffle(list);
-////            for (String symbol : list){
-////                dongfangManager.getKline(symbol ,period,true,true);
-////            }
-////        }
-////    }
-//
-//
-//
-//    /***
-//     * 30m
-//     */
-//    @Scheduled(cron = "${task.today.kzz.30m}")
-//    public void todayKzzBy30m(){
-//        if ("0".equals(klineTodayOff)) return;
-//        log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-//        Integer period = KlineEnum.K_30M.getId();
-//        List<Gupiao> list = gupiaoManager.listBeforeTime(period);
-//        TodayByKline(period, list);
-//    }
-//
-//
-//
-//    /***
-//     * 仅仅同步数据
-//     * 当天数据同步线程
-//     */
-//    public void TodayByKline(Integer period, List<Gupiao> list){
-//        try {
-//            for (Gupiao gupiao : list){
-//                gupiao.setPeriod(period);
-//                gupiao.setFollowers(1); //当天
-//                gupiaoCodeKlineSender.send(gupiao);
-//            }
-//        }catch (Exception e){log.debug(e.toString());}
-//    }
+
+
+
+    /***
+     * 30m
+     */
+    @Scheduled(cron = "${task.today.kzz.30m}")
+    public void todayKzzBy30m(){
+        if ("0".equals(klineTodayOff)) return;
+        log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
+        Integer period = KlineEnum.K_30M.getId();
+        List<Gupiao> list = gupiaoManager.listBeforeTime(period);
+        TodayByKline(period, list);
+    }
+
+
+
+    /***
+     * 仅仅同步数据
+     * 当天数据同步线程
+     */
+    public void TodayByKline(Integer period, List<Gupiao> list){
+        try {
+            for (Gupiao gupiao : list){
+                gupiao.setPeriod(period);
+                gupiao.setFollowers(1); //当天
+                gupiaoCodeKlineSender.send(gupiao);
+            }
+        }catch (Exception e){log.debug(e.toString());}
+    }
 
 
 
