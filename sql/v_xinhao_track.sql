@@ -21,11 +21,4 @@ from gupiao_xinhao s
 where  (s.sj3>s.sj2 and s.sj2<s.sj1)  and s.type = 1 and s.period = 30
   and s.biz_date >= DATE_FORMAT(ADDDATE(NOW(),-1),'%Y-%m-%d')
 
---  小大小
-union all
-select
-    s.symbol,30 as period,s.biz_date2,s.price2 as loss_price, 1 as stype
-from gupiao_xinhao s
-where  (s.sj3<s.sj2 and s.sj2>s.sj1)  and s.type = 1 and s.period = 30
-  and s.biz_date >= DATE_FORMAT(ADDDATE(NOW(),-1),'%Y-%m-%d')
 ;
