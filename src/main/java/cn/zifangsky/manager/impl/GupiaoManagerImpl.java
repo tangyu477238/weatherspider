@@ -44,6 +44,9 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public void updateTime(String bondId) {
         Gupiao gupiao = gupiaoRepository.findBySymbol(bondId);
+        if (ComUtil.isEmpty(gupiao)){
+            return;
+        }
         gupiao.setTotal_shares(System.currentTimeMillis());
         gupiaoRepository.save(gupiao);
     }
