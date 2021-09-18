@@ -1,5 +1,6 @@
 package cn.zifangsky.mq.consumer;
 
+import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.model.Gupiao;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,19 @@ public class GupiaoCodeKlineReceiver {
 					"10","11","12","13","14","15","16","17","18","19"}) }, containerFactory = "batchContainerFactory")
 	public void handle0(Gupiao gupiao) {
 		try {
+			Runnable run = new GupiaoCodeKlineReceiver.GupiaoKlineCodeRunnable(gupiao);
+			ExecutorProcessPool.getInstance().executeByFixedThread(run);
+		}catch (Exception e){log.debug(e.toString());}
+	}
+
+
+	public class GupiaoKlineCodeRunnable implements Runnable{
+		private Gupiao gupiao;
+		public GupiaoKlineCodeRunnable(Gupiao gupiao){
+			this.gupiao=gupiao;
+		}
+		@Override
+		public void run(){
 			if ("1".equals(klineOff) && gupiao.getFollowers()!=1){
 				log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));
 				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
@@ -41,33 +55,9 @@ public class GupiaoCodeKlineReceiver {
 				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
 				return;
 			}
-		}catch (Exception e){log.debug(e.toString());}
+
+		}
 	}
-
-
-
-//	private void getKlineData(Gupiao gupiao){
-//		try {
-//			Runnable run = new GupiaoCodeKlineReceiver.GupiaoKlineCodeRunnable(gupiao);
-//			ExecutorProcessPool.getInstance().executeByCustomThread(run);
-//		}catch (Exception e){log.debug(e.toString());}
-//	}
-//
-//	public class GupiaoKlineCodeRunnable implements Runnable{
-//		private Gupiao gupiao;
-//		public GupiaoKlineCodeRunnable(Gupiao gupiao){
-//			this.gupiao=gupiao;
-//		}
-//		@Override
-//		public void run(){
-//			if (gupiao.getFollowers()==1){
-//				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
-//			} else {
-//				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
-//			}
-//
-//		}
-//	}
 
 
   
