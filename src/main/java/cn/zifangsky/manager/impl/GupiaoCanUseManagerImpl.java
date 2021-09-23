@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 			gupiaoCanUse.setPeriod(Integer.parseInt(map.get("period").toString()));
 			gupiaoCanUse.setLossPrice(Double.parseDouble(map.get("loss_price").toString()));
 			gupiaoCanUse.setStype(Integer.parseInt(map.get("stype").toString()));
+			gupiaoCanUse.setCreateTime(new Date());
 			canUseList.add(gupiaoCanUse);
 		}
 		addCanUse(canUseList);

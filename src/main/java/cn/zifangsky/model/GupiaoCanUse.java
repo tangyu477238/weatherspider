@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @Entity
@@ -22,6 +23,9 @@ public class GupiaoCanUse implements Serializable {
     @Column(columnDefinition = "double(10,3) default '0.000'")
     private double lossPrice;
     private int stype;
+
+    private Date createTime;
+
 
 
 
