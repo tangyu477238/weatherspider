@@ -60,7 +60,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				String stock_code = stockMap.get("symbol").toString();
 				int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
 				int buyNum = 10; //参考数量
-				BigDecimal lossPrice = new BigDecimal(stockMap.get("lossPrice").toString()).subtract(new BigDecimal(0.5)); //止损
+				BigDecimal lossPrice = new BigDecimal(stockMap.get("lossPrice").toString()); //止损
 				log.info(stock_code+"-lossPrice--"+lossPrice);
 				BigDecimal newPrice = new BigDecimal(0);
 				if(currentNum>0){ //已有数量/但数量不相等，重新挂一遍
@@ -80,7 +80,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				}
 				log.info(stock_code+"-newPrice--"+newPrice);
 				if (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(0.3)) > 0
-						&& (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(1.5))<0) ){
+						&& (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(2))<0) ){
 					String original_price = String.valueOf(newPrice.add(new BigDecimal(0.01))); //获取触发价格
 					loginManager.hungBuy(stock_code, stock_code ,original_price , newPrice.toString(), buyNum);
 				}
