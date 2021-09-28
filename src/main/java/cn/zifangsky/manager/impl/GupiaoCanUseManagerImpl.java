@@ -68,7 +68,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 						continue;
 					}
 					newPrice = new BigDecimal(loginManager.getNewPrice(stock_code)); //获取最新价格
-					loginManager.hungSell(stock_code,stock_code,lossPrice.toString(), ""+newPrice, currentNum);
+					loginManager.hungSell(stock_code,stockMap.get("name").toString(),lossPrice.toString(), ""+newPrice, currentNum);
 					continue;
 				}
 
@@ -82,7 +82,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				if (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(0.3)) > 0
 						&& (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(2))<0) ){
 					String original_price = String.valueOf(newPrice.add(new BigDecimal(0.01))); //获取触发价格
-					loginManager.hungBuy(stock_code, stock_code ,original_price , newPrice.toString(), buyNum);
+					loginManager.hungBuy(stock_code, stockMap.get("name").toString() ,original_price , newPrice.toString(), buyNum);
 				}
 			}
 		} catch (Exception e) {
