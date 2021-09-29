@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 			gupiaoCanUse.setPeriod(Integer.parseInt(map.get("period").toString()));
 			gupiaoCanUse.setLossPrice(Double.parseDouble(map.get("loss_price").toString()));
 			gupiaoCanUse.setStype(Integer.parseInt(map.get("stype").toString()));
+			gupiaoCanUse.setCreateTime(new Date());
 			canUseList.add(gupiaoCanUse);
 		}
 		addCanUse(canUseList);
@@ -58,7 +60,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				String stock_code = stockMap.get("symbol").toString();
 				int currentNum = loginManager.getCurrentAmount(stock_code); //当前数量
 				int buyNum = 10; //参考数量
-				BigDecimal lossPrice = new BigDecimal(stockMap.get("lossPrice").toString()).subtract(new BigDecimal(0.5)); //止损
+				BigDecimal lossPrice = new BigDecimal(stockMap.get("lossPrice").toString()); //止损
 				log.info(stock_code+"-lossPrice--"+lossPrice);
 				BigDecimal newPrice = new BigDecimal(0);
 				if(currentNum>0){ //已有数量/但数量不相等，重新挂一遍
@@ -66,7 +68,7 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 						continue;
 					}
 					newPrice = new BigDecimal(loginManager.getNewPrice(stock_code)); //获取最新价格
-					loginManager.hungSell(stock_code,stock_code,lossPrice.toString(), ""+newPrice, currentNum);
+					loginManager.hungSell(stock_code,stockMap.get("name").toString(),lossPrice.toString(), ""+newPrice, currentNum);
 					continue;
 				}
 
@@ -78,9 +80,9 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 				}
 				log.info(stock_code+"-newPrice--"+newPrice);
 				if (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(0.3)) > 0
-						&& (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(1.5))<0) ){
+						&& (getFudu(newPrice, lossPrice).compareTo(new BigDecimal(2))<0) ){
 					String original_price = String.valueOf(newPrice.add(new BigDecimal(0.01))); //获取触发价格
-					loginManager.hungBuy(stock_code, stock_code ,original_price , newPrice.toString(), buyNum);
+					loginManager.hungBuy(stock_code, stockMap.get("name").toString() ,original_price , newPrice.toString(), buyNum);
 				}
 			}
 		} catch (Exception e) {
