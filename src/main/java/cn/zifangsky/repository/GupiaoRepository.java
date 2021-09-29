@@ -72,7 +72,7 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "delete from gupiao where (symbol like '11%' or  symbol like '12%') and symbol not in (select * from ( select symbol from gupiao where symbol like '11%' or  symbol like '12%' order by amount desc  LIMIT 0, 80 ) t)  ",nativeQuery = true)
+    @Query(value = "delete from gupiao where (symbol like '11%' or  symbol like '12%') and symbol not in (select * from ( select symbol from gupiao where (symbol like '11%' or  symbol like '12%' ) and amount > 0 ) t)  ",nativeQuery = true)
     int delNotUse();
 
 

@@ -107,7 +107,7 @@ public class TodayTasks {
     public void todayKzzBy5m(){
         if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        TodayByKline(KlineEnum.K_5M.getId());
+//        TodayByKline(KlineEnum.K_5M.getId());
 
     }
 
