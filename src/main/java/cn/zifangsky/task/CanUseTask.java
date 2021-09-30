@@ -35,7 +35,7 @@ public class CanUseTask {
     public void todayCanUse(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("开始执行todayCanUse，Date：{0}",  DateTimeUtil.formatDateStr(new Date())));
-        gupiaoCanUseManager.addCanUse();
+//        gupiaoCanUseManager.addCanUse();
     }
 
 
