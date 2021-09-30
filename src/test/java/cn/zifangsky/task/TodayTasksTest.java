@@ -19,7 +19,7 @@ public class TodayTasksTest {
 
     @Test
     public void gupiaoByAll() throws Exception{
-
+        //同步所有数据清单
         todayTasks.gupiaoByAll();
 
     }
