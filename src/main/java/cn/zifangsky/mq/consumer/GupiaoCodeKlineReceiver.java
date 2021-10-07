@@ -2,6 +2,7 @@ package cn.zifangsky.mq.consumer;
 
 import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.manager.DongfangManager;
+import cn.zifangsky.manager.impl.DongfangServiceImpl;
 import cn.zifangsky.model.Gupiao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,9 @@ public class GupiaoCodeKlineReceiver {
 	@Resource
 	private DongfangManager dongfangManager;
 
+	@Resource
+	private DongfangServiceImpl dongfangService;
+
 	/**
 	 * 接收消息并处理
 	 */
@@ -47,12 +51,16 @@ public class GupiaoCodeKlineReceiver {
 		@Override
 		public void run(){
 			if ("1".equals(klineOff) && gupiao.getFollowers()!=1){
-				log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));
-				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
+				log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}",
+						gupiao.getSymbol(), gupiao.getPeriod()));
+//				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
+
+				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod());
 				return;
 			}
 			if ("1".equals(klineTodayOff) && gupiao.getFollowers()==1){
-				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
+//				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
+				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod());
 				return;
 			}
 

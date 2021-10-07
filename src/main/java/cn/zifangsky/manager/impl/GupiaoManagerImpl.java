@@ -132,17 +132,6 @@ public class GupiaoManagerImpl implements GupiaoManager {
                     }).collect(Collectors.toList());
             gupiaoKline5mRepository.saveAll(list); //保存新增数据
         } else if (listBase.get(0).getPeriod()==KlineEnum.K_30M.getId()){
-//            GupiaoKline30m gupiaoKline30m;
-//            List<GupiaoKline30m> list = new ArrayList<>();
-//            for (BaseGupiaoKline kline : listBase){
-//                gupiaoKline30m = new GupiaoKline30m();
-//                BeanUtils.copyProperties(kline, gupiaoKline30m);
-//
-//                String biz_date = DateTimeUtil.getPeriodDate(Double.valueOf(listBase.get(0).getPeriod()));
-//                if (gupiaoKline30m.getBizDate().compareTo(biz_date) <= 0){ //控制
-//                    list.add(gupiaoKline30m);
-//                }
-//            }
             List<GupiaoKline30m> list = listBase.stream()
                 .map((item) -> {
                     GupiaoKline30m gupiaoKline30m = new GupiaoKline30m();

@@ -79,37 +79,37 @@ public class TodayTasks {
     /////////////////////////////////当天//////K线同步//////////////////////////////////////////////
 
 
-//    /***
-//     * 5m(按信号同步)
-//     */
-//    @Scheduled(cron = "${task.today.kzz.5m}")
-//    public void todayKzzBy5m(){
-//        if ("0".equals(klineTodayOff)) return;
-//        log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-//        List<String> listM5 = gupiaoCanUseRepository.listSyns();
-//        Integer period = KlineEnum.K_5M.getId();
-//        Gupiao gupiao;
-//        for (String symbol : listM5){
-//            gupiao = new Gupiao();
-//            gupiao.setSymbol(symbol);
-//            gupiao.setPeriod(period);
-//            gupiao.setFollowers(1);
-//            gupiaoCodeKlineSender.send(gupiao);
-//        }
-//
-//    }
-
-
     /***
-     * 5m
+     * 5m(按信号同步)
      */
     @Scheduled(cron = "${task.today.kzz.5m}")
     public void todayKzzBy5m(){
         if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-//        TodayByKline(KlineEnum.K_5M.getId());
+        List<String> listM5 = gupiaoCanUseRepository.listSyns();
+        Integer period = KlineEnum.K_5M.getId();
+        Gupiao gupiao;
+        for (String symbol : listM5){
+            gupiao = new Gupiao();
+            gupiao.setSymbol(symbol);
+            gupiao.setPeriod(period);
+            gupiao.setFollowers(1);
+            gupiaoCodeKlineSender.send(gupiao);
+        }
 
     }
+
+
+//    /***
+//     * 5m
+//     */
+//    @Scheduled(cron = "${task.today.kzz.5m}")
+//    public void todayKzzBy5m(){
+//        if ("0".equals(klineTodayOff)) return;
+//        log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+//        TodayByKline(KlineEnum.K_5M.getId());
+//
+//    }
 
 
 
@@ -181,9 +181,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.every.kzz.5m}")
     public void kzzBy5m(){
         if ("0".equals(klineOff)) return;
-        
         log.info(MessageFormat.format("kzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-
         gupiaoManager.sysnKzzKlineAll(KlineEnum.K_5M.getId());
 
     }
