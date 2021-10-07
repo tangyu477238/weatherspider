@@ -5,47 +5,26 @@ create view v_buylist_5m as
 
 
 select
-    t.symbol,t.lossPrice,IFNULL(g.`name`,t.symbol) as name
+k.symbol,k.before_date,k.lossPrice ,x2.biz_date,x2.price2 as lossPrice2 ,g.name
 from (
-         select k.symbol,
-                max(k.biz_date)    as biz_date,
-                min(k.down_price2) as lossPrice2,
-                min(k.down_price1) as lossPrice
-         from gupiao_xinhao s
-                  inner join gupiao_kline_5m k
-                             on k.symbol = s.symbol
-                                 and k.before_date2 = s.biz_date2
-                                 and k.down_price2 < k.down_price1
-                                 and k.up_price2 < k.up_price1
-                                 and k.yi_trend = 0
-         where (s.sj4 < s.sj3 and s.sj3 < s.sj2 and s.sj2 > s.sj1)
-           and s.type = 1
-           and s.period = 5
-           and k.biz_date >= DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d')
-         group by k.symbol
-         order by biz_date desc
-     ) t
-         left join gupiao g on g.symbol = t.symbol
-         inner join (
-    select
-        case
-            when DATE_FORMAT(NOW(),'%H')=9 and DATE_FORMAT(NOW(),'%i')<35 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:05')
-            when DATE_FORMAT(NOW(),'%H')=9 and DATE_FORMAT(NOW(),'%i')<40 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:10')
-            when DATE_FORMAT(NOW(),'%H')=9 and DATE_FORMAT(NOW(),'%i')<45 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:15')
-            when DATE_FORMAT(NOW(),'%H')=9 and DATE_FORMAT(NOW(),'%i')<50 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:20')
-            when DATE_FORMAT(NOW(),'%H')=9 and DATE_FORMAT(NOW(),'%i')<55 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:25')
-            when DATE_FORMAT(NOW(),'%H')=9 and DATE_FORMAT(NOW(),'%i')<60 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:30')
+select
+k.symbol,k.before_date,k.lossPrice
+from (
 
-            when DATE_FORMAT(NOW(),'%H')=10 and DATE_FORMAT(NOW(),'%i')<5 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:35')
-            when DATE_FORMAT(NOW(),'%H')=10 and DATE_FORMAT(NOW(),'%i')<10 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:40')
-            when DATE_FORMAT(NOW(),'%H')=10 and DATE_FORMAT(NOW(),'%i')<15 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:45')
-            when DATE_FORMAT(NOW(),'%H')=10 and DATE_FORMAT(NOW(),'%i')<20 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:50')
-            when DATE_FORMAT(NOW(),'%H')=10 and DATE_FORMAT(NOW(),'%i')<25 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 14:55')
-            when DATE_FORMAT(NOW(),'%H')=10 and DATE_FORMAT(NOW(),'%i')<30 then CONCAT(DATE_FORMAT(ADDDATE(NOW(), -1), '%Y-%m-%d'),' 15:00')
-            else DATE_ADD(NOW(), INTERVAL -60 MINUTE)
-            end as biz_date
-    from v_syn_max_bizdate v
+select
+k.symbol,k.before_date,
+k.before_date2,k.after_date,k.after_date2,
+MIN(k.down_price1) as lossPrice
+from gupiao_kline_30m k
+inner join v_syn_max_bizdate b on  k.before_date >= date_add(b.biz_date, interval -2 day)
+where  k.down_price1 > k.down_price2 and k.yi_trend = 0
+-- and k.up_price1>k.up_price2 -- 超过前高 屏蔽
+group by k.symbol,k.before_date,k.before_date2,k.after_date,k.after_date2
+) k
+inner join gupiao_xinhao x1 on  x1.type = 1 and x1.period = 30  and k.symbol = x1.symbol and k.before_date2 = x1.biz_date2   and ( x1.sj3 < x1.sj2 and x1.sj2 > x1.sj1)
 
-) m
-where t.biz_date >= m.biz_date
+) k
+inner join gupiao_xinhao x2 on  x2.type = 1 and x2.period = 5   and k.symbol = x2.symbol and x2.biz_date2>k.before_date and (x2.sj4 < x2.sj3 and x2.sj3 < x2.sj2 and x2.sj2 > x2.sj1)
+inner join gupiao g on g.symbol = k.symbol
+
 
