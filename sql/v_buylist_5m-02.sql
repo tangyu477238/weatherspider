@@ -5,7 +5,7 @@ create view v_buylist_5m as
 
 
 select
-k.symbol,k.before_date,k.lossPrice ,x2.biz_date,x2.price2 as lossPrice2 ,g.name
+k.symbol,k.before_date,min(k.lossPrice) as lossPrice ,max(x2.biz_date) as biz_date, min(x2.price2) as lossPrice2 ,g.name
 from (
 select
 k.symbol,k.before_date,k.lossPrice
@@ -26,5 +26,7 @@ inner join gupiao_xinhao x1 on  x1.type = 1 and x1.period = 30  and k.symbol = x
 ) k
 inner join gupiao_xinhao x2 on  x2.type = 1 and x2.period = 5   and k.symbol = x2.symbol and x2.biz_date2>k.before_date and (x2.sj4 < x2.sj3 and x2.sj3 < x2.sj2 and x2.sj2 > x2.sj1)
 inner join gupiao g on g.symbol = k.symbol
+
+group by k.symbol,k.before_date ,g.name
 
 
