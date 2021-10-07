@@ -54,13 +54,12 @@ public class GupiaoCodeKlineReceiver {
 				log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}",
 						gupiao.getSymbol(), gupiao.getPeriod()));
 //				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
-
-				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod());
+				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod(),true,false);
 				return;
 			}
 			if ("1".equals(klineTodayOff) && gupiao.getFollowers()==1){
 //				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
-				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod());
+				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
 				return;
 			}
 

@@ -5,6 +5,7 @@ package cn.zifangsky.common;
 import cn.zifangsky.enums.DongfangEnum;
 import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.login.StockUtil;
+import cn.zifangsky.model.ProxyIp;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -60,14 +61,18 @@ public class HttpMethodUtil {
 
     }
 
-    public static String doGet(String url){
+    public static String doGet(String url, ProxyIp proxyIp){
         StringBuffer sbf = new StringBuffer();
         HttpURLConnection conn = null;
         BufferedReader br = null;
         String content = null;
         try{
             URL u = new URL(url);
-            conn = (HttpURLConnection)u.openConnection();
+            if (ComUtil.isEmpty(proxyIp)) {
+                conn = (HttpURLConnection) u.openConnection();
+            } else {
+                conn = (HttpURLConnection)u.openConnection(getProxy(proxyIp));
+            }
             conn.setReadTimeout(2000);
             conn.setConnectTimeout(2000);
             conn.setRequestProperty("accept", "*/*");
@@ -93,8 +98,15 @@ public class HttpMethodUtil {
         }
         return sbf.toString();
     }
-    public static Proxy getProxy(String ip, Integer port){
-        InetSocketAddress proxyAddr = new InetSocketAddress(ip, port);
+
+
+    public static String doGet(String url){
+        return doGet(url,null);
+    }
+
+
+    public static Proxy getProxy(ProxyIp proxyIp){
+        InetSocketAddress proxyAddr = new InetSocketAddress(proxyIp.getIp(), proxyIp.getPort());
         Proxy proxy = new Proxy(Proxy.Type.HTTP, proxyAddr);
         return proxy;
     }

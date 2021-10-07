@@ -3,7 +3,9 @@ package cn.zifangsky.manager.impl;
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.HttpMethodUtil;
+import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.BaseGupiaoKline;
+import cn.zifangsky.model.ProxyIp;
 import cn.zifangsky.repository.GupiaoRepository;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -22,14 +24,25 @@ public class DongfangServiceImpl {
     @Resource
     private GupiaoRepository gupiaoRepository;
 
-    public void getKine(String bondId, Integer period){
+    @Resource(name="proxyIpManager")
+    private ProxyIpManager proxyIpManager;
+
+    public void getKine(String bondId, Integer period, boolean isProxy, boolean isToday){
 
         try {
-            Integer num = HttpMethodUtil.getBizdate(period);
-            String beg = gupiaoRepository.getBizDate(num).replace("-","");
-            beg = DateTimeUtil.formatDateStr(DateTimeUtil.addDays(new Date(),-1000),"yyyyMMdd");
+            if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //非当天运行,且最新一天有数据，则不进行
+                return;
+            }
+            if (isToday && !ComUtil.isEmpty(gupiaoManager.getBeforeTime(bondId, period))){ //当天运行,且前一个时间段已同步，则不进行
+                return;
+            }
+            String beg = DateTimeUtil.formatDateStr(new Date(),"yyyyMMdd");
+            if (!isToday){
+                Integer num = HttpMethodUtil.getBizdate(period);
+                beg = gupiaoRepository.getBizDate(num).replace("-","");
+            }
             String klineUrl = HttpMethodUtil.getUrl(bondId, period, beg);
-            String result = HttpMethodUtil.doGet(klineUrl);
+            String result = HttpMethodUtil.doGet(klineUrl, proxyIpManager.selectRandomIP());
             if (ComUtil.isEmpty(result)){
                 return;
             }
