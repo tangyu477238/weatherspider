@@ -16,7 +16,13 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
             " where c.symbol is null", nativeQuery = true)
     List<Map<String, Object>> listCanUseView();
 
-    @Query(value = " select distinct c.symbol from gupiao_can_use c inner join v_syn_max_bizdate b on  c.biz_date >= date_add(b.biz_date, interval -2 day) ", nativeQuery = true)
+    @Query(value = " select distinct c.symbol from gupiao_can_use c " +
+            "inner join (\n" +
+            "    select  MIN(biz_date) as biz_date  from (\n" +
+            "        select c.biz_date from v_syn_max_bizdate b\n" +
+            "        inner join biz_calendar c on c.biz_date <= b.biz_date and c.holiday = 1\n" +
+            "        order by biz_date desc  LIMIT 0, 3 ) t\n" +
+            ") b on  c.biz_date >= b.biz_date ", nativeQuery = true)
     List<String> listSyns();
 
     @Modifying
