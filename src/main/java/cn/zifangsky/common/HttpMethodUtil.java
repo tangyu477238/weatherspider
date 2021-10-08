@@ -9,10 +9,7 @@ import cn.zifangsky.model.ProxyIp;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
+import java.net.*;
 import java.util.Date;
 @Slf4j
 public class HttpMethodUtil {
@@ -83,6 +80,8 @@ public class HttpMethodUtil {
                     sbf.append(content);
                 }
             }
+        } catch (SocketTimeoutException e) {
+            doGet(url);
         } catch(Exception e) {
 //            e.printStackTrace();
             log.info(e.toString());
@@ -129,7 +128,7 @@ public class HttpMethodUtil {
                 .append("&fqt=1&secid=").append(exchange_type).append(".").append(bondId)
                 .append("&beg=").append(beg)
                 .append("&end=20500000&_=1618930055730");
-        log.info(url.toString());
+//        log.info(url.toString());
         return url.toString();
     }
 
