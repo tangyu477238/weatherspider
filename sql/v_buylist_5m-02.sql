@@ -11,4 +11,6 @@ inner join gupiao_xinhao x2 on  x2.type = 1 and x2.period = 5   and k.symbol = x
 inner join gupiao g on g.symbol = k.symbol
 where x2.price2>=k.loss_price
 group by k.symbol,k.biz_date ,g.name
+
+order by biz_date desc
 ;
