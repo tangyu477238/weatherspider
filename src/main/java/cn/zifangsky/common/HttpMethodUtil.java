@@ -133,7 +133,7 @@ public class HttpMethodUtil {
     }
 
 
-    public static Integer getBizdate(Integer period){
+    public static Integer getBizDate(Integer period){
         int num = 500;
         if (period== KlineEnum.K_5M.getId()){
             num = Double.valueOf(Math.ceil(500/48)).intValue();

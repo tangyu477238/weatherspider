@@ -80,10 +80,8 @@ public class KzzTasks {
     public void deleteAllMyYmd() throws Exception{
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.info(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
-//      心跳线程
+        log.info(MessageFormat.format("清除任务，Date：{0}",FORMAT.format(current)));
         loginManager.clearStockYmd();
-
 
     }
 

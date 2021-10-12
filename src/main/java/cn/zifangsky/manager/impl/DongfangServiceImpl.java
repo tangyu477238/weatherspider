@@ -38,8 +38,9 @@ public class DongfangServiceImpl {
             }
             String beg = DateTimeUtil.formatDateStr(new Date(),"yyyyMMdd");
             if (!isToday){
-                Integer num = HttpMethodUtil.getBizdate(period);
-                beg = gupiaoRepository.getBizDate(num).replace("-","");
+//                Integer num = HttpMethodUtil.getBizdate(period);
+//                beg = gupiaoRepository.getBizDate(num).replace("-","");
+                beg = "20190101";
             }
             String klineUrl = HttpMethodUtil.getUrl(bondId, period, beg);
             String result = HttpMethodUtil.doGet(klineUrl, proxyIpManager.selectRandomIP());
@@ -49,41 +50,46 @@ public class DongfangServiceImpl {
             log.info(period+"------------"+bondId);
             result = result.split("\\(")[1].split("\\)")[0];
             JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
-            String symbol = object.getString("code");
-            JSONArray jsonArray = object.getJSONArray("klines");
-            List<BaseGupiaoKline> list = new ArrayList<>();
-            for (int i = 0; jsonArray != null && i < jsonArray.size(); i++) {
-                try {
-                    String jsonArray1[] = jsonArray.get(i).toString().split(",");
-                    BaseGupiaoKline kzz1 = new BaseGupiaoKline();
-                    kzz1.setSymbol(symbol);
-                    kzz1.setPeriod(period);
-
-                    kzz1.setTimestamp(DateTimeUtil.parseToDate(jsonArray1[0]));
-                    kzz1.setBizDate(jsonArray1[0]);
-
-                    kzz1.setOpen(Double.parseDouble(jsonArray1[1]));
-                    kzz1.setClose(Double.parseDouble(jsonArray1[2]));
-                    kzz1.setHigh(Double.parseDouble(jsonArray1[3]));
-                    kzz1.setLow(Double.parseDouble(jsonArray1[4]));
-
-                    kzz1.setVolume(Double.parseDouble(jsonArray1[5]));
-                    kzz1.setAmount(jsonArray1[6]);
-
-                    kzz1.setPs(jsonArray1[7]);//振幅(百分比)
-                    kzz1.setPercent(Double.parseDouble(jsonArray1[8])); //涨幅(百分比)
-                    kzz1.setChg(Double.parseDouble(jsonArray1[9]));//涨跌
-                    kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
-                    list.add(kzz1);
-                } catch (Exception e) {
-                    log.debug(e.toString());
-                }
-            }
+            List<BaseGupiaoKline> list = listKline(object, period);
             gupiaoManager.saveKlineAll(list);
-            gupiaoManager.updateTime(symbol);
+            gupiaoManager.updateTime(object.getString("code"));
         } catch (Exception e) {
             log.debug(e.toString());
         }
 
+    }
+
+
+    private List<BaseGupiaoKline> listKline(JSONObject object, Integer period){
+        JSONArray jsonArray = object.getJSONArray("klines");
+        List<BaseGupiaoKline> list = new ArrayList<>();
+        for (int i = 0; jsonArray != null && i < jsonArray.size(); i++) {
+            try {
+                String jsonArray1[] = jsonArray.get(i).toString().split(",");
+                BaseGupiaoKline kzz1 = new BaseGupiaoKline();
+                kzz1.setSymbol(object.getString("code"));
+                kzz1.setPeriod(period);
+
+                kzz1.setTimestamp(DateTimeUtil.parseToDate(jsonArray1[0]));
+                kzz1.setBizDate(jsonArray1[0]);
+
+                kzz1.setOpen(Double.parseDouble(jsonArray1[1]));
+                kzz1.setClose(Double.parseDouble(jsonArray1[2]));
+                kzz1.setHigh(Double.parseDouble(jsonArray1[3]));
+                kzz1.setLow(Double.parseDouble(jsonArray1[4]));
+
+                kzz1.setVolume(Double.parseDouble(jsonArray1[5]));
+                kzz1.setAmount(jsonArray1[6]);
+
+                kzz1.setPs(jsonArray1[7]);//振幅(百分比)
+                kzz1.setPercent(Double.parseDouble(jsonArray1[8])); //涨幅(百分比)
+                kzz1.setChg(Double.parseDouble(jsonArray1[9]));//涨跌
+                kzz1.setTurnoverrate(Double.parseDouble(jsonArray1[10])); //换手
+                list.add(kzz1);
+            } catch (Exception e) {
+                log.debug(e.toString());
+            }
+        }
+        return list;
     }
 }
