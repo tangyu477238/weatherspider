@@ -23,6 +23,12 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
 
     @Query(value = "select g.* from gupiao g" +
             " inner join v_syn_max_bizdate v on 1 = 1" +
+            " LEFT JOIN gupiao_kline_15m k on k.symbol = g.symbol and CONCAT(v.biz_date,' 15:00')  =  k.biz_date " +
+            " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
+    List<Gupiao> listkzz15M();
+
+    @Query(value = "select g.* from gupiao g" +
+            " inner join v_syn_max_bizdate v on 1 = 1" +
             " LEFT JOIN gupiao_kline_30m k on k.symbol = g.symbol and CONCAT(v.biz_date,' 15:00')  =  k.biz_date " +
             " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
     List<Gupiao> listkzz30M();
@@ -64,6 +70,11 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
             " where k.symbol = ?1", nativeQuery = true)
     Gupiao getBeforeTime5m(String symbol, Integer period);
 
+    @Query(value = "select s.* from gupiao s " +
+            " inner join v_before_15m_time b on 1= 1" +
+            " inner join gupiao_kline_5m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
+            " where k.symbol = ?1", nativeQuery = true)
+    Gupiao getBeforeTime15m(String symbol, Integer period);
 
     @Modifying
     @Transactional

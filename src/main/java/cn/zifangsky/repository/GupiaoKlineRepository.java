@@ -68,6 +68,12 @@ public interface GupiaoKlineRepository extends JpaRepository<GupiaoKline,Integer
 
 
     @Query(value = "select COUNT(1) as sl " +
+            " from gupiao_kline_15m k " +
+            " inner join v_syn_max_bizdate t on CONCAT(t.biz_date,' 15:00')  =  k.biz_date " +
+            " where k.symbol=?1 ", nativeQuery = true)
+    Integer getKline15mMaxBizdate(String bondId);
+
+    @Query(value = "select COUNT(1) as sl " +
             " from gupiao_kline_30m k " +
             " inner join v_syn_max_bizdate t on CONCAT(t.biz_date,' 15:00')  =  k.biz_date " +
             " where k.symbol=?1 ", nativeQuery = true)

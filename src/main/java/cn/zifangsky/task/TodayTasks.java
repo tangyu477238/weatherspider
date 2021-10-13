@@ -94,7 +94,7 @@ public class TodayTasks {
             gupiao.setSymbol(symbol);
             gupiao.setPeriod(period);
             gupiao.setFollowers(1);
-            gupiaoCodeKlineSender.send(gupiao);
+//            gupiaoCodeKlineSender.send(gupiao);
         }
 
     }
@@ -120,7 +120,7 @@ public class TodayTasks {
     public void todayKzzBy30m(){
         if ("0".equals(klineTodayOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-        TodayByKline(KlineEnum.K_30M.getId());
+//        TodayByKline(KlineEnum.K_30M.getId());
     }
 
 
@@ -197,5 +197,15 @@ public class TodayTasks {
 
     }
 
+    /***
+     * 全量 15分k线
+     */
+    @Scheduled(cron = "${task.every.kzz.15m}")
+    public void kzzBy15m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("----------------kzzBy15m，Date：{0}---------------------",DateTimeUtil.formatTimetoString(new Date())));
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_15M.getId());
+
+    }
 
 }
