@@ -25,8 +25,8 @@ public class HttpMethodUtil {
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
-            conn.setReadTimeout(2000);
-            conn.setConnectTimeout(2000);
+            conn.setReadTimeout(1500);
+            conn.setConnectTimeout(1500);
             conn.setRequestProperty("accept","*/*");
             conn.setRequestProperty("connection","Keep-Alive");
             conn.setRequestProperty("content-Type","application/json");
@@ -58,7 +58,7 @@ public class HttpMethodUtil {
 
     }
 
-    public static String doGet(String url, ProxyIp proxyIp){
+    public static String doGet(String url, ProxyIp proxyIp) {
         StringBuffer sbf = new StringBuffer();
         HttpURLConnection conn = null;
         BufferedReader br = null;
@@ -70,21 +70,20 @@ public class HttpMethodUtil {
             } else {
                 conn = (HttpURLConnection)u.openConnection(getProxy(proxyIp));
             }
-            conn.setReadTimeout(2000);
-            conn.setConnectTimeout(2000);
+            conn.setReadTimeout(1500);
+            conn.setConnectTimeout(1500);
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
+            conn.setRequestProperty("Content-type", "application/json");
+
             if(conn.getResponseCode()==200){
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream(),"utf-8"));
                 while((content=br.readLine())!=null){
                     sbf.append(content);
                 }
             }
-        } catch (SocketTimeoutException e) {
-            doGet(url);
         } catch(Exception e) {
-//            e.printStackTrace();
-            log.info(e.toString());
+            return null;
         } finally{
             if(br!=null){
                 try {
@@ -99,7 +98,8 @@ public class HttpMethodUtil {
     }
 
 
-    public static String doGet(String url){
+    public static String doGet(String url) throws Exception{
+
         return doGet(url,null);
     }
 

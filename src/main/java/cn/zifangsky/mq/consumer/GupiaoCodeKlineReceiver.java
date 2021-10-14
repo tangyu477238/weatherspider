@@ -51,7 +51,7 @@ public class GupiaoCodeKlineReceiver {
 		@Override
 		public void run(){
 			if ("1".equals(klineOff) && gupiao.getFollowers()!=1){
-				log.info(MessageFormat.format("接收到消息，gupiaoCodeKlineReceiver:{0}/{1}",
+				log.info(MessageFormat.format("接收到消息，Receiver:{0}/{1}",
 						gupiao.getSymbol(), gupiao.getPeriod()));
 //				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
 				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod(),true,false);

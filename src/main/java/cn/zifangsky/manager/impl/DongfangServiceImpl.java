@@ -30,6 +30,9 @@ public class DongfangServiceImpl {
     public void getKine(String bondId, Integer period, boolean isProxy, boolean isToday){
 
         try {
+            if (ComUtil.isEmpty(gupiaoRepository.findBySymbol(bondId))){
+                return;
+            }
             if (!isToday && gupiaoManager.getKlineMaxBizdate(bondId, period)){ //非当天运行,且最新一天有数据，则不进行
                 return;
             }
@@ -43,10 +46,7 @@ public class DongfangServiceImpl {
                 beg = "20190101";
             }
             String klineUrl = HttpMethodUtil.getUrl(bondId, period, beg);
-            String result = HttpMethodUtil.doGet(klineUrl, proxyIpManager.selectRandomIP());
-            if (ComUtil.isEmpty(result)){
-                return;
-            }
+            String result = getResult(klineUrl);
             log.info(period+"------------"+bondId);
             result = result.split("\\(")[1].split("\\)")[0];
             JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
@@ -59,6 +59,13 @@ public class DongfangServiceImpl {
 
     }
 
+    private String getResult(String klineUrl) throws Exception{
+        String result = HttpMethodUtil.doGet(klineUrl, proxyIpManager.selectRandomIP());
+        if (ComUtil.isEmpty(result)){
+            result = getResult(klineUrl);
+        }
+        return result;
+    }
 
     private List<BaseGupiaoKline> listKline(JSONObject object, Integer period){
         JSONArray jsonArray = object.getJSONArray("klines");
