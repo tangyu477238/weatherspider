@@ -35,8 +35,8 @@ public class TodayTasks {
     @Value("${mq.kline.off}")
     private String klineOff;
 
-    @Value("${mq.kline.today.off}")
-    private String klineTodayOff;
+//    @Value("${mq.kline.today.off}")
+//    private String klineOff;
 
     @Resource
     private DongfangManager dongfangManager;
@@ -59,7 +59,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.schedule}")
     public void todayByFen(){
-        if ("0".equals(klineTodayOff)) return;
+        if ("0".equals(klineOff)) return;
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
 //        dongfangManager.getToDayKline5M("399006");
     }
@@ -69,7 +69,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.schedule}")
     public void todayByDay(){
-        if ("0".equals(klineTodayOff)) return;
+        if ("0".equals(klineOff)) return;
         log.debug(MessageFormat.format("开始执行dongfeng，Date：{0}", DateTimeUtil.formatTimetoString(new Date())));
 //        dongfangManager.getKline("000002");
     }
@@ -84,7 +84,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.kzz.5m}")
     public void todayKzzBy5m(){
-        if ("0".equals(klineTodayOff)) return;
+        if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         List<String> listM5 = gupiaoCanUseRepository.listSyns();
         Integer period = KlineEnum.K_5M.getId();
@@ -105,7 +105,7 @@ public class TodayTasks {
 //     */
 //    @Scheduled(cron = "${task.today.kzz.5m}")
 //    public void todayKzzBy5m(){
-//        if ("0".equals(klineTodayOff)) return;
+//        if ("0".equals(klineOff)) return;
 //        log.info(MessageFormat.format("todayKzzBy5m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
 //        TodayByKline(KlineEnum.K_5M.getId());
 //
@@ -116,7 +116,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.kzz.15m}")
     public void todayKzzBy15m(){
-        if ("0".equals(klineTodayOff)) return;
+        if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy15m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
         TodayByKline(KlineEnum.K_15M.getId());
     }
@@ -126,7 +126,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.today.kzz.30m}")
     public void todayKzzBy30m(){
-        if ("0".equals(klineTodayOff)) return;
+        if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
 //        TodayByKline(KlineEnum.K_30M.getId());
     }
