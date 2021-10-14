@@ -20,8 +20,8 @@ public class GupiaoCodeKlineReceiver {
 	@Value("${mq.kline.off}")
 	private String klineOff;
 
-	@Value("${mq.kline.today.off}")
-	private String klineTodayOff;
+//	@Value("${mq.kline.today.off}")
+//	private String klineTodayOff;
 
 	@Resource
 	private DongfangManager dongfangManager;
@@ -36,10 +36,13 @@ public class GupiaoCodeKlineReceiver {
 			partitions = { "0","1","2","3","4","5","6","7","8","9",
 					"10","11","12","13","14","15","16","17","18","19"}) }, containerFactory = "batchContainerFactory")
 	public void handle0(Gupiao gupiao) {
+		if ("0".equals(klineOff)) {return;}
 		try {
 			Runnable run = new GupiaoCodeKlineReceiver.GupiaoKlineCodeRunnable(gupiao);
 			ExecutorProcessPool.getInstance().executeByFixedThread(run);
-		}catch (Exception e){log.debug(e.toString());}
+		} catch (Exception e) {
+			log.debug(e.toString());
+		}
 	}
 
 
@@ -50,19 +53,10 @@ public class GupiaoCodeKlineReceiver {
 		}
 		@Override
 		public void run(){
-			if ("1".equals(klineOff) && gupiao.getFollowers()!=1){
-				log.info(MessageFormat.format("接收到消息，Receiver:{0}/{1}",
-						gupiao.getSymbol(), gupiao.getPeriod()));
-//				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod());
-				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod(),true,false);
-				return;
-			}
-			if ("1".equals(klineTodayOff) && gupiao.getFollowers()==1){
-//				dongfangManager.getKline(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
-				dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod(),true,true);
-				return;
-			}
-
+			log.info(MessageFormat.format("接收到消息，Receiver:{0}/{1}", gupiao.getSymbol(), gupiao.getPeriod()));
+			boolean isToday = gupiao.getFollowers()==1 ? true : false; //当天数据获取
+			dongfangService.getKine(gupiao.getSymbol(), gupiao.getPeriod(),true, isToday);
+			return;
 		}
 	}
 
