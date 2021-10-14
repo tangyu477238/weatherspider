@@ -111,7 +111,15 @@ public class TodayTasks {
 //
 //    }
 
-
+    /***
+     * 15m
+     */
+    @Scheduled(cron = "${task.today.kzz.15m}")
+    public void todayKzzBy15m(){
+        if ("0".equals(klineTodayOff)) return;
+        log.info(MessageFormat.format("--------todayKzzBy15m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
+        TodayByKline(KlineEnum.K_15M.getId());
+    }
 
     /***
      * 30m

@@ -42,11 +42,29 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
 
 
 
+
+
+
+
+
     @Query(value = "select s.* from gupiao s " +
             " inner join v_before_30m_time b on 1= 1" +
             " left join gupiao_kline_30m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
             " where k.symbol is null order by s.total_shares LIMIT 0, 20", nativeQuery = true)
     List<Gupiao> listBeforeTime30m(Integer period);
+
+    @Query(value = "select s.* from gupiao s " +
+            " inner join v_before_15m_time b on 1= 1" +
+            " left join gupiao_kline_15m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
+            " where k.symbol is null order by s.total_shares LIMIT 0, 20", nativeQuery = true)
+    List<Gupiao> listBeforeTime15m(Integer period);
+
+    @Query(value = "select s.* from gupiao s " +
+            " inner join v_before_5m_time b on 1= 1" +
+            " left join gupiao_kline_5m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
+            " where k.symbol is null order by s.total_shares LIMIT 0, 20", nativeQuery = true)
+    List<Gupiao> listBeforeTime5m(Integer period);
+
 
 
 
@@ -55,14 +73,6 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
             " inner join gupiao_kline_30m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
             " where k.symbol = ?1", nativeQuery = true)
     Gupiao getBeforeTime30m(String symbol, Integer period);
-
-
-    @Query(value = "select s.* from gupiao s " +
-            " inner join v_before_5m_time b on 1= 1" +
-            " left join gupiao_kline_5m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
-            " where k.symbol is null order by s.total_shares LIMIT 0, 20", nativeQuery = true)
-    List<Gupiao> listBeforeTime5m(Integer period);
-
 
     @Query(value = "select s.* from gupiao s " +
             " inner join v_before_5m_time b on 1= 1" +
@@ -75,6 +85,9 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
             " inner join gupiao_kline_5m k on s.symbol = k.symbol and b.biz_date = k.biz_date" +
             " where k.symbol = ?1", nativeQuery = true)
     Gupiao getBeforeTime15m(String symbol, Integer period);
+
+
+
 
     @Modifying
     @Transactional
