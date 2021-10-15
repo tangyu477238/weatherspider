@@ -121,19 +121,7 @@ public class TodayTasks {
         TodayByKline(KlineEnum.K_15M.getId());
     }
 
-    @Scheduled(cron = "${task.today.kzz.60m}")
-    public void todayKzzBy60m(){
-        if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("--------todayKzzBy60m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-        TodayByKline(KlineEnum.K_60M.getId());
-    }
 
-    @Scheduled(cron = "${task.today.kzz.15m}")
-    public void todayKzzBy120m(){
-        if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("--------todayKzzBy15m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-        TodayByKline(KlineEnum.K_120M.getId());
-    }
     /***
      * 30m
      */
@@ -141,9 +129,22 @@ public class TodayTasks {
     public void todayKzzBy30m(){
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("--------todayKzzBy30m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
-//        TodayByKline(KlineEnum.K_30M.getId());
+        TodayByKline(KlineEnum.K_30M.getId());
     }
 
+    @Scheduled(cron = "${task.today.kzz.60m}")
+    public void todayKzzBy60m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("--------todayKzzBy60m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
+        TodayByKline(KlineEnum.K_60M.getId());
+    }
+
+    @Scheduled(cron = "${task.today.kzz.120m}")
+    public void todayKzzBy120m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("--------todayKzzBy120m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
+        TodayByKline(KlineEnum.K_120M.getId());
+    }
 
 
     /***
@@ -228,5 +229,29 @@ public class TodayTasks {
         gupiaoManager.sysnKzzKlineAll(KlineEnum.K_15M.getId());
 
     }
+
+    /***
+     * 全量 60分k线
+     */
+    @Scheduled(cron = "${task.every.kzz.60m}")
+    public void kzzBy60m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("----------------kzzBy60m，Date：{0}---------------------",DateTimeUtil.formatTimetoString(new Date())));
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_60M.getId());
+
+    }
+
+
+    /***
+     * 全量 120分k线
+     */
+    @Scheduled(cron = "${task.every.kzz.120m}")
+    public void kzzBy120m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("----------------kzzBy120m，Date：{0}---------------------",DateTimeUtil.formatTimetoString(new Date())));
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_120M.getId());
+
+    }
+
 
 }
