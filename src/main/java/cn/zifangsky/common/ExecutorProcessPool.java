@@ -35,7 +35,7 @@ public class ExecutorProcessPool {
      */
     private ExecutorProcessPool(){
         cacheExcecutor = ExecutorServiceFactory.getInstance().createCachedThreadPool();
-        fixedExcecutor = ExecutorServiceFactory.getInstance().createFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        fixedExcecutor = ExecutorServiceFactory.getInstance().createFixedThreadPool(Runtime.getRuntime().availableProcessors() * 20);
         customExcecutor = ExecutorServiceFactory.getInstance().createCustomThreadPool();
         return;
     }

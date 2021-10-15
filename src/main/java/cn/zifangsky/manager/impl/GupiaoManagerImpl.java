@@ -41,6 +41,12 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Resource
     private GupiaoKline30mRepository gupiaoKline30mRepository; //获取30k线对象
 
+    @Resource
+    private GupiaoKline60mRepository gupiaoKline60mRepository; //获取60k线对象
+
+    @Resource
+    private GupiaoKline120mRepository gupiaoKline120mRepository; //获取120k线对象
+
     @Override
     public void updateTime(String bondId) {
         Gupiao gupiao = gupiaoRepository.findBySymbol(bondId);
@@ -147,6 +153,22 @@ public class GupiaoManagerImpl implements GupiaoManager {
                     return gupiaoKline30m;
                 }).collect(Collectors.toList());
             gupiaoKline30mRepository.saveAll(list); //保存新增数据
+        } else if (listBase.get(0).getPeriod()==KlineEnum.K_60M.getId()){
+            List<GupiaoKline60m> list = listBase.stream()
+                    .map((item) -> {
+                        GupiaoKline60m gupiaoKline60m = new GupiaoKline60m();
+                        BeanUtils.copyProperties(item, gupiaoKline60m);
+                        return gupiaoKline60m;
+                    }).collect(Collectors.toList());
+            gupiaoKline60mRepository.saveAll(list); //保存新增数据
+        } else if (listBase.get(0).getPeriod()==KlineEnum.K_120M.getId()){
+            List<GupiaoKline120m> list = listBase.stream()
+                    .map((item) -> {
+                GupiaoKline120m gupiaoKline120m = new GupiaoKline120m();
+                BeanUtils.copyProperties(item, gupiaoKline120m);
+                return gupiaoKline120m;
+            }).collect(Collectors.toList());
+            gupiaoKline120mRepository.saveAll(list); //保存新增数据
         } else if (listBase.get(0).getPeriod()==KlineEnum.K_1D.getId()){
             List<GupiaoKline> list = listBase.stream()
                 .map((item) -> {
@@ -234,6 +256,10 @@ public class GupiaoManagerImpl implements GupiaoManager {
             sl = gupiaoKlineRepository.getKline15mMaxBizdate(bondId);
         } else if (period==KlineEnum.K_30M.getId()){
             sl = gupiaoKlineRepository.getKline30mMaxBizdate(bondId);
+        } else if (period==KlineEnum.K_60M.getId()){
+            sl = gupiaoKlineRepository.getKline60mMaxBizdate(bondId);
+        } else if (period==KlineEnum.K_120M.getId()){
+            sl = gupiaoKlineRepository.getKline120mMaxBizdate(bondId);
         } else if (period==KlineEnum.K_1D.getId()){
             sl = gupiaoKlineRepository.getKlineMaxBizdate(bondId);
         }
@@ -265,18 +291,26 @@ public class GupiaoManagerImpl implements GupiaoManager {
             return gupiaoRepository.listBeforeTime15m(period);
         }else  if (period==KlineEnum.K_5M.getId()){
             return gupiaoRepository.listBeforeTime5m(period);
+        }else  if (period==KlineEnum.K_60M.getId()){
+            return gupiaoRepository.listBeforeTime60m(period);
+        }else  if (period==KlineEnum.K_120M.getId()){
+            return gupiaoRepository.listBeforeTime120m(period);
         }
         return null;
     }
 
     @Override
     public Gupiao getBeforeTime(String symbol, Integer period) {
-        if (period==KlineEnum.K_30M.getId()){
-            return gupiaoRepository.getBeforeTime30m(symbol, period);
-        } else if (period==KlineEnum.K_5M.getId()){
+        if (period==KlineEnum.K_5M.getId()){
             return gupiaoRepository.getBeforeTime5m(symbol, period);
         } else if (period==KlineEnum.K_15M.getId()){
             return gupiaoRepository.getBeforeTime15m(symbol, period);
+        } else if (period==KlineEnum.K_30M.getId()){
+            return gupiaoRepository.getBeforeTime30m(symbol, period);
+        } else if (period==KlineEnum.K_60M.getId()){
+            return gupiaoRepository.getBeforeTime60m(symbol, period);
+        } else if (period==KlineEnum.K_120M.getId()){
+            return gupiaoRepository.getBeforeTime120m(symbol, period);
         }
         return null;
     }

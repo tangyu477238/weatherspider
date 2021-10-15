@@ -121,6 +121,19 @@ public class TodayTasks {
         TodayByKline(KlineEnum.K_15M.getId());
     }
 
+    @Scheduled(cron = "${task.today.kzz.60m}")
+    public void todayKzzBy60m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("--------todayKzzBy60m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
+        TodayByKline(KlineEnum.K_60M.getId());
+    }
+
+    @Scheduled(cron = "${task.today.kzz.15m}")
+    public void todayKzzBy120m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("--------todayKzzBy15m，Date：{0}-------------",DateTimeUtil.formatTimetoString(new Date())));
+        TodayByKline(KlineEnum.K_120M.getId());
+    }
     /***
      * 30m
      */
