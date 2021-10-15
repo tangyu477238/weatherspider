@@ -188,6 +188,10 @@ public class GupiaoManagerImpl implements GupiaoManager {
             return gupiaoKlineRepository.listKlineBizDate15m(bondId, period);
         } else if (period==KlineEnum.K_30M.getId()){
             return gupiaoKlineRepository.listKlineBizDate30m(bondId, period);
+        }  else if (period==KlineEnum.K_60M.getId()){
+            return gupiaoKlineRepository.listKlineBizDate60m(bondId, period);
+        }  else if (period==KlineEnum.K_120M.getId()){
+            return gupiaoKlineRepository.listKlineBizDate120m(bondId, period);
         } else if (period==KlineEnum.K_1D.getId()){
             return gupiaoKlineRepository.listKlineBizDate(bondId, period);
         }
