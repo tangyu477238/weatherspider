@@ -3,9 +3,9 @@ package cn.zifangsky.manager.impl;
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.common.HttpMethodUtil;
+import cn.zifangsky.enums.KlineEnum;
 import cn.zifangsky.manager.ProxyIpManager;
 import cn.zifangsky.model.BaseGupiaoKline;
-import cn.zifangsky.model.ProxyIp;
 import cn.zifangsky.repository.GupiaoRepository;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -52,7 +52,9 @@ public class DongfangServiceImpl {
             JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
             List<BaseGupiaoKline> list = listKline(object, period);
             gupiaoManager.saveKlineAll(list);
-            gupiaoManager.updateTime(object.getString("code"));
+            if (period == KlineEnum.K_15M.getId()){
+                gupiaoManager.updateTime(object.getString("code"));
+            }
         } catch (Exception e) {
             log.debug(e.toString());
         }
