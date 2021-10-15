@@ -21,6 +21,14 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
             " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
     List<Gupiao> listkzz1Day();
 
+
+
+    @Query(value = "select g.* from gupiao g" +
+            " inner join v_syn_max_bizdate v on 1 = 1" +
+            " LEFT JOIN gupiao_kline_5m k on k.symbol = g.symbol and CONCAT(v.biz_date,' 15:00')  =  k.biz_date " +
+            " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
+    List<Gupiao> listkzz5M();
+
     @Query(value = "select g.* from gupiao g" +
             " inner join v_syn_max_bizdate v on 1 = 1" +
             " LEFT JOIN gupiao_kline_15m k on k.symbol = g.symbol and CONCAT(v.biz_date,' 15:00')  =  k.biz_date " +
@@ -35,9 +43,17 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
 
     @Query(value = "select g.* from gupiao g" +
             " inner join v_syn_max_bizdate v on 1 = 1" +
-            " LEFT JOIN gupiao_kline_5m k on k.symbol = g.symbol and CONCAT(v.biz_date,' 15:00')  =  k.biz_date " +
+            " LEFT JOIN gupiao_kline_60m k on k.symbol = g.symbol and CONCAT(v.biz_date,' 15:00')  =  k.biz_date " +
             " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
-    List<Gupiao> listkzz5M();
+    List<Gupiao> listkzz60M();
+
+    @Query(value = "select g.* from gupiao g" +
+            " inner join v_syn_max_bizdate v on 1 = 1" +
+            " LEFT JOIN gupiao_kline_120m k on k.symbol = g.symbol and CONCAT(v.biz_date,' 15:00')  =  k.biz_date " +
+            " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
+    List<Gupiao> listkzz120M();
+
+
 
 
 
