@@ -184,7 +184,16 @@ public class TodayTasks {
         dongfangManager.listKzzData();
     }
 
-
+//    /***
+//     * 全量 周k线
+//     */
+//    @Scheduled(cron = "${task.every.kzz.week}")
+//    public void kzzByWeek(){
+//        if ("0".equals(klineOff)) return;
+//        log.info(MessageFormat.format("KzzByWeek，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+//        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1W.getId());
+//
+//    }
 
     /***
      * 全量 日k线
@@ -192,7 +201,7 @@ public class TodayTasks {
     @Scheduled(cron = "${task.every.kzz.day}")
     public void kzzByDay(){
         if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("todayKzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        log.info(MessageFormat.format("KzzByDay，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1D.getId());
 
     }

@@ -21,7 +21,11 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
             " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
     List<Gupiao> listkzz1Day();
 
-
+    @Query(value = "select g.* from gupiao g" +
+            " inner join v_syn_max_bizdate v on 1 = 1" +
+            " LEFT JOIN gupiao_kline k on k.symbol = g.symbol and v.biz_date = k.biz_date" +
+            " where (g.symbol like '11%' or  g.symbol like '12%') and k.symbol  is null order by g.total_shares LIMIT 0, 20", nativeQuery = true)
+    List<Gupiao> listkzz1Week();
 
     @Query(value = "select g.* from gupiao g" +
             " inner join v_syn_max_bizdate v on 1 = 1" +
@@ -135,7 +139,7 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "delete from gupiao where (symbol like '11%' or  symbol like '12%') and symbol not in (select * from ( select symbol from gupiao where (symbol like '11%' or  symbol like '12%' ) and amount > 20000000 ) t)  ",nativeQuery = true)
+    @Query(value = "delete from gupiao where (symbol like '11%' or  symbol like '12%') and symbol not in (select * from ( select symbol from gupiao where (symbol like '11%' or  symbol like '12%' ) and ps > 3 ) t)  ",nativeQuery = true)
     int delNotUse();
 
 

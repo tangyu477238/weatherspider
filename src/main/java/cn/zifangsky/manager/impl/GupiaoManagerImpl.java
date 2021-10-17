@@ -251,6 +251,8 @@ public class GupiaoManagerImpl implements GupiaoManager {
             return gupiaoRepository.listkzz120M();
         } else if (period==KlineEnum.K_1D.getId()){
             return gupiaoRepository.listkzz1Day();
+        } else if (period==KlineEnum.K_1W.getId()){
+            return gupiaoRepository.listkzz1Day();
         }
         return gupiaoRepository.listkzz();
     }
