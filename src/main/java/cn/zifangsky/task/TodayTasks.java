@@ -94,7 +94,7 @@ public class TodayTasks {
             gupiao.setSymbol(symbol);
             gupiao.setPeriod(period);
             gupiao.setFollowers(1);
-//            gupiaoCodeKlineSender.send(gupiao);
+            gupiaoCodeKlineSender.send(gupiao);
         }
 
     }
