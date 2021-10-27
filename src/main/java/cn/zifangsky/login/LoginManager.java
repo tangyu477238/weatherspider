@@ -56,7 +56,7 @@ public class LoginManager implements ILogin{
     public int getCurrentAmount(String stock_code) throws Exception{
         JSONObject info = queryStockEnablelNum(stock_code);
         if (ComUtil.isEmpty(info)){
-            return 0;
+            return -1;
         }
         return  info.getJSONObject("data").getInt("current_amount");
     }
