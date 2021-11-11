@@ -35,4 +35,8 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
 
     @Query(value = " select * from v_buylist_ma ", nativeQuery = true)
     List<Map<String, Object>> listBuyMa();
+
+    @Query(value = " select * from v_buylist_last_morn ", nativeQuery = true)
+    List<Map<String, Object>> listBuyLastMorn();
+
 }

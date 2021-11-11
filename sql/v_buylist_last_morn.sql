@@ -1,7 +1,7 @@
 
 
-drop view v_buylist_ma;
-create view v_buylist_ma as
+drop view v_buylist_last_morn;
+create view v_buylist_last_morn as
 
 select
     k.symbol,g.name,k.low as lossPrice

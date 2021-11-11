@@ -317,9 +317,11 @@ public class LoginManager implements ILogin{
      * @throws Exception
      */
     public void hungBuyByStoreCode(String stock_code, String stock_name, int entrust_amount) throws Exception{
-        BigDecimal newPrice  = new BigDecimal(getNewPrice(stock_code)); //获取最新价格
+        //获取最新价格
+        BigDecimal newPrice  = new BigDecimal(getNewPrice(stock_code));
+        //获取触发价格
         String original_price = String.valueOf(newPrice.add(new BigDecimal(0.01))
-                .setScale(3, BigDecimal.ROUND_HALF_UP)); //获取触发价格
+                .setScale(3, BigDecimal.ROUND_HALF_UP));
         hungBuy(stock_code, stock_name, original_price, newPrice.toString(), entrust_amount);
     }
 

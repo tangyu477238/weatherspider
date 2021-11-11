@@ -1,9 +1,5 @@
 package cn.zifangsky.manager.impl;
 
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.GupiaoCanUseManager;
 import cn.zifangsky.model.GupiaoCanUse;
@@ -22,7 +18,6 @@ import java.util.Map;
 @Service("gupiaoCanUseManager")
 public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 
-	
 	@Resource
 	private GupiaoCanUseRepository gupiaoCanUseRepository;
 
@@ -122,101 +117,5 @@ public class GupiaoCanUseManagerImpl implements GupiaoCanUseManager {
 //	}
 
 
-	/****
-	 * 检查非需要处理的数据，删除掉
-	 * @param listBuy
-	 * @throws Exception
-	 */
-	private void listSell(List<Map<String,Object>> listBuy) throws Exception{
-		Integer num = 10;
-		//获取条件列表
-		Map ymdMap = loginManager.listMyYmd();
-		//仓数据列表
-		List<JSONObject> list = loginManager.queryMyStockAmount();
-		for (JSONObject jsonObject : list){
-			try {
-				Thread.sleep(20);
-				Integer enable_amount = jsonObject.getInt("enable_amount");
-				String stock_code = jsonObject.getStr("stock_code");
-				String stock_name = jsonObject.getStr("stock_name");
-				if (checkTodayData(listBuy, stock_code)){
-					if (enable_amount > num){
-						loginManager.hungSellByStoreCode(stock_code, stock_name, (enable_amount - num));
-					}
-					continue;
-				}
-				if (stock_code.startsWith("11")||stock_code.startsWith("12")){
-					//已存在hungSell订单
-					loginManager.delYmd(ymdMap, stock_code,"34");
-					loginManager.hungSellByStoreCode(stock_code, stock_name, enable_amount);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
-	@Override
-	public void listMa() throws Exception{
-//		清除所有
-		loginManager.deleteAllMyYmd(null);
-		//待处理清单
-		List<Map<String,Object>> listBuyMa = gupiaoCanUseRepository.listBuyMa();
-		//先处理掉数据
-		listSell(listBuyMa);
-		if(ComUtil.isEmpty(listBuyMa)){
-			return;
-		}
-		//获取条件列表
-		Map ymdMap = loginManager.listMyYmd();
-		for (Map<String,Object> stockMap : listBuyMa) {
-			try {
-				Thread.sleep(50);
-				String stock_code = stockMap.get("symbol").toString();
-				String stock_name = stockMap.get("name").toString();
-				//已存在hungBuy订单
-				loginManager.delYmd(ymdMap,stock_code,"8");
-				if (loginManager.getCurrentAmount(stock_code) > 0){
-					continue;
-				}
-				loginManager.hungBuyByStoreCode(stock_code, stock_name,10);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@Override
-	public void sellMorn() throws Exception{
-		//仓数据列表
-		List<JSONObject> list = loginManager.queryMyStockAmount();
-		for (JSONObject jsonObject : list){
-			try {
-				Thread.sleep(50);
-				Integer enable_amount = jsonObject.getInt("enable_amount");
-				String stock_code = jsonObject.getStr("stock_code");
-				String stock_name = jsonObject.getStr("stock_name");
-				if (stock_code.startsWith("11")||stock_code.startsWith("12")){
-					loginManager.hungSellByStoreCode(stock_code, stock_name, enable_amount);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	/**
-	 *  检查是否是今天更新名单
-	 * @param listBuy
-	 * @param stock_code
-	 * @return
-	 */
-	private boolean checkTodayData(List<Map<String,Object>> listBuy, String stock_code){
-		for (Map<String,Object> stockMap : listBuy) {
-			if (stock_code.equals(stockMap.get("symbol").toString())){
-				return true;
-			}
-		}
-		return false;
-	}
 }

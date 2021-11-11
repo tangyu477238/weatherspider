@@ -9,6 +9,7 @@ import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.DongfangManager;
 import cn.zifangsky.manager.GupiaoCanUseManager;
 import cn.zifangsky.manager.GupiaoManager;
+import cn.zifangsky.manager.LastMornManager;
 import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.repository.GupiaoCanUseRepository;
@@ -54,7 +55,7 @@ public class KzzTasks {
     private LoginManager loginManager;
 
     @Resource
-    private GupiaoManager gupiaoManager;
+    private LastMornManager lastMornManager;
 
     @Resource
     private GupiaoCanUseManager gupiaoCanUseManager;
@@ -93,7 +94,7 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
-        gupiaoCanUseManager.listMa();
+        lastMornManager.listMa();
 
     }
 
@@ -103,7 +104,7 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
-        gupiaoCanUseManager.listMa();
+        lastMornManager.listMa();
 
     }
 
