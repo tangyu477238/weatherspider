@@ -11,6 +11,7 @@ import cn.zifangsky.manager.GupiaoCanUseManager;
 import cn.zifangsky.manager.GupiaoManager;
 import cn.zifangsky.model.BaseGupiaoKline;
 import cn.zifangsky.model.Gupiao;
+import cn.zifangsky.repository.GupiaoCanUseRepository;
 import cn.zifangsky.repository.GupiaoKlineRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +48,7 @@ public class KzzTasks {
     private GupiaoKlineRepository gupiaoKlineRepository;
 
     @Resource
-    private DongfangManager dongfangManager;
+    private GupiaoCanUseRepository gupiaoCanUseRepository;
 
     @Resource
     private LoginManager loginManager;
@@ -68,8 +69,8 @@ public class KzzTasks {
     @Scheduled(cron = "${task.kzz.todayBuy}")
     public void todayBuy(){
         if ("0".equals(consumerOff)) return;
-        log.info(MessageFormat.format("开始执行todayBuy，Date：{0}",  DateTimeUtil.formatDateStr(new Date())));
-        gupiaoCanUseManager.listBuy();
+//        log.info(MessageFormat.format("开始执行todayBuy，Date：{0}",  DateTimeUtil.formatDateStr(new Date())));
+//        gupiaoCanUseManager.listBuy();
     }
 
 
@@ -81,38 +82,31 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("清除任务，Date：{0}",FORMAT.format(current)));
-        loginManager.clearStockYmd();
+//        loginManager.clearStockYmd();
 
     }
 
-//
-//
-//    @Scheduled(cron = "${task.kzz.risedown}")
-//    public void taskYmd() throws Exception{
-//        if ("0".equals(consumerOff)) return;
-//        Date current = new Date();
-//        log.debug(MessageFormat.format("taskYmd，Date：{0}",FORMAT.format(current)));
-//
-//        String listJson = loginManager.queryMyStockAmount (); //数据列表
-//        JSONObject jsonObj = JSONUtil.parseObj(listJson);
-//        if (jsonObj.getInt("total") == 0){
-//            return ;
-//        }
-//        Map map = loginManager.listMyYmd(); //获取条件列表
-//        JSONArray jsonArray = jsonObj.getJSONArray("data");
-//        for (Object object : jsonArray){
-//            JSONObject jsonObject = (JSONObject)object;
-//            Integer enable_amount = jsonObject.getInt("enable_amount");
-//            String stock_code = jsonObject.getStr("stock_code");
-//            String stock_name = jsonObject.getStr("stock_name");
-//            if (enable_amount>0 && (stock_code.startsWith("11")||stock_code.startsWith("12"))){
-//                loginManager.addYmd(map, stock_code, stock_name, enable_amount);
-//            }
-//            if (enable_amount==0){
-//                loginManager.checkAddYmd(map, stock_code, -1 , "34");
-//                loginManager.checkAddYmd(map, stock_code, -1 , "35");
-//                loginManager.checkAddYmd(map, stock_code, -1 , "7");
-//            }
-//        }
-//    }
+
+    //MA数据 14点50进行
+    @Scheduled(cron = "${task.kzz.risedown}")
+    public void listMa() throws Exception{
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
+        gupiaoCanUseManager.listMa();
+
+    }
+
+    //9点35进行
+    @Scheduled(cron = "${task.kzz.morn}")
+    public void sellMorn() throws Exception{
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
+        gupiaoCanUseManager.listMa();
+
+    }
+
+
+
 }

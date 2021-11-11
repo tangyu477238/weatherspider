@@ -3,10 +3,10 @@
 drop view v_buylist_5m;
 create view  v_buylist_5m as
 
-select DISTINCT symbol,biz_date,lossPrice,`name`,period from (
+select DISTINCT symbol,biz_date,lossPrice,`name`,period,type_name from (
 
 select
-    x3.symbol, x3.biz_date, x3.price3  as lossPrice,g.name,x3.period
+    x3.symbol, x3.biz_date, x3.price3  as lossPrice,g.name,x3.period,x3.type_name
 from gupiao_xinhao x3
 inner join gupiao g on g.symbol = x3.symbol and x3.period = 15 and x3.type_name = 'zjrc' and ( x3.sj5 >0 and x3.sj4 < x3.sj3 and x3.sj3 > x3.sj2 and x3.sj2 > x3.sj1)
 inner join (
@@ -26,7 +26,7 @@ inner join (
 union all
 
 select
-    x3.symbol,x3.biz_date,x3.price3  as lossPrice,g.name,x3.period
+    x3.symbol,x3.biz_date,x3.price3  as lossPrice,g.name,x3.period,x3.type_name
 from gupiao_xinhao x3
 inner join gupiao g on g.symbol = x3.symbol and x3.period = 30 and x3.type_name = 'zjrc' and ( x3.sj5 >0 and x3.sj4 < x3.sj3 and x3.sj3 > x3.sj2 and x3.sj2 > x3.sj1)
 inner join (
@@ -47,7 +47,7 @@ union all
 select k.* from (
 
                     select
-                        k.symbol,af.biz_date,x.sj3 as lossPrice,g.name,x.period
+                        k.symbol,af.biz_date,x.sj3 as lossPrice,g.name,x.period,x.type_name
                     from gupiao_xinhao x
                              inner join gupiao g on g.symbol = x.symbol
                              inner join gupiao_kline_15m k on k.biz_date = x.biz_date2 and k.symbol = x.symbol

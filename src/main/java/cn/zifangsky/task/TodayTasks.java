@@ -162,7 +162,16 @@ public class TodayTasks {
         }catch (Exception e){log.debug(e.toString());}
     }
 
+    /***
+     * 日k线
+     */
+    @Scheduled(cron = "${task.today.kzz.day}")
+    public void todaykzzByDay(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("today，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1D.getId());
 
+    }
 
 
 

@@ -1836,7 +1836,7 @@ public class DateTimeUtil {
 
     public static String getPeriodDate(Integer period){
         if (period == KlineEnum.K_1D.getId()){
-            if (DateTimeUtil.getHoursOfDay(new Date()) < 15){
+            if (DateTimeUtil.getHoursOfDay(new Date()) < 14){
                 return DateTimeUtil.formatDateStr(DateTimeUtil.addDays(new Date(),-1),"yyyy-MM-dd");
             }
             return DateTimeUtil.formatDateStr(new Date(),"yyyy-MM-dd");

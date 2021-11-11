@@ -12,4 +12,7 @@ public interface GupiaoCanUseManager  {
 
     void listBuy();
 
+    void listMa() throws Exception;
+
+    void sellMorn() throws Exception;
 }

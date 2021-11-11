@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,7 +30,7 @@ public class LoginManagerTest {
     @Test
     public void deleteAllMyYmd() throws Exception{
 
-        loginManager.deleteAllMyYmd();
+        loginManager.deleteAllMyYmd(null);
 
     }
 
@@ -50,8 +51,8 @@ public class LoginManagerTest {
      */
     @Test
     public void queryMyStockAmount() throws Exception{
-        String json = loginManager.queryMyStockAmount ();
-        log.debug(json);
+        List<JSONObject> list = loginManager.queryMyStockAmount ();
+        log.debug(list.toString());
     }
 
     /***
@@ -60,11 +61,8 @@ public class LoginManagerTest {
      */
     @Test
     public void addRisedownYmd() throws Exception{
-
-        String json = loginManager.queryMyStockAmount ();
-        JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
-        for (Object object : jsonArray){
-            JSONObject jsonObject = (JSONObject)object;
+        List<JSONObject> list = loginManager.queryMyStockAmount ();
+        for (JSONObject jsonObject : list){
             Integer enable_amount = jsonObject.getInt("enable_amount");
             String stock_code = jsonObject.getStr("stock_code");
             String stock_name = jsonObject.getStr("stock_name");

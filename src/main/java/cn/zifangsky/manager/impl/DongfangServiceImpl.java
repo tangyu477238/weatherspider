@@ -52,9 +52,9 @@ public class DongfangServiceImpl {
             JSONObject object = JSONObject.parseObject(result).getJSONObject("data");
             List<BaseGupiaoKline> list = listKline(object, period);
             gupiaoManager.saveKlineAll(list);
-            if (period == KlineEnum.K_15M.getId()){
+//            if (period == KlineEnum.K_15M.getId()){
                 gupiaoManager.updateTime(object.getString("code"));
-            }
+//            }
         } catch (Exception e) {
             log.debug(e.toString());
         }

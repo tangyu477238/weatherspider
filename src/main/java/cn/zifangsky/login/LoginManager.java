@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -42,7 +44,7 @@ public class LoginManager implements ILogin{
     public int getEnableAmount(String stock_code) throws Exception{
         JSONObject info = queryStockEnablelNum(stock_code);
         if (ComUtil.isEmpty(info)){
-            return 0;
+            return -1;
         }
         return info.getJSONObject("data").getInt("enable_amount");
     }
@@ -62,101 +64,13 @@ public class LoginManager implements ILogin{
     }
 
 
-    /****
-     * 补仓
-     * @return
-     * @throws Exception
-     */
-    public int buchongStockNum () throws Exception{
-        String stock_code = "159949";
-        Integer enableAmount = getEnableAmount( stock_code);
-        Integer currentAmount = getCurrentAmount( stock_code);
-        Integer initNum = 4000;
-        if (currentAmount<initNum) { //当前<4000 需要补充仓位
-            return currentAmount-initNum;
-        }
-        //当前(6000)>4000 ,可用仓位(2000) > (6000-4000)
-        if (currentAmount>initNum && enableAmount>0){
-            return enableAmount < (currentAmount - initNum) ? enableAmount:(currentAmount - initNum);
-        }
-        return 0;
-    }
-
-    /****
-     * getNewPriceCyb
-     * 最新价格
-     */
-    public Double getNewPriceCyb() throws Exception{
-        String stock_code = "159949";
-        String stock_name = "创业板50";
-        Double newPrice = Double.parseDouble(getNewPrice(stock_code));
-        return newPrice;
-    }
-
-
-
-
-    /****
-     * 定价卖出
-
-     */
-    public void hungSellCyb ( String original_price, String current_price, int entrust_amount) throws Exception{
-
-        String stock_code = "159949";
-        String stock_name = "创业板50";
-//        String original_price = ""; //触发价格
-//        String current_price = original_price; //当前价格(无效)
-//        int entrust_amount = 2000; //委托数
-
-        hungSell(stock_code, stock_name, original_price, current_price, entrust_amount );
-    }
-
-    /****
-     * 挂单买入
-
-     */
-    public void hungBuyCyb ( String original_price, String current_price,int entrust_amount) throws Exception{
-
-        String stock_code = "159949";
-        String stock_name = "创业板50";
-//        String original_price = original_price; //触发价格
-//        String current_price = current_price; //当前价格
-//        int entrust_amount = 2000; //委托数
-
-        hungBuy(stock_code, stock_name, original_price, current_price, entrust_amount );
-    }
-
-    /***
-     * 创建创业板表格
-     * @param base_price
-     * @return
-     * @throws Exception
-     */
-    public String gridYmdCyb (String base_price) throws Exception{
-        String stock_code = "159949";
-        String stock_name = "创业板50";
-//        String base_price  = "1.500"; //基准价格
-        String lower_limit = "1.000";
-        String upper_limit = "2.000";
-        String increase = "1.00";
-        String decrease = "1.00";
-        String close_after_entrust_failure= "false";
-
-        String current_price= base_price;
-        int position_upper_limit=10000;
-        int position_lower_limit=1000;
-        int entrust_amount = 1000; //委托数
-        String json = gridYmd( stock_code,  stock_name,  base_price, lower_limit, upper_limit,increase, decrease, close_after_entrust_failure,
-                current_price,  position_upper_limit,  position_lower_limit,  entrust_amount );
-        return JSONUtil.parseObj(json).getStr("data");
-    }
 
 
     /****
      * getNewPrice
-
+     * 获取最新价格
      */
-    public String getNewPrice(String stock_code) throws Exception{
+    public String getNewPrice(String stock_code){
         int exchange_type =  StockUtil.isShenshi(stock_code)  ? 2 : 1; //深/沪
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/getCodeInfosByExchangeType?codes="+stock_code+"."+exchange_type;
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
@@ -197,29 +111,45 @@ public class LoginManager implements ILogin{
      * @return
      * @throws Exception
      */
-    public String queryMyStockAmount () throws Exception{
-
+    public List<JSONObject> queryMyStockAmount() throws Exception{
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryMyStockAmount?"+getAccountInfo()+getImeiInfo();
         log.debug("");
         log.debug(url);
         log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
-        log.debug(httpOrgCreateTestRtn);
-        return httpOrgCreateTestRtn;
+        JSONObject jsonObj = JSONUtil.parseObj(httpOrgCreateTestRtn);
+        List<JSONObject> list = new ArrayList<>();
+        if (jsonObj.getInt("total") == 0){
+            return list;
+        }
+        JSONArray jsonArray = jsonObj.getJSONArray("data");
+        for (Object object : jsonArray){
+            JSONObject jsonObject = (JSONObject)object;
+            Integer enable_amount = jsonObject.getInt("enable_amount");
+            if(enable_amount == 0){
+                continue;
+            }
+            list.add(jsonObject);
+        }
+        return list;
     }
 
     /***
-     * 清除任务
+     * 清除所有或指定任务
      * @throws Exception
      */
-    public void deleteAllMyYmd () throws Exception{
+    public void deleteAllMyYmd(String strategyId) throws Exception{
         String json = queryMyYmdForPage();
         JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
         for (Object object : jsonArray){
             JSONObject jsonObject = (JSONObject)object;
             String ymdId = jsonObject.getJSONObject("ymd_base").getStr("ymd_id");
             String strategy_id = jsonObject.getJSONObject("ymd_base").getStr("strategy_id");
-            if ("34".equals(strategy_id)){
+            if (ComUtil.isEmpty(strategyId)){
+                deleteYmd(ymdId);
+                continue;
+            }
+            if (strategyId.equals(strategy_id)){
                 deleteYmd(ymdId);
             }
         }
@@ -232,7 +162,8 @@ public class LoginManager implements ILogin{
      * @throws Exception
      */
     public void clearStockYmd() throws Exception{
-        Map<String, String> ymdMap = listMyYmd(); //获取条件列表
+        //获取条件列表
+        Map<String, String> ymdMap = listMyYmd();
         ymdMap.forEach((k, v) -> {
             try {
                 String stock_code = k.split("_")[0];
@@ -368,7 +299,7 @@ public class LoginManager implements ILogin{
      * @return
      * @throws Exception
      */
-    public String deleteYmd(String ymd_id ) throws Exception{
+    public String deleteYmd(String ymd_id) throws Exception{
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/deleteYmd?ymd_id="+ymd_id+"&is_delete=0"
                 +"&"+getAccountInfo() +getImeiInfo();
@@ -378,6 +309,19 @@ public class LoginManager implements ILogin{
         return httpOrgCreateTestRtn;
     }
 
+    /***
+     * 按单个产品买入
+     * @param stock_code
+     * @param stock_name
+     * @param entrust_amount
+     * @throws Exception
+     */
+    public void hungBuyByStoreCode(String stock_code, String stock_name, int entrust_amount) throws Exception{
+        BigDecimal newPrice  = new BigDecimal(getNewPrice(stock_code)); //获取最新价格
+        String original_price = String.valueOf(newPrice.add(new BigDecimal(0.01))
+                .setScale(3, BigDecimal.ROUND_HALF_UP)); //获取触发价格
+        hungBuy(stock_code, stock_name, original_price, newPrice.toString(), entrust_amount);
+    }
 
     /****
      * 挂单买入
@@ -424,7 +368,7 @@ public class LoginManager implements ILogin{
      * @throws Exception
      */
     public String hungSell(String stock_code, String stock_name, String original_price, String current_price,
-                                 int entrust_amount ) throws Exception{
+                                 int entrust_amount) throws Exception{
 
         String entrust_price_mode = "BuyPrice5"; //即时价格 NewPrice
 
@@ -439,6 +383,19 @@ public class LoginManager implements ILogin{
         return httpOrgCreateTestRtn;
     }
 
+    /***
+     * 根据产品编码，卖出指定数量
+     * @param stock_code
+     * @param stock_name
+     * @param enable_amount
+     * @throws Exception
+     */
+    public void hungSellByStoreCode(String stock_code, String stock_name, Integer enable_amount) throws Exception{
+        BigDecimal newPrice  = new BigDecimal(getNewPrice(stock_code)); //获取最新价格
+        String original_price = String.valueOf(newPrice.subtract(new BigDecimal(-0.01))
+                .setScale(3, BigDecimal.ROUND_HALF_UP)); //获取触发价格
+        hungSell(stock_code, stock_name, original_price, newPrice.toString(), enable_amount);
+    }
 
 
 
