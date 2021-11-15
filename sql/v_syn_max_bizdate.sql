@@ -29,11 +29,9 @@ select
     max(if(num = 21,biz_date,null)) biz_date20,
     max(if(num = 22,biz_date,null)) biz_date21
 from (
-
-    select biz_date,ROW_NUMBER() OVER(PARTITION BY c.holiday order by biz_date desc) AS num
+     select
+         biz_date,ROW_NUMBER() OVER(PARTITION BY c.holiday order by biz_date desc) AS num
      from biz_calendar  c
      where c.holiday = 1
-   and c.biz_date <= IF(date_format(now(),'%Y-%m-%d %H:%i') < date_format(now(),'%Y-%m-%d %09:%25'), date_format(ADDDATE(NOW(),0 ),'%Y-%m-%d'), date_format(ADDDATE(NOW(),1),'%Y-%m-%d'))
-
-
-) t
+       and c.biz_date <= IF(date_format(now(),'%H:%i') < '09:25', CURDATE(), ADDDATE(CURDATE(),if(date_format(now(),'%w')=5,3,1)))
+ ) t

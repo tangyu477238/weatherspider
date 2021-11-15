@@ -77,14 +77,13 @@ public class KzzTasks {
 
 
 
-    // 清除任务
+    // 定时
     @Scheduled(cron = "${task.kzz.delAll}")
     public void deleteAllMyYmd() throws Exception{
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.info(MessageFormat.format("清除任务，Date：{0}",FORMAT.format(current)));
-//        loginManager.clearStockYmd();
-
+        log.info(MessageFormat.format("定时任务，Date：{0}",FORMAT.format(current)));
+        loginManager.queryMyStockAmount();
     }
 
 

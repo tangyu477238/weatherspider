@@ -181,7 +181,16 @@ public class TodayTasks {
 
 
     /////////////////////////////////一天一次///////////全量数据同步/////////////////////////////////////////
-
+    /***
+     * all_temp 名称列表
+     */
+    @Scheduled(cron = "${task.every.gupiao.all_temp}")
+    public void gupiaoByAllTemp(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("all_temp，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        gupiaoRepository.delKzzAll();
+        dongfangManager.listKzzData();
+    }
     /***
      * 全量 名称列表
      */
