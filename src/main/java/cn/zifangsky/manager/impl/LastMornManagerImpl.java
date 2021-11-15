@@ -17,8 +17,8 @@ import java.util.Map;
 @Service("lastMornManagerImpl")
 public class LastMornManagerImpl implements LastMornManager {
 
-	@Value("${cczq.useNum}")
-	private Integer useNum ;
+	@Value("${cczq.hs_openid}")
+	private String hs_openid ;
 
 	@Resource
 	private GupiaoCanUseRepository gupiaoCanUseRepository;
@@ -43,12 +43,14 @@ public class LastMornManagerImpl implements LastMornManager {
 				Integer enable_amount = jsonObject.getInt("enable_amount");
 				String stock_code = jsonObject.getStr("stock_code");
 				String stock_name = jsonObject.getStr("stock_name");
-				if (checkTodayData(listBuy, stock_code)){
+				Integer useNum = getTodayData(listBuy, stock_code);
+				if (useNum > 0){
 					if (enable_amount > useNum){
 						loginManager.hungSellByStoreCode(stock_code, stock_name, (enable_amount - useNum));
 					}
 					continue;
 				}
+
 				if (stock_code.startsWith("11")||stock_code.startsWith("12")){
 					//已存在hungSell订单
 					loginManager.delYmd(ymdMap, stock_code,"34");
@@ -65,7 +67,7 @@ public class LastMornManagerImpl implements LastMornManager {
 //		清除所有
 		loginManager.deleteAllMyYmd(null);
 		//待处理清单
-		List<Map<String,Object>> listBuyMa = gupiaoCanUseRepository.listBuyLastMorn();
+		List<Map<String,Object>> listBuyMa = gupiaoCanUseRepository.listBuyLastMorn(hs_openid);
 		//先处理掉数据
 		listSell(listBuyMa);
 		if(ComUtil.isEmpty(listBuyMa)){
@@ -78,12 +80,13 @@ public class LastMornManagerImpl implements LastMornManager {
 				Thread.sleep(50);
 				String stock_code = stockMap.get("symbol").toString();
 				String stock_name = stockMap.get("name").toString();
+				Double useNum = Double.parseDouble(stockMap.get("num").toString());
 				//已存在hungBuy订单
 				loginManager.delYmd(ymdMap,stock_code,"8");
 				if (loginManager.getCurrentAmount(stock_code) > 0){
 					continue;
 				}
-				loginManager.hungBuyByStoreCode(stock_code, stock_name,useNum);
+				loginManager.hungBuyByStoreCode(stock_code, stock_name, useNum.intValue());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -110,17 +113,18 @@ public class LastMornManagerImpl implements LastMornManager {
 	}
 
 	/**
-	 *  检查是否是今天更新名单
+	 *  今天更新名单
 	 * @param listBuy
 	 * @param stock_code
 	 * @return
 	 */
-	private boolean checkTodayData(List<Map<String,Object>> listBuy, String stock_code){
+	private Integer getTodayData(List<Map<String,Object>> listBuy, String stock_code){
 		for (Map<String,Object> stockMap : listBuy) {
 			if (stock_code.equals(stockMap.get("symbol").toString())){
-				return true;
+				Double useNum = Double.parseDouble(stockMap.get("num").toString());
+				return useNum.intValue();
 			}
 		}
-		return false;
+		return 0;
 	}
 }
