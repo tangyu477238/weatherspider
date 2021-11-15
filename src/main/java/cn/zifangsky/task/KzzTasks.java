@@ -77,17 +77,36 @@ public class KzzTasks {
 
 
 
-    // 定时
+
+
+    /**
+     * // 定时
+     * @throws Exception
+     */
+    @Scheduled(cron = "${task.kzz.xintiao}")
+    public void xintiao() throws Exception{
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.info(MessageFormat.format("xintiao，Date：{0}",FORMAT.format(current)));
+        loginManager.queryMyStockAmount();
+    }
+
+    /***
+     * // 清除任务
+     * @throws Exception
+     */
     @Scheduled(cron = "${task.kzz.delAll}")
     public void deleteAllMyYmd() throws Exception{
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
-        log.info(MessageFormat.format("定时任务，Date：{0}",FORMAT.format(current)));
-        loginManager.queryMyStockAmount();
+        log.info(MessageFormat.format("清除任务，Date：{0}",FORMAT.format(current)));
+        loginManager.deleteAllMyYmd(null);
     }
 
-
-    //MA数据 14点50进行
+    /**
+     * //MA数据 14点50进行
+     * @throws Exception
+     */
     @Scheduled(cron = "${task.kzz.risedown}")
     public void listMa() throws Exception{
         if ("0".equals(consumerOff)) return;
@@ -97,7 +116,10 @@ public class KzzTasks {
 
     }
 
-    //9点35进行
+    /**
+     * //9点35进行
+     * @throws Exception
+     */
     @Scheduled(cron = "${task.kzz.morn}")
     public void sellMorn() throws Exception{
         if ("0".equals(consumerOff)) return;
