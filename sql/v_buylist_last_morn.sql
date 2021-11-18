@@ -3,7 +3,7 @@
 drop view v_buylist_last_morn;
 create view v_buylist_last_morn as
 select
-    ROUND(c.amount/zjCount/zjPrice,-1) as num,c.account,m.*
+    ROUND(c.amount/zjCount/zjPrice,-1) as num,c.account,ROUND(c.amount/zjCount/zjPrice,-1)*zjPrice as am,m.*
 from (
          select
              k.symbol,g.name,k.low as lossPrice,k.`close` as zjPrice
@@ -25,3 +25,4 @@ inner join (
          inner join biz_buy_amount c  on 1 = 1
          left join biz_buy_qiangshu q on m.symbol = q.symbol
 where q.symbol is null
+order by am desc
