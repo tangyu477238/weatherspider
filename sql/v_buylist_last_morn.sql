@@ -10,7 +10,8 @@ from (
          from gupiao_kline k
                   inner join v_syn_max_bizdate v on v.biz_date = k.biz_date
                   inner join gupiao g on g.symbol = k.symbol
-         where k.percent>-2 and  k.percent<2 and k.symbol like '11%'
+                  left join biz_buy_qiangshu q on g.symbol = q.symbol
+         where k.percent>-2 and  k.percent<2 and k.symbol like '11%' and q.symbol is null
  ) m
 inner join (
     select SUM(zjPrice) as total,COUNT(1) as zjCount from (
@@ -19,10 +20,9 @@ inner join (
           from gupiao_kline k
                    inner join v_syn_max_bizdate v on v.biz_date = k.biz_date
                    inner join gupiao g on g.symbol = k.symbol
-          where k.percent>-2 and  k.percent<2 and k.symbol like '11%'
+                   left join biz_buy_qiangshu q on g.symbol = q.symbol
+          where k.percent>-2 and  k.percent<2 and k.symbol like '11%' and q.symbol is null
       ) x
 ) t on 1 =1
-         inner join biz_buy_amount c  on 1 = 1
-         left join biz_buy_qiangshu q on m.symbol = q.symbol
-where q.symbol is null
+inner join biz_buy_amount c  on 1 = 1
 order by am desc

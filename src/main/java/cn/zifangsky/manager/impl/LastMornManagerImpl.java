@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +69,7 @@ public class LastMornManagerImpl implements LastMornManager {
 		loginManager.deleteAllMyYmd(null);
 		//待处理清单
 		List<Map<String,Object>> listBuyMa = gupiaoCanUseRepository.listBuyLastMorn(hs_openid);
+		Collections.shuffle(listBuyMa);
 		//先处理掉数据
 		listSell(listBuyMa);
 		if(ComUtil.isEmpty(listBuyMa)){
@@ -83,10 +85,15 @@ public class LastMornManagerImpl implements LastMornManager {
 				Double useNum = Double.parseDouble(stockMap.get("num").toString());
 				//已存在hungBuy订单
 				loginManager.delYmd(ymdMap,stock_code,"8");
-				if (loginManager.getCurrentAmount(stock_code) > 0){
+				int num = loginManager.getCurrentAmount(stock_code);
+				if (num==-1){
+					num = 0;
+				}
+				//大于或等于购买数
+				if (num >= useNum){
 					continue;
 				}
-				loginManager.hungBuyByStoreCode(stock_code, stock_name, useNum.intValue());
+				loginManager.hungBuyByStoreCode(stock_code, stock_name, (useNum.intValue()-num));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
