@@ -33,5 +33,8 @@ from (
          biz_date,ROW_NUMBER() OVER(PARTITION BY c.holiday order by biz_date desc) AS num
      from biz_calendar  c
      where c.holiday = 1
-       and c.biz_date <= IF(date_format(now(),'%H:%i') < '09:25', CURDATE(), ADDDATE(CURDATE(),case when date_format(now(),'%w')=5  then 3 when date_format(now(),'%w')=6  then 2  else 1 end ))
+       and c.biz_date <= (case
+        when (date_format(now(),'%w')=0 or date_format(now(),'%w')= 6) then ADDDATE(CURDATE(),case when date_format(now(),'%w')=6  then 2  else 1 end )
+        when date_format(now(),'%H:%i') < '09:25' then CURDATE() else ADDDATE(CURDATE(),case when date_format(now(),'%w')=5  then 3 when date_format(now(),'%w')=6  then 2  else 1 end )
+        end)
  ) t
