@@ -39,4 +39,6 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
     @Query(value = " select * from v_buylist_last_morn where account=?1", nativeQuery = true)
     List<Map<String, Object>> listBuyLastMorn(String account);
 
+    @Query(value = "select token from biz_buy_amount t where account = ?1 ", nativeQuery = true)
+    String getToken(String account);
 }

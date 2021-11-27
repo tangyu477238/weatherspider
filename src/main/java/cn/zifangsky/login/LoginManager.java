@@ -5,11 +5,13 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import cn.zifangsky.common.ComUtil;
 import cn.zifangsky.common.DateTimeUtil;
+import cn.zifangsky.repository.GupiaoCanUseRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -32,9 +34,15 @@ public class LoginManager implements ILogin{
     @Value("${cczq.s_stock_account}")
     private String s_stock_account ;
 
-    @Value("${cczq.access_token}")
-    private String access_token;
+//    @Value("${cczq.access_token}")
+//    private String access_token;
 
+    @Resource
+    private GupiaoCanUseRepository gupiaoCanUseRepository;
+
+    private String getAccessToken(){
+        return gupiaoCanUseRepository.getToken(hs_openid);
+    }
 
     /****
      * 可用仓位
@@ -507,7 +515,7 @@ public class LoginManager implements ILogin{
     //&comp_id=1&hs_openid=xx&access_token=xx&fund_account=xx
     private String getAccountInfo(){
         return "comp_id="+comp_id+"&hs_openid="+hs_openid
-                +"&access_token="+access_token+"&fund_account="+fund_account;
+                +"&access_token="+getAccessToken()+"&fund_account="+fund_account;
     }
     //&cep_type=1&exchange_type=xx&stock_account=xx
     private String getStockAccount(String stock_code){
