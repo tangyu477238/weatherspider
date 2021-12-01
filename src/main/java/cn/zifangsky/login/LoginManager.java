@@ -348,7 +348,7 @@ public class LoginManager implements ILogin{
                                   int entrust_amount ) throws Exception{
 
 
-        String entrust_price_mode = "NewPrice"; //即时价格
+        String entrust_price_mode = "SellPrice5"; //即时价格
 
 
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/hungBuy?stock_code="+stock_code

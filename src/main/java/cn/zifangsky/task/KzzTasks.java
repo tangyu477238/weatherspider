@@ -95,7 +95,7 @@ public class KzzTasks {
     }
 
     /**
-     * //MA数据 14点57进行
+     * //MA数据 14点59进行
      * @throws Exception
      */
     @Scheduled(cron = "${task.kzz.risedown}")
@@ -104,7 +104,7 @@ public class KzzTasks {
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
         int[] hours = {14};
-        int[] minutes = {57, 58, 59};
+        int[] minutes = {59};
         if (!checkRunTime(hours, minutes)){
             return;
         }
