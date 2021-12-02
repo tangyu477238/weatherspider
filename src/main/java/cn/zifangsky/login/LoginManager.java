@@ -121,9 +121,8 @@ public class LoginManager implements ILogin{
      */
     public List<JSONObject> queryMyStockAmount() throws Exception{
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryMyStockAmount?"+getAccountInfo()+getImeiInfo();
-        log.debug("");
+        log.info(hs_openid);
         log.debug(url);
-        log.debug("");
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
         JSONObject jsonObj = JSONUtil.parseObj(httpOrgCreateTestRtn);
         List<JSONObject> list = new ArrayList<>();

@@ -103,9 +103,9 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
-        int[] hours = {14};
-        int[] minutes = {59};
-        if (!checkRunTime(hours, minutes)){
+        String startTime = "14:58:44";
+        String endTime = "15:00:00";
+        if (!checkRunTime(startTime, endTime)){
             return;
         }
         log.info(MessageFormat.format("进行处理，Date：{0}",FORMAT.format(current)));
@@ -122,9 +122,9 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
-        int[] hours = {9};
-        int[] minutes = {35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45};
-        if (!checkRunTime(hours, minutes)){
+        String startTime = "09:34:44";
+        String endTime = "09:45:00";
+        if (!checkRunTime(startTime, endTime)){
             return;
         }
         log.info(MessageFormat.format("进行处理，Date：{0}",FORMAT.format(current)));
@@ -148,6 +148,21 @@ public class KzzTasks {
             return true;
         }
         return false;
+    }
+
+    /***
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws Exception
+     */
+    private boolean checkRunTime(String startTime, String endTime) throws Exception{
+        Date start = DateTimeUtil.parseToDate(DateTimeUtil.formatDateStr(new Date(),
+                "yyyy-MM-dd")+" "+startTime,"yyyy-MM-dd HH:mm:ss");
+        Date end = DateTimeUtil.parseToDate(DateTimeUtil.formatDateStr(new Date(),
+                "yyyy-MM-dd")+" "+endTime,"yyyy-MM-dd HH:mm:ss");
+        return (DateTimeUtil.getSecondsOfTwoDate(new Date(), start)>0) && (DateTimeUtil.getSecondsOfTwoDate(new Date(), end)<0);
     }
 
 }
