@@ -189,7 +189,6 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.every.gupiao.all_1m}")
     public void sysListKzzEvery(){
-        if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("sysAllEvery，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         dongfangManager.sysListKzzEvery();
     }
