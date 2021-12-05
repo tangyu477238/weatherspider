@@ -17,6 +17,7 @@ public interface DongfangManager {
 	void getToDayKline5M(String bondId);
 
 	void listKzzData();
+	void sysListKzzEvery();
 
 
 

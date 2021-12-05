@@ -181,6 +181,21 @@ public class TodayTasks {
 
 
     /////////////////////////////////一天一次///////////全量数据同步/////////////////////////////////////////
+
+    /***
+     *
+     * 1分钟/同步一次
+     * 全部数据
+     */
+    @Scheduled(cron = "${task.every.gupiao.all_1m}")
+    public void sysListKzzEvery(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("sysAllEvery，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        dongfangManager.sysListKzzEvery();
+    }
+
+
+
     /***
      * all_temp 名称列表
      */
