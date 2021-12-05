@@ -37,6 +37,18 @@ public interface GupiaoKlineRepository extends JpaRepository<GupiaoKline,Integer
     @Query(value = "select biz_date as bizDate from gupiao_kline where symbol=?1 and period =?2 order by biz_date desc ", nativeQuery = true)
     List<String> listKlineBizDate(String bondId, Integer period);
 
+    @Query(value = "select biz_date as bizDate from gupiao_kline_1m where symbol=?1 and period =?2 order by biz_date desc ", nativeQuery = true)
+    List<String> listKlineBizDate1m(String bondId, Integer period);
+
+    @Query(value = "select biz_date as bizDate from gupiao_kline_2m where symbol=?1 and period =?2 order by biz_date desc ", nativeQuery = true)
+    List<String> listKlineBizDate2m(String bondId, Integer period);
+
+    @Query(value = "select biz_date as bizDate from gupiao_kline_3m where symbol=?1 and period =?2 order by biz_date desc ", nativeQuery = true)
+    List<String> listKlineBizDate3m(String bondId, Integer period);
+
+    @Query(value = "select biz_date as bizDate from gupiao_kline_4m where symbol=?1 and period =?2 order by biz_date desc ", nativeQuery = true)
+    List<String> listKlineBizDate4m(String bondId, Integer period);
+
     @Query(value = "select biz_date as bizDate from gupiao_kline_5m where symbol=?1 and period =?2 order by biz_date desc ", nativeQuery = true)
     List<String> listKlineBizDate5m(String bondId, Integer period);
 
@@ -59,6 +71,31 @@ public interface GupiaoKlineRepository extends JpaRepository<GupiaoKline,Integer
             " where k.symbol=?1 ", nativeQuery = true)
     Integer getKlineMaxBizdate(String bondId);
 
+
+
+    @Query(value = "select COUNT(1) as sl " +
+            " from gupiao_kline_1m k " +
+            " inner join v_syn_max_bizdate t on CONCAT(t.biz_date,' 15:00')  =  k.biz_date " +
+            " where k.symbol=?1 ", nativeQuery = true)
+    Integer getKline1mMaxBizdate(String bondId);
+
+    @Query(value = "select COUNT(1) as sl " +
+            " from gupiao_kline_2m k " +
+            " inner join v_syn_max_bizdate t on CONCAT(t.biz_date,' 15:00')  =  k.biz_date " +
+            " where k.symbol=?1 ", nativeQuery = true)
+    Integer getKline2mMaxBizdate(String bondId);
+
+    @Query(value = "select COUNT(1) as sl " +
+            " from gupiao_kline_3m k " +
+            " inner join v_syn_max_bizdate t on CONCAT(t.biz_date,' 15:00')  =  k.biz_date " +
+            " where k.symbol=?1 ", nativeQuery = true)
+    Integer getKline3mMaxBizdate(String bondId);
+
+    @Query(value = "select COUNT(1) as sl " +
+            " from gupiao_kline_4m k " +
+            " inner join v_syn_max_bizdate t on CONCAT(t.biz_date,' 15:00')  =  k.biz_date " +
+            " where k.symbol=?1 ", nativeQuery = true)
+    Integer getKline4mMaxBizdate(String bondId);
 
     @Query(value = "select COUNT(1) as sl " +
             " from gupiao_kline_5m k " +

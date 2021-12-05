@@ -225,6 +225,16 @@ public class TodayTasks {
     }
 
     /***
+     * 全量 1分k线
+     */
+    @Scheduled(cron = "${task.every.kzz.1m}")
+    public void kzzBy1m(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("kzzBy1m，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1M.getId());
+
+    }
+    /***
      * 全量 5分k线
      */
     @Scheduled(cron = "${task.every.kzz.5m}")

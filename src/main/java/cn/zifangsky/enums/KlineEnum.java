@@ -3,7 +3,7 @@ package cn.zifangsky.enums;
 
 public enum KlineEnum {
 
-
+    K_1M(1,"1","1分钟"),
     K_5M(5,"5","5分钟"),
     K_15M(15,"15","15分钟"),
     K_30M(30,"30","30分钟"),

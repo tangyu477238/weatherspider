@@ -28,24 +28,25 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Resource
     private GupiaoCodeKlineSender gupiaoCodeKlineSender; //获取k线列表
 
-
     @Resource
     private GupiaoKlineRepository gupiaoKlineRepository; //获取day k线对象
 
+
+    @Resource
+    private GupiaoKline1mRepository gupiaoKline1mRepository; //获取1k线对象
     @Resource
     private GupiaoKline5mRepository gupiaoKline5mRepository; //获取5k线对象
 
+
     @Resource
     private GupiaoKline15mRepository gupiaoKline15mRepository; //获取15k线对象
-
     @Resource
     private GupiaoKline30mRepository gupiaoKline30mRepository; //获取30k线对象
-
     @Resource
     private GupiaoKline60mRepository gupiaoKline60mRepository; //获取60k线对象
-
     @Resource
     private GupiaoKline120mRepository gupiaoKline120mRepository; //获取120k线对象
+
 
     @Override
     public void updateTime(String bondId) {
@@ -129,7 +130,15 @@ public class GupiaoManagerImpl implements GupiaoManager {
         if (ComUtil.isEmpty(listBase)){
             return;
         }
-        if (listBase.get(0).getPeriod()==KlineEnum.K_5M.getId()){
+        if (listBase.get(0).getPeriod()==KlineEnum.K_1M.getId()){
+            List<GupiaoKline1m> list = listBase.stream()
+                    .map((item) -> {
+                        GupiaoKline1m gupiaoKline1m = new GupiaoKline1m();
+                        BeanUtils.copyProperties(item, gupiaoKline1m);
+                        return gupiaoKline1m;
+                    }).collect(Collectors.toList());
+            gupiaoKline1mRepository.saveAll(list); //保存新增数据
+        } else if (listBase.get(0).getPeriod()==KlineEnum.K_5M.getId()){
             List<GupiaoKline5m> list = listBase.stream()
                     .map((item) -> {
                         GupiaoKline5m gupiaoKline5m = new GupiaoKline5m();
@@ -182,7 +191,9 @@ public class GupiaoManagerImpl implements GupiaoManager {
     }
 
     public List<String> listKlineBizDate(String bondId, Integer period) {
-        if (period== KlineEnum.K_5M.getId()){
+        if (period== KlineEnum.K_1M.getId()){
+            return gupiaoKlineRepository.listKlineBizDate1m(bondId, period);
+        } else if (period== KlineEnum.K_5M.getId()){
             return gupiaoKlineRepository.listKlineBizDate5m(bondId, period);
         } else if (period==KlineEnum.K_15M.getId()){
             return gupiaoKlineRepository.listKlineBizDate15m(bondId, period);
@@ -239,9 +250,11 @@ public class GupiaoManagerImpl implements GupiaoManager {
     }
 
     public List<Gupiao> listKzzKline(Integer period) {
-        if (period==KlineEnum.K_5M.getId()){
+        if (period==KlineEnum.K_1M.getId()){
+            return gupiaoRepository.listkzz1M();
+        } else  if (period==KlineEnum.K_5M.getId()){
             return gupiaoRepository.listkzz5M();
-        } else if (period==KlineEnum.K_15M.getId()){
+        } else  if (period==KlineEnum.K_15M.getId()){
             return gupiaoRepository.listkzz15M();
         } else if (period==KlineEnum.K_30M.getId()){
             return gupiaoRepository.listkzz30M();
@@ -260,7 +273,9 @@ public class GupiaoManagerImpl implements GupiaoManager {
     @Override
     public boolean getKlineMaxBizdate(String bondId, Integer period) {
         Integer sl = 0;
-        if (period==KlineEnum.K_5M.getId()){
+        if (period==KlineEnum.K_1M.getId()){
+            sl = gupiaoKlineRepository.getKline1mMaxBizdate(bondId);
+        } else if (period==KlineEnum.K_5M.getId()){
             sl = gupiaoKlineRepository.getKline5mMaxBizdate(bondId);
         } else if (period==KlineEnum.K_15M.getId()){
             sl = gupiaoKlineRepository.getKline15mMaxBizdate(bondId);
