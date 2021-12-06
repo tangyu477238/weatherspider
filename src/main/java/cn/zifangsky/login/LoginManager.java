@@ -327,7 +327,7 @@ public class LoginManager implements ILogin{
         //获取最新价格
         BigDecimal newPrice  = new BigDecimal(getNewPrice(stock_code));
         //获取触发价格
-        String original_price = String.valueOf(newPrice.add(new BigDecimal(0.01))
+        String original_price = String.valueOf(newPrice.add(new BigDecimal(0.001))
                 .setScale(3, BigDecimal.ROUND_HALF_UP));
         hungBuy(stock_code, stock_name, original_price, newPrice.toString(), entrust_amount);
     }
@@ -401,9 +401,12 @@ public class LoginManager implements ILogin{
      */
     public void hungSellByStoreCode(String stock_code, String stock_name, Integer enable_amount) throws Exception{
         BigDecimal newPrice  = new BigDecimal(getNewPrice(stock_code)); //获取最新价格
-        String original_price = String.valueOf(newPrice.subtract(new BigDecimal(-0.01))
+        String original_price = String.valueOf(newPrice.subtract(new BigDecimal(-0.001))
+                .setScale(3, BigDecimal.ROUND_HALF_UP)); //获取触发价格
+        String original_price2 = String.valueOf(newPrice.subtract(new BigDecimal(0.001))
                 .setScale(3, BigDecimal.ROUND_HALF_UP)); //获取触发价格
         hungSell(stock_code, stock_name, original_price, newPrice.toString(), enable_amount);
+        hungSell(stock_code, stock_name, original_price2, newPrice.toString(), enable_amount);
     }
 
 
