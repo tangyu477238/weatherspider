@@ -160,4 +160,9 @@ public interface GupiaoRepository extends JpaRepository<Gupiao,Integer> {
     @Query(value = "select MIN(biz_date) as biz_date from(" +
             "select * from biz_calendar where holiday = 1 and biz_date < DATE_FORMAT(NOW(),'%Y-%m-%d') ORDER BY biz_date desc LIMIT 0, ?1 ) t ", nativeQuery = true)
     String getBizDate(int num);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from gupiao_kline where biz_date = CURDATE() ",nativeQuery = true)
+    int kzzByDayDel();
 }

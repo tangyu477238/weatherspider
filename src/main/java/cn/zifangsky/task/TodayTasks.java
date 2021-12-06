@@ -189,6 +189,7 @@ public class TodayTasks {
      */
     @Scheduled(cron = "${task.every.gupiao.all_1m}")
     public void sysListKzzEvery(){
+        if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("sysAllEvery，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         dongfangManager.sysListKzzEvery();
     }
@@ -226,6 +227,19 @@ public class TodayTasks {
 //        gupiaoManager.sysnKzzKlineAll(KlineEnum.K_1W.getId());
 //
 //    }
+
+
+
+    /***
+     *  删除 day_del
+     */
+    @Scheduled(cron = "${task.every.kzz.day_del}")
+    public void kzzByDayDel(){
+        if ("0".equals(klineOff)) return;
+        log.info(MessageFormat.format("day_del，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        gupiaoRepository.kzzByDayDel();
+
+    }
 
     /***
      * 全量 日k线
