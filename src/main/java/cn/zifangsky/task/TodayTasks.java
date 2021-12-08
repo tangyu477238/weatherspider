@@ -188,9 +188,14 @@ public class TodayTasks {
      * 全部数据
      */
     @Scheduled(cron = "${task.every.gupiao.all_1m}")
-    public void sysListKzzEvery(){
+    public void sysListKzzEvery() throws Exception{
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("sysAllEvery，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
+        String startTime = "09:30:00";
+        String endTime = "15:00:00";
+        if (!DateTimeUtil.checkRunTime(startTime, endTime)){
+            return;
+        }
         dongfangManager.sysListKzzEvery();
     }
 

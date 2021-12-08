@@ -33,7 +33,7 @@ public class GupiaoEveryPipeline implements Pipeline {
 	@Override
 	public void process(ResultItems resultItems, Task task) {
 		List<Gupiao> list = resultItems.get("result");
-		String createTime = DateTimeUtil.formatDateStr(new Date(), DateTimeUtil.FMT_yyyyMMddHHmmss);
+		String createTime = DateTimeUtil.formatDateStr(new Date(), DateTimeUtil.FMT_yyyyMMddHHmm);
 		List<GupiaoEvery> everyList = list.stream().map(x -> {
 			GupiaoEvery gupiaoEveryPipeline = new GupiaoEvery();
 			BeanUtils.copyProperties(x, gupiaoEveryPipeline);

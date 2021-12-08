@@ -1848,6 +1848,22 @@ public class DateTimeUtil {
         }
         return DateTimeUtil.formatDateStr(new Date(),"yyyy-MM-dd HH:"+minuteStr);
     }
+
+    /***
+     * checkRunTime
+     * @param startTime
+     * @param endTime
+     * @return
+     * @throws Exception
+     */
+    public static boolean checkRunTime(String startTime, String endTime) throws Exception{
+        Date start = DateTimeUtil.parseToDate(DateTimeUtil.formatDateStr(new Date(),
+                "yyyy-MM-dd")+" "+startTime,"yyyy-MM-dd HH:mm:ss");
+        Date end = DateTimeUtil.parseToDate(DateTimeUtil.formatDateStr(new Date(),
+                "yyyy-MM-dd")+" "+endTime,"yyyy-MM-dd HH:mm:ss");
+        return (DateTimeUtil.getSecondsOfTwoDate(new Date(), start)>0) && (DateTimeUtil.getSecondsOfTwoDate(new Date(), end)<0);
+    }
+
     public static void main (String str []){
 //        System.out.println(DateTimeUtil.getMonthOfFistDay(2).substring(5,10));
 //        System.out.println(DateTimeUtil.getMonthOfLastDay(2).substring(5,10));

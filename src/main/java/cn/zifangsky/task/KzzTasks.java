@@ -105,12 +105,11 @@ public class KzzTasks {
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
         String startTime = "14:58:44";
         String endTime = "15:00:00";
-        if (!checkRunTime(startTime, endTime)){
+        if (!DateTimeUtil.checkRunTime(startTime, endTime)){
             return;
         }
         log.info(MessageFormat.format("进行处理，Date：{0}",FORMAT.format(current)));
         lastMornManager.listMa();
-
     }
 
     /**
@@ -124,45 +123,15 @@ public class KzzTasks {
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
         String startTime = "09:34:44";
         String endTime = "09:45:00";
-        if (!checkRunTime(startTime, endTime)){
+        if (!DateTimeUtil.checkRunTime(startTime, endTime)){
             return;
         }
         log.info(MessageFormat.format("进行处理，Date：{0}",FORMAT.format(current)));
         lastMornManager.listMa();
-
     }
 
-    /**
-     *  判断时间区间
-     * @param hours
-     * @param minutes
-     * @return
-     */
-    private boolean checkRunTime(int[] hours, int[] minutes){
-        List<Integer> hourList = Ints.asList(hours);
-        int cHours = DateTimeUtil.getHoursOfDay(new Date());
-        List<Integer> minuteList = Ints.asList(minutes);
-        int cMinute = DateTimeUtil.getMinutesOfHour(new Date());
-        //判断是否在范围内
-        if (hourList.contains(cHours) && minuteList.contains(cMinute)){
-            return true;
-        }
-        return false;
-    }
 
-    /***
-     *
-     * @param startTime
-     * @param endTime
-     * @return
-     * @throws Exception
-     */
-    private boolean checkRunTime(String startTime, String endTime) throws Exception{
-        Date start = DateTimeUtil.parseToDate(DateTimeUtil.formatDateStr(new Date(),
-                "yyyy-MM-dd")+" "+startTime,"yyyy-MM-dd HH:mm:ss");
-        Date end = DateTimeUtil.parseToDate(DateTimeUtil.formatDateStr(new Date(),
-                "yyyy-MM-dd")+" "+endTime,"yyyy-MM-dd HH:mm:ss");
-        return (DateTimeUtil.getSecondsOfTwoDate(new Date(), start)>0) && (DateTimeUtil.getSecondsOfTwoDate(new Date(), end)<0);
-    }
+
+
 
 }
