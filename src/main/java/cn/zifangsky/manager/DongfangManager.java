@@ -18,6 +18,7 @@ public interface DongfangManager {
 
 	void listKzzData();
 	void sysListKzzEvery();
+	void sysListKzzBuy();
 
 
 

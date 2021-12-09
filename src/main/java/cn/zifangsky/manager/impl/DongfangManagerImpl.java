@@ -11,6 +11,7 @@ import cn.zifangsky.repository.GupiaoRepository;
 import cn.zifangsky.spider.pipeline.DongfangKlinePipeline;
 import cn.zifangsky.spider.gp.DongfangKlineSpider;
 import cn.zifangsky.spider.gp.DongfangSpider;
+import cn.zifangsky.spider.pipeline.GupiaoBuyPipeline;
 import cn.zifangsky.spider.pipeline.GupiaoEveryPipeline;
 import cn.zifangsky.spider.pipeline.GupiaoPipeline;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,8 @@ public class DongfangManagerImpl implements DongfangManager {
     @Resource
     private GupiaoEveryPipeline gupiaoEveryPipeline;
 
+    @Resource
+    private GupiaoBuyPipeline gupiaoBuyPipeline;
 
     /****
      * 获取当天
@@ -69,6 +72,13 @@ public class DongfangManagerImpl implements DongfangManager {
                 .run();
     }
 
+    @Override
+    public void sysListKzzBuy() {
+        OOSpider.create(new DongfangSpider()).addPipeline(gupiaoBuyPipeline)
+                .addUrl("https://"+System.currentTimeMillis()+".push2.eastmoney.com/api/qt/clist/get?cb=jQuery1124009866857718349142_1628899426141&pn=1&pz=500&po=1&np=1&ut=bd1d9ddb04089700cf9c27f6f7426281&fltt=2&invt=2&fid=f3&fs=b:MK0354&fields=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20&_=1628899426142")
+                .thread(1)
+                .run();
+    }
 
 
     /****

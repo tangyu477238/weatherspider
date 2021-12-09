@@ -326,12 +326,22 @@ public class LoginManager implements ILogin{
     public void hungBuyByStoreCode(String stock_code, String stock_name, int entrust_amount) throws Exception{
         //获取最新价格
         BigDecimal newPrice  = new BigDecimal(getNewPrice(stock_code));
+        BigDecimal val = oddOrEven() ? new BigDecimal(0.001) : new BigDecimal(-0.001);
         //获取触发价格
-        String original_price = String.valueOf(newPrice.add(new BigDecimal(0.001))
+        String original_price = String.valueOf(newPrice.add(val)
                 .setScale(3, BigDecimal.ROUND_HALF_UP));
         hungBuy(stock_code, stock_name, original_price, newPrice.toString(), entrust_amount);
     }
 
+
+    public static boolean oddOrEven() {
+        long a = System.currentTimeMillis();
+        if ((a & 1) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     /****
      * 挂单买入
      * @param stock_code

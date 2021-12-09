@@ -9,7 +9,7 @@ from (
      select
          k.symbol,k.name,k.low as lossPrice,k.`close` as zjPrice
      from gupiao_every k
-              inner join v_syn_max_bizdate v on CONCAT(v.biz_date,' 14:58') = left(k.dividend_yield,16)
+              inner join v_syn_max_bizdate v on CONCAT(v.biz_date,' 14:58') = k.dividend_yield
               left join biz_buy_qiangshu q on k.symbol = q.symbol
      where k.percent>-2 and  k.percent<2 and k.ps > 3 and k.amount>20000000
        and k.symbol like '11%' and q.symbol is null
@@ -20,7 +20,7 @@ from (
           select
               k.symbol,k.name,k.low as lossPrice,k.`close` as zjPrice,k.dividend_yield,k.ps
           from gupiao_every k
-                   inner join v_syn_max_bizdate v on  CONCAT(v.biz_date,' 14:58') = left(k.dividend_yield,16)
+                   inner join v_syn_max_bizdate v on  CONCAT(v.biz_date,' 14:58') = k.dividend_yield
                    left join biz_buy_qiangshu q on k.symbol = q.symbol
           where k.percent>-2 and  k.percent<2 and k.ps > 3 and k.amount>20000000
             and k.symbol like '11%' and q.symbol is null

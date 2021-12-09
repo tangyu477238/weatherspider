@@ -6,7 +6,6 @@ import cn.zifangsky.manager.GupiaoCanUseManager;
 import cn.zifangsky.manager.LastMornManager;
 import cn.zifangsky.repository.GupiaoCanUseRepository;
 import cn.zifangsky.repository.GupiaoKlineRepository;
-import com.google.common.primitives.Ints;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,7 +16,6 @@ import java.text.Format;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 定时任务配置
