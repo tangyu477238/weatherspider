@@ -199,7 +199,7 @@ public class TodayTasks {
         dongfangManager.sysListKzzEvery();
 
         String startTime1 = "14:58:00";
-        String endTime1 = "14:58:00";
+        String endTime1 = "14:58:50";
         if (!DateTimeUtil.checkRunTime(startTime1, endTime1)){
             return;
         }
