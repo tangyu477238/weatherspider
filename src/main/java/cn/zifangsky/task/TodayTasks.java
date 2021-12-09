@@ -192,15 +192,18 @@ public class TodayTasks {
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("sysAllEvery，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
         String startTime = "09:30:00";
-        String endTime = "15:00:00";
+        String endTime = "15:00:50";
         if (!DateTimeUtil.checkRunTime(startTime, endTime)){
             return;
         }
         dongfangManager.sysListKzzEvery();
 
-        String startTime1 = "14:58:00";
-        String endTime1 = "14:58:50";
-        if (!DateTimeUtil.checkRunTime(startTime1, endTime1)){
+        String startTime1 = "09:35:00";
+        String endTime1 = "09:35:50";
+        String startTime2 = "14:58:00";
+        String endTime2 = "14:58:50";
+        if (!DateTimeUtil.checkRunTime(startTime1, endTime1) &&
+                !DateTimeUtil.checkRunTime(startTime2, endTime2)){
             return;
         }
         dongfangManager.sysListKzzBuy();
@@ -208,16 +211,7 @@ public class TodayTasks {
 
 
 
-    /***
-     * all_temp 名称列表
-     */
-    @Scheduled(cron = "${task.every.gupiao.all_temp}")
-    public void gupiaoByAllTemp(){
-        if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("all_temp，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        gupiaoRepository.delKzzAll();
-        dongfangManager.listKzzData();
-    }
+
     /***
      * 全量 名称列表
      */
@@ -242,16 +236,7 @@ public class TodayTasks {
 
 
 
-    /***
-     *  删除 day_del
-     */
-    @Scheduled(cron = "${task.every.kzz.day_del}")
-    public void kzzByDayDel(){
-        if ("0".equals(klineOff)) return;
-        log.info(MessageFormat.format("day_del，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        gupiaoRepository.kzzByDayDel();
 
-    }
 
     /***
      * 全量 日k线

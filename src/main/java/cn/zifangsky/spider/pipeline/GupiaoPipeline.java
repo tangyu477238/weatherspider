@@ -30,7 +30,7 @@ public class GupiaoPipeline implements Pipeline {
 		List<Gupiao> list = resultItems.get("result");
 		gupiaoRepository.saveAll(list);
 		//清除不符合的数据
-		gupiaoRepository.delNotUse();
+//		gupiaoRepository.delNotUse();
 
 	}
 
