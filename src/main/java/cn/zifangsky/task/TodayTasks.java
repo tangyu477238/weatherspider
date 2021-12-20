@@ -191,14 +191,14 @@ public class TodayTasks {
     public void sysListKzzEvery() throws Exception{
         if ("0".equals(klineOff)) return;
         log.info(MessageFormat.format("sysAllEvery，Date：{0}",DateTimeUtil.formatTimetoString(new Date())));
-        String startTime = "09:30:00";
+        String startTime = "09:25:00";
         String endTime = "15:00:50";
         if (!DateTimeUtil.checkRunTime(startTime, endTime)){
             return;
         }
         dongfangManager.sysListKzzEvery();
 
-        String startTime1 = "09:35:00";
+        String startTime1 = "09:25:00";
         String endTime1 = "09:35:50";
         String startTime2 = "14:58:00";
         String endTime2 = "14:58:50";

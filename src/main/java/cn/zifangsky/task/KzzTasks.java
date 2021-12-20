@@ -119,7 +119,7 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
-        String startTime = "09:34:44";
+        String startTime = "09:30:44";
         String endTime = "09:45:00";
         if (!DateTimeUtil.checkRunTime(startTime, endTime)){
             return;
