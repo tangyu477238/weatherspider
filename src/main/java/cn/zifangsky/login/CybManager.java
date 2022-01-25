@@ -7,23 +7,13 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Administrator
+ */
 @Slf4j
 @Service
 public class CybManager{
 
-    String comp_id = "1091";
-
-    @Value("${cczq.hs_openid}")
-    private String hs_openid ;
-    @Value("${cczq.fund_account}")
-    private String fund_account ;
-    @Value("${cczq.h_stock_account}")
-    private String h_stock_account ;
-    @Value("${cczq.s_stock_account}")
-    private String s_stock_account ;
-
-    @Value("${cczq.access_token}")
-    private String access_token;
 
     @Resource
     private LoginManager loginManager;
