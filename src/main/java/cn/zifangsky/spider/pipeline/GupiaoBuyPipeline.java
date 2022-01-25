@@ -4,6 +4,7 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.GupiaoBuy;
 import cn.zifangsky.repository.GupiaoBuyRepository;
+import cn.zifangsky.repository.GupiaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.ResultItems;
@@ -26,6 +27,8 @@ public class GupiaoBuyPipeline implements Pipeline {
 	@Resource
 	private GupiaoBuyRepository gupiaoBuyRepository;
 
+	@Resource
+	private GupiaoRepository gupiaoRepository;
 
 	/**
 	 * 保存数据
@@ -34,10 +37,12 @@ public class GupiaoBuyPipeline implements Pipeline {
 	public void process(ResultItems resultItems, Task task) {
 		List<Gupiao> list = resultItems.get("result");
 		String createTime = DateTimeUtil.formatDateStr(new Date(), DateTimeUtil.FMT_yyyyMMddHHmm);
+		String bBizDate = gupiaoRepository.getBizDate(1);
 		List<GupiaoBuy> everyList = list.stream().map(x -> {
 			GupiaoBuy gupiaoBuy = new GupiaoBuy();
 			BeanUtils.copyProperties(x, gupiaoBuy);
 			gupiaoBuy.setDividend_yield(createTime);
+			gupiaoBuy.setVolume_ratio(bBizDate);
 			return gupiaoBuy;
 		}).collect(Collectors.toList());
 

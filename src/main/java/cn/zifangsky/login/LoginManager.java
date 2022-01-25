@@ -23,25 +23,20 @@ import java.util.Map;
 @Service
 public class LoginManager implements ILogin{
 
-    String comp_id = "1091";
-
-    @Value("${cczq.hs_openid}")
-    private String hs_openid ;
-    @Value("${cczq.fund_account}")
-    private String fund_account ;
-    @Value("${cczq.h_stock_account}")
-    private String h_stock_account ;
-    @Value("${cczq.s_stock_account}")
-    private String s_stock_account ;
-
-//    @Value("${cczq.access_token}")
-//    private String access_token;
+    @Resource
+    private CczqConfig cczqConfig;
 
     @Resource
     private GupiaoCanUseRepository gupiaoCanUseRepository;
 
-    private String getAccessToken(){
-        return gupiaoCanUseRepository.getToken(hs_openid);
+    public String getStartTime(){
+        return gupiaoCanUseRepository.getStartTime(cczqConfig.getHs_openid());
+    }
+    public String getEndTime(){
+        return gupiaoCanUseRepository.getEndTime(cczqConfig.getHs_openid());
+    }
+    public String getAccessToken(){
+        return gupiaoCanUseRepository.getToken(cczqConfig.getHs_openid());
     }
 
     /****
@@ -121,7 +116,7 @@ public class LoginManager implements ILogin{
      */
     public List<JSONObject> queryMyStockAmount() throws Exception{
         String url = "https://tjd.cczq.com:5000/cczq/biz/v/queryMyStockAmount?"+getAccountInfo()+getImeiInfo();
-        log.info(hs_openid);
+        log.info(cczqConfig.getHs_openid());
         log.debug(url);
         String httpOrgCreateTestRtn = HttpClientUtil.get(url);
         JSONObject jsonObj = JSONUtil.parseObj(httpOrgCreateTestRtn);
@@ -526,8 +521,8 @@ public class LoginManager implements ILogin{
     }
     //&comp_id=1&hs_openid=xx&access_token=xx&fund_account=xx
     private String getAccountInfo(){
-        return "comp_id="+comp_id+"&hs_openid="+hs_openid
-                +"&access_token="+getAccessToken()+"&fund_account="+fund_account;
+        return "comp_id="+cczqConfig.getCompId()+"&hs_openid="+cczqConfig.getHs_openid()
+                +"&access_token="+getAccessToken()+"&fund_account="+cczqConfig.getFund_account();
     }
     //&cep_type=1&exchange_type=xx&stock_account=xx
     private String getStockAccount(String stock_code){
@@ -536,7 +531,7 @@ public class LoginManager implements ILogin{
     //&exchange_type=xx&stock_account=xx
     private String stockAccount(String stock_code){
         int exchange_type = StockUtil.isShenshi(stock_code)  ? 2 : 1; //深/沪
-        String stock_account =  StockUtil.isShenshi(stock_code) ? s_stock_account : h_stock_account; //沪市或深市
+        String stock_account =  StockUtil.isShenshi(stock_code) ? cczqConfig.getS_stock_account() : cczqConfig.getH_stock_account(); //沪市或深市
         return "&exchange_type="+exchange_type+"&stock_account="+stock_account;
     }
 
