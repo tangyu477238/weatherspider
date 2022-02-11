@@ -143,6 +143,9 @@ public class LoginManager implements ILogin{
     public void deleteAllMyYmd(String strategyId) throws Exception{
         String json = queryMyYmdForPage();
         JSONArray jsonArray = JSONUtil.parseObj(json).getJSONArray("data");
+        if (ComUtil.isEmpty(jsonArray)){
+            return;
+        }
         for (Object object : jsonArray){
             JSONObject jsonObject = (JSONObject)object;
             String ymdId = jsonObject.getJSONObject("ymd_base").getStr("ymd_id");
