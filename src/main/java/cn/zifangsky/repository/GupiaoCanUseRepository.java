@@ -41,4 +41,11 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
 
     @Query(value = "select token from biz_buy_amount t where account = ?1 ", nativeQuery = true)
     String getToken(String account);
+
+    @Query(value = "select stime from biz_buy_amount t where account = ?1 ", nativeQuery = true)
+    String getStartTime(String account);
+
+    @Query(value = "select etime from biz_buy_amount t where account = ?1 ", nativeQuery = true)
+    String getEndTime(String account);
+
 }

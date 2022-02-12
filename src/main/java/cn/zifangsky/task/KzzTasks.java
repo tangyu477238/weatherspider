@@ -93,7 +93,7 @@ public class KzzTasks {
     }
 
     /**
-     * //MA数据 14点59进行
+     * //MA数据 14点57进行
      * @throws Exception
      */
     @Scheduled(cron = "${task.kzz.risedown}")
@@ -101,7 +101,7 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
-        String startTime = "14:58:44";
+        String startTime = "14:56:44";
         String endTime = "15:00:00";
         if (!DateTimeUtil.checkRunTime(startTime, endTime)){
             return;
@@ -119,8 +119,8 @@ public class KzzTasks {
         if ("0".equals(consumerOff)) return;
         Date current = new Date();
         log.info(MessageFormat.format("listMa，Date：{0}",FORMAT.format(current)));
-        String startTime = "09:34:44";
-        String endTime = "09:45:00";
+        String startTime = loginManager.getStartTime();
+        String endTime = loginManager.getEndTime();
         if (!DateTimeUtil.checkRunTime(startTime, endTime)){
             return;
         }

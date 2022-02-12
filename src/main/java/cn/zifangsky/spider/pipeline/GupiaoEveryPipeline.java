@@ -4,6 +4,7 @@ import cn.zifangsky.common.DateTimeUtil;
 import cn.zifangsky.model.Gupiao;
 import cn.zifangsky.model.GupiaoEvery;
 import cn.zifangsky.repository.GupiaoEveryRepository;
+import cn.zifangsky.repository.GupiaoRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import us.codecraft.webmagic.ResultItems;
@@ -26,6 +27,9 @@ public class GupiaoEveryPipeline implements Pipeline {
 	@Resource
 	private GupiaoEveryRepository gupiaoEveryRepository;
 
+	@Resource
+	private GupiaoRepository gupiaoRepository;
+
 
 	/**
 	 * 保存数据
@@ -34,10 +38,12 @@ public class GupiaoEveryPipeline implements Pipeline {
 	public void process(ResultItems resultItems, Task task) {
 		List<Gupiao> list = resultItems.get("result");
 		String createTime = DateTimeUtil.formatDateStr(new Date(), DateTimeUtil.FMT_yyyyMMddHHmm);
+		String bBizDate = gupiaoRepository.getBizDate(1);
 		List<GupiaoEvery> everyList = list.stream().map(x -> {
 			GupiaoEvery gupiaoEveryPipeline = new GupiaoEvery();
 			BeanUtils.copyProperties(x, gupiaoEveryPipeline);
 			gupiaoEveryPipeline.setDividend_yield(createTime);
+			gupiaoEveryPipeline.setVolume_ratio(bBizDate);
 			return gupiaoEveryPipeline;
 		}).collect(Collectors.toList());
 
