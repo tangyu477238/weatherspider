@@ -92,6 +92,18 @@ public class KzzTasks {
         loginManager.deleteAllMyYmd(null);
     }
 
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
     /**
      * //MA数据 14点57进行
      * @throws Exception
@@ -131,5 +143,21 @@ public class KzzTasks {
 
 
 
-
+    /**
+     * grid
+     * @throws Exception
+     */
+    @Scheduled(cron = "${task.kzz.grid}")
+    public void grid() throws Exception{
+        if ("0".equals(consumerOff)) return;
+        Date current = new Date();
+        log.info(MessageFormat.format("grid，Date：{0}",FORMAT.format(current)));
+        String startTime = loginManager.getStartTime();
+        String endTime = loginManager.getEndTime();
+        if (!DateTimeUtil.checkRunTime(startTime, endTime)){
+            return;
+        }
+        log.info(MessageFormat.format("grid进行处理，Date：{0}",FORMAT.format(current)));
+//        lastMornManager.listGrid();
+    }
 }

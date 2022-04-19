@@ -7,15 +7,13 @@ import cn.zifangsky.common.ExecutorProcessPool;
 import cn.zifangsky.login.LoginManager;
 import cn.zifangsky.manager.LastMornManager;
 import cn.zifangsky.repository.GupiaoCanUseRepository;
+import cn.zifangsky.repository.GupiaoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service("lastMornManagerImpl")
@@ -30,6 +28,8 @@ public class LastMornManagerImpl implements LastMornManager {
 	@Resource
 	private LoginManager loginManager;
 
+	@Resource
+	private GupiaoRepository gupiaoRepository;
 
 
 
@@ -109,6 +109,17 @@ public class LastMornManagerImpl implements LastMornManager {
 		}
 	}
 
+	/**
+	 * 立刻清理所有
+	 */
+	private void listSellAll() throws Exception {
+		//仓库列表
+		List<JSONObject> stockList = loginManager.queryMyStockAmount();
+		//获取条件列表
+		Map ymdMap = loginManager.listMyYmd();
+		//sell数据
+		listSell(new ArrayList<>(), stockList, ymdMap);
+	}
 
 	/****
      * 检查非需要处理的数据，删除掉
@@ -130,6 +141,24 @@ public class LastMornManagerImpl implements LastMornManager {
 			}
 		}
 	}
+
+
+	/**
+	 * 立刻购入所有
+	 */
+	private void listBuyAll(List<Map<String,Object>> listBuy) throws Exception {
+		Collections.shuffle(listBuy);
+		//仓库列表
+		List<JSONObject> stockList = loginManager.queryMyStockAmount();
+		//获取条件列表
+		Map ymdMap = loginManager.listMyYmd();
+		//先处理多买的数据
+		listSell(listBuy, stockList, ymdMap);
+		//重新buy不足的数据
+		listBuy(listBuy, stockList, ymdMap);
+	}
+
+
 
 	/****
 	 * 检查非需要处理的数据，删除掉
@@ -222,5 +251,77 @@ public class LastMornManagerImpl implements LastMornManager {
 			}
 		}
 		return 0;
+	}
+
+	private boolean in(List<Double> list){
+		Double first = 0.0;
+		Double two = 0.0;
+		Double now = 0.0;
+		boolean flag = false;
+		for (int i = 2 ; list.size() > 2 && i < list.size(); i++){
+			first = list.get(i-2);
+			two = list.get(i-1);
+			now = list.get(i);
+			if (first < two && two < now && flag){
+
+			}
+		}
+		return false;
+	}
+
+
+
+	@Override
+	public void listGrid() throws Exception {
+		for (int x = 1 ;x < 3; x++){
+
+		String bBizDate = gupiaoRepository.getBizDate(x);
+		log.info(bBizDate);
+		List<Map<String, Object>> list = gupiaoCanUseRepository.listGrid(bBizDate);
+		Double first = 0.0;
+		Double two = 0.0;
+		Double three = 0.0;
+		Double now = 0.0;
+
+		Double beg = 0.0;
+		Double end = 0.0;
+		boolean flag = false;
+		Double sum = 0.0;
+		for (int i = 3 ; list.size() > 3 && i < list.size(); i++){
+			first = Double.parseDouble(list.get(i-3).get("bilv").toString());
+			two = Double.parseDouble(list.get(i-2).get("bilv").toString());
+			three = Double.parseDouble(list.get(i-1).get("bilv").toString());
+			now = Double.parseDouble(list.get(i).get("bilv").toString());
+			String dividend_yield = list.get(i).get("dividend_yield").toString();
+			//2<3<当前且已出
+			if (first < two && two < three && three < now && !flag && now < 2 && now>0){
+				beg  = now;
+				flag = true;
+				log.info(now + "-------进-------"+dividend_yield);
+				//1>2>3>当前且已进
+			} else if (first > two && two > three && three > now && flag){
+				end = now;
+				flag  = false;
+				log.info(now + "-----出--------///"+(end-beg)+"///"+dividend_yield);
+				sum = sum +(end-beg);
+			}
+		}
+		log.info("sum-----///"+sum);
+
+		}
+
+//		//清除所有
+//		loginManager.deleteAllMyYmd(null);
+//		if (flag){
+//			//待处理清单
+//			List<Map<String,Object>> listBuyGrid = gupiaoCanUseRepository.listBuyGrid(hs_openid);
+//			listBuyAll(listBuyGrid);
+//		} else {
+//			//清理所有
+//			listSellAll();
+//		}
+
+
+
 	}
 }

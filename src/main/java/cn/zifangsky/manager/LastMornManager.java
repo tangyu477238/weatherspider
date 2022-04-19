@@ -10,4 +10,7 @@ public interface LastMornManager {
     void listMa() throws Exception;
 
 //    void sellMorn() throws Exception;
+
+    void listGrid() throws Exception;
+
 }

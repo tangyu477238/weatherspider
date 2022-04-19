@@ -39,6 +39,9 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
     @Query(value = " select * from v_buylist_last_morn where account=?1", nativeQuery = true)
     List<Map<String, Object>> listBuyLastMorn(String account);
 
+    @Query(value = " select * from v_buylist_last_morn where account=?1", nativeQuery = true)
+    List<Map<String, Object>> listBuyGrid(String account);
+
     @Query(value = "select token from biz_buy_amount t where account = ?1 ", nativeQuery = true)
     String getToken(String account);
 
@@ -47,5 +50,16 @@ public interface GupiaoCanUseRepository extends JpaRepository<GupiaoCanUse,Integ
 
     @Query(value = "select etime from biz_buy_amount t where account = ?1 ", nativeQuery = true)
     String getEndTime(String account);
+
+    @Query(value = "select " +
+            " ROUND(SUM(e.percent)/COUNT(1),3) as bilv,e.dividend_yield" +
+            " from gupiao_kline k" +
+            " inner join gupiao_every e on  k.symbol = e.symbol and  e.volume_ratio = k.biz_date" +
+            " left join biz_buy_qiangshu q on k.symbol = q.symbol" +
+            " where k.biz_date = ?1" +
+            " and k.symbol like '11%'  and k.percent>-2 and  k.percent<2  and  k.ps > 3 and k.amount>20000000  and q.symbol is null" +
+            " group by e.dividend_yield" +
+            " order by e.dividend_yield asc ", nativeQuery = true)
+    List<Map<String, Object>> listGrid(String bBizDate);
 
 }
